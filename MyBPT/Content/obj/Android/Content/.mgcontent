@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Android</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/dirtfloor.png</File>
+    <File>C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/purplefloor.png</File>
+    <File>C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/regulartext.spritefont</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

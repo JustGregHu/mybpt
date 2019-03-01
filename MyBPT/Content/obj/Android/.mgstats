@@ -1,0 +1,4 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/dirtfloor.png","C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/bin/Android/dirtfloor.xnb","TextureProcessor","Texture2DContent",356,10085,1.471321
+"C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/purplefloor.png","C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/bin/Android/purplefloor.xnb","TextureProcessor","Texture2DContent",381,10085,0.0090036
+"C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/regulartext.spritefont","C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/bin/Android/regulartext.xnb","FontDescriptionProcessor","SpriteFontContent",2008,136209,0.9548805
