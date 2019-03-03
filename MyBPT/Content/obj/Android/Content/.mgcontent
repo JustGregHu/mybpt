@@ -4,9 +4,9 @@
   <Platform>Android</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/dirtfloor.png</File>
-    <File>C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/purplefloor.png</File>
-    <File>C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/regulartext.spritefont</File>
+    <File>C:/mybpt/MyBPT/Content/regulartext.spritefont</File>
+    <File>C:/mybpt/MyBPT/Content/grass.png</File>
+    <File>C:/mybpt/MyBPT/Content/pearl.jpg</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

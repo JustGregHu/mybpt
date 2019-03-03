@@ -15,19 +15,14 @@ namespace MyBPT
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         TouchCollection tc;
-
-        Tile selectedtile=null;
-
-        List<Tile> gameworld;
-
+        GameTextures texturecollection;
+        GameWorld gameworld;
         SpriteFont font;
-        int debugscore;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
             graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
@@ -42,8 +37,6 @@ namespace MyBPT
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -53,18 +46,14 @@ namespace MyBPT
         /// </summary>
         protected override void LoadContent()
         {
-            gameworld = new List<Tile>();
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Vector2 dirtfloortemppos=new Vector2(200,200);
-            gameworld.Add(new Tile(Content.Load<Texture2D>("grass"), dirtfloortemppos, new Rectangle(dirtfloortemppos.ToPoint(), new Point(100, 100))));
-            dirtfloortemppos = new Vector2(200, 300);
-            gameworld.Add(new Tile(Content.Load<Texture2D>("grass"), dirtfloortemppos, new Rectangle(dirtfloortemppos.ToPoint(), new Point(100, 100))));
-            dirtfloortemppos = new Vector2(400, 300);
-            gameworld.Add(new Tile(Content.Load<Texture2D>("pearl"), dirtfloortemppos, new Rectangle(dirtfloortemppos.ToPoint(), new Point(100, 100))));
+            texturecollection = new GameTextures();
+            texturecollection.AddTexture(0, new Texture2D(GraphicsDevice, 100,100));
+            texturecollection.AddTexture(1, Content.Load<Texture2D>("grass"));
+            texturecollection.AddTexture(2, Content.Load<Texture2D>("pearl"));
+            gameworld = new GameWorld(texturecollection.GetTextures());
+            gameworld.GenerateRandomWorld();
             font = Content.Load<SpriteFont>("regulartext");
-            debugscore = 0;
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -73,7 +62,7 @@ namespace MyBPT
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+           
         }
 
         /// <summary>
@@ -83,10 +72,10 @@ namespace MyBPT
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            tc = TouchPanel.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
-
-            // TODO: Add your update logic here
+            
             base.Update(gameTime);
         }
 
@@ -96,42 +85,87 @@ namespace MyBPT
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
-
-            // TODO: Add your drawing code here
-
-            
-
-
-            tc = TouchPanel.GetState();
-
+            foreach (var tile in gameworld.MapData)
+            {
+                tile.Highlighted = false;
+            }
             spriteBatch.Begin();
-            foreach (var tile in gameworld) {
+            if (tc.Count > 0)
+            {
+                if (gameworld.GetTileAtTouchPosition(tc[0])!=null)
+                {
+                    gameworld.GetTileAtTouchPosition(tc[0]).Highlighted = true;;
+                }
+            }
+            foreach (var tile in gameworld.MapData)
+            {
+                tile.Draw(spriteBatch);
+            }
+
+
+
+
+
+
+
+
+            //DEBUG
+            if (tc.Count > 0)
+            {
+                if (gameworld.GetTileAtTouchPosition(tc[0]) != null)
+                {
+                    spriteBatch.DrawString(font, gameworld.GetTileAtTouchPosition(tc[0]).Position.ToString(), new Vector2(50, 50), Color.White);
+                    spriteBatch.DrawString(font, gameworld.GetGridPositionAtTouchPosition(tc[0]).X + " " + gameworld.GetGridPositionAtTouchPosition(tc[0]).Y, new Vector2(50, 100), Color.White);
+                    spriteBatch.DrawString(font, gameworld.IsGridAvailableAt(tc[0].Position.ToPoint()).ToString(), new Vector2(50, 150), Color.White);
+                }
+
+            }
+
+
+            // MOVING TILES
+
+            /*
+
+            List<Tile> movingtiles = new List<Tile>();
+            ;
+            foreach (var tile in gameworld.MapData) {
                 tile.Draw(spriteBatch);
                 if (tc.Count>0) {
-                    
-                    //movingtile
-                    //tile.MoveIfTouchIsHeld(spriteBatch, tc[0]);
+                    spriteBatch.DrawString(font, tc[0].Position.ToString(), new Vector2(50, 50), Color.White);
+                    if (tile.Moving || tile.IsTileOnPosition(tc[0].Position))
+                    {
+                        movingtiles.Add(tile);
+                    }
+
 
                 }
             }
 
-            if (TouchPanel.GetCapabilities().IsConnected)
+            if (movingtiles.Count>0)
+            {
+                foreach (var tile in movingtiles)
+                {
+                    tile.CheckIfReleased(tc[0]);
+                }
+                movingtiles[0].MoveIfTouchIsHeld(gameworld,spriteBatch, tc[0]);
+            }
+            /*
+
+
+            /*if (TouchPanel.GetCapabilities().IsConnected)
             {
                 spriteBatch.DrawString(font, "touchscreen detected", new Vector2(50, 50), Color.White);
-                spriteBatch.DrawString(font, "distance moved: "+debugscore.ToString(), new Vector2(50, 100), Color.White);
+                spriteBatch.DrawString(font, "distance moved: " + debugscore.ToString(), new Vector2(50, 100), Color.White);
             }
             else
             {
                 spriteBatch.DrawString(font, "no touchscreen detected", new Vector2(50, 50), Color.White);
-            }
-            
+            }*/
 
-            
+
+
 
             spriteBatch.End();
-
-
             base.Draw(gameTime);
         }
     }

@@ -1,4 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/dirtfloor.png","C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/bin/Android/Content/dirtfloor.xnb","TextureProcessor","Texture2DContent",356,10085,0.4061049
-"C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/purplefloor.png","C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/bin/Android/Content/purplefloor.xnb","TextureProcessor","Texture2DContent",381,10085,0.0079997
-"C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/regulartext.spritefont","C:/Users/Greg/source/repos/MyBPT/MyBPT/Content/bin/Android/Content/regulartext.xnb","FontDescriptionProcessor","SpriteFontContent",2008,136209,0.946488
+"C:/mybpt/MyBPT/Content/grass.png","C:/mybpt/MyBPT/Content/bin/Android/Content/grass.xnb","TextureProcessor","Texture2DContent",24238,40085,0.0490004
+"C:/mybpt/MyBPT/Content/pearl.jpg","C:/mybpt/MyBPT/Content/bin/Android/Content/pearl.xnb","TextureProcessor","Texture2DContent",2203,40085,0.0090011
+"C:/mybpt/MyBPT/Content/regulartext.spritefont","C:/mybpt/MyBPT/Content/bin/Android/Content/regulartext.xnb","FontDescriptionProcessor","SpriteFontContent",2068,136209,1.256073
