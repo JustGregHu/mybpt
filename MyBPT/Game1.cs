@@ -18,6 +18,7 @@ namespace MyBPT
         GameTextures texturecollection;
         GameWorld gameworld;
         SpriteFont font;
+        Camera camera;
 
         public Game1()
         {
@@ -37,6 +38,8 @@ namespace MyBPT
         /// </summary>
         protected override void Initialize()
         {
+            TouchPanel.EnabledGestures = GestureType.FreeDrag | GestureType.Pinch | GestureType.DragComplete;
+            camera = new Camera(GraphicsDevice.Viewport);
             base.Initialize();
         }
 
@@ -75,7 +78,7 @@ namespace MyBPT
             tc = TouchPanel.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
-            
+            camera.Update(gameTime,tc);
             base.Update(gameTime);
         }
 
@@ -85,16 +88,29 @@ namespace MyBPT
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,null,null,null,null,camera.transform);
+
+
+
             foreach (var tile in gameworld.MapData)
             {
                 tile.Highlighted = false;
             }
-            spriteBatch.Begin();
+            
             if (tc.Count > 0)
             {
+               
                 if (gameworld.GetTileAtTouchPosition(tc[0])!=null)
                 {
-                    gameworld.GetTileAtTouchPosition(tc[0]).Highlighted = true;;
+                    TouchLocation tlcameraadjusted = new TouchLocation(tc[0].Id, tc[0].State, new Vector2(tc[0].Position.X + camera.Position.X, tc[0].Position.Y + camera.Position.Y));
+                    try
+                    {
+                        gameworld.GetTileAtTouchPosition(tlcameraadjusted).Highlighted = true; 
+                    }
+                    catch (System.Exception)
+                    {
+
+                    }
                 }
             }
             foreach (var tile in gameworld.MapData)
@@ -110,16 +126,26 @@ namespace MyBPT
 
 
             //DEBUG
-            if (tc.Count > 0)
+            try
             {
-                if (gameworld.GetTileAtTouchPosition(tc[0]) != null)
+                if (tc.Count > 0)
                 {
-                    spriteBatch.DrawString(font, gameworld.GetTileAtTouchPosition(tc[0]).Position.ToString(), new Vector2(50, 50), Color.White);
-                    spriteBatch.DrawString(font, gameworld.GetGridPositionAtTouchPosition(tc[0]).X + " " + gameworld.GetGridPositionAtTouchPosition(tc[0]).Y, new Vector2(50, 100), Color.White);
-                    spriteBatch.DrawString(font, gameworld.IsGridAvailableAt(tc[0].Position.ToPoint()).ToString(), new Vector2(50, 150), Color.White);
+                    if (gameworld.GetTileAtTouchPosition(tc[0]) != null)
+                    {
+                        TouchLocation tlcameraadjusted = new TouchLocation(tc[0].Id, tc[0].State, new Vector2(tc[0].Position.X + camera.Position.X, tc[0].Position.Y + camera.Position.Y));
+                        spriteBatch.DrawString(font, gameworld.GetTileAtTouchPosition(tlcameraadjusted).Position.ToString(), new Vector2(50 + camera.Position.X, 50 + camera.Position.Y), Color.White);
+                        spriteBatch.DrawString(font, gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).X + " " + gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).Y, new Vector2(50 + camera.Position.X, 100 + camera.Position.Y), Color.White);
+                        spriteBatch.DrawString(font, gameworld.IsGridAvailableAt(tlcameraadjusted.Position.ToPoint()).ToString(), new Vector2(50 + camera.Position.X, 150 + camera.Position.Y), Color.White);
+
+                    }
+
                 }
+            }
+            catch (System.Exception)
+            {
 
             }
+
 
 
             // MOVING TILES
