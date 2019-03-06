@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using MyBPT.Classes;
+using System;
 using System.Collections.Generic;
 
 namespace MyBPT
@@ -12,6 +13,7 @@ namespace MyBPT
     /// </summary>
     public class Game1 : Game
     {
+        Perlin perlin = new Perlin();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         TouchCollection tc;
@@ -91,7 +93,6 @@ namespace MyBPT
             spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,null,null,null,null,camera.transform);
 
 
-
             foreach (var tile in gameworld.MapData)
             {
                 tile.Highlighted = false;
@@ -124,6 +125,8 @@ namespace MyBPT
 
 
 
+            //spriteBatch.DrawString(font, gameworld.OctavePerlin(0.1, 0.9, 0.5, 16, 0.5).ToString(), new Vector2(50 + camera.Position.X, 200 + camera.Position.Y), Color.White);
+
 
             //DEBUG
             try
@@ -145,6 +148,8 @@ namespace MyBPT
             {
 
             }
+
+           
 
 
 
