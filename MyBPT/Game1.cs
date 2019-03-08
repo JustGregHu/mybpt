@@ -53,11 +53,14 @@ namespace MyBPT
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             texturecollection = new GameTextures();
-            texturecollection.AddTexture(0, new Texture2D(GraphicsDevice, 100,100));
-            texturecollection.AddTexture(1, Content.Load<Texture2D>("grass"));
-            texturecollection.AddTexture(2, Content.Load<Texture2D>("pearl"));
+            texturecollection.AddTexture("water", Content.Load<Texture2D>("water"));
+            texturecollection.AddTexture("sand", Content.Load<Texture2D>("sand"));
+            texturecollection.AddTexture("grass", Content.Load<Texture2D>("grass"));
+            texturecollection.AddTexture("grasstree", Content.Load<Texture2D>("grasstree"));
+            texturecollection.AddTexture("stone", Content.Load<Texture2D>("stone"));
+            texturecollection.AddTexture("snow", Content.Load<Texture2D>("snow"));
             gameworld = new GameWorld(texturecollection.GetTextures());
-            gameworld.GenerateRandomWorld();
+            gameworld.GenerateMap(spriteBatch, GraphicsDevice);
             font = Content.Load<SpriteFont>("regulartext");
         }
 
@@ -92,7 +95,7 @@ namespace MyBPT
         {
             spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,null,null,null,null,camera.transform);
 
-
+            
             foreach (var tile in gameworld.MapData)
             {
                 tile.Highlighted = false;
@@ -119,13 +122,9 @@ namespace MyBPT
                 tile.Draw(spriteBatch);
             }
 
+            
 
-
-
-
-
-
-            //spriteBatch.DrawString(font, gameworld.OctavePerlin(0.1, 0.9, 0.5, 16, 0.5).ToString(), new Vector2(50 + camera.Position.X, 200 + camera.Position.Y), Color.White);
+            gameworld.DrawNoiseMap(camera,font,spriteBatch);
 
 
             //DEBUG

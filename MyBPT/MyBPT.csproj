@@ -64,7 +64,6 @@
     <Compile Include="Classes\Camera.cs" />
     <Compile Include="Classes\GameWorld.cs" />
     <Compile Include="Classes\GameTextures.cs" />
-    <Compile Include="Classes\Noise2d.cs" />
     <Compile Include="Classes\Perlin.cs" />
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Game1.cs" />

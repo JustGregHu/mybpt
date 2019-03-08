@@ -15,14 +15,14 @@ namespace MyBPT.Classes
 {
     class GameTextures
     {
-        Dictionary<int, Texture2D> collection = new Dictionary<int, Texture2D>();
+        Dictionary<string, Texture2D> collection = new Dictionary<string, Texture2D>();
         
-        public Dictionary<int, Texture2D> GetTextures()
+        public Dictionary<string, Texture2D> GetTextures()
         {
             return collection;
         }
 
-        public void AddTexture(int newtextureid, Texture2D newtexture)
+        public void AddTexture(string newtextureid, Texture2D newtexture)
         {
             collection.Add(newtextureid,newtexture);
         }

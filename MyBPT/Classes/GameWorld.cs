@@ -19,167 +19,138 @@ using System.Threading.Tasks;
 
 namespace MyBPT.Classes {
     class GameWorld {
+        
         Perlin perlin;
         int worldsize;
+        double noisescale;
         Random rnd = new Random();
         Tile[,] mapdata;
-        Dictionary<int, Texture2D> texturecollection;
+        Dictionary<string, Texture2D> texturecollection;
+        Texture2D texture;
+        Color[] colourMap;
+        double[,] noiseMap;
+
 
         //GAME WORLD
 
-        public GameWorld(Dictionary<int, Texture2D> texturecollection)
+        public GameWorld(Dictionary<string, Texture2D> texturecollection)
         {
             perlin = new Perlin();
             worldsize = 64;
+            noisescale = 12f;
             this.texturecollection = texturecollection;
-            mapdata = new Tile[worldsize,worldsize];
+            mapdata = new Tile[worldsize, worldsize];
         }
 
-        public void GenerateRandomWorld()
+        public double[,] GenerateNoiseMap(int mapWidth, int mapHeight, double scale)
         {
-            double[] dnoisemap = new double[worldsize * worldsize]; 
-            for (int i = 0; i < worldsize*worldsize; i++)
-            {
-                perlin = new Perlin();
-                dnoisemap[i] = OctavePerlin(worldsize, worldsize, 1, 16, 1);
-            }
-            double[,] noisemap = new double[worldsize, worldsize];
-            for (int i = 0; i < worldsize; i++)
-            {
-                for (int p = 0; p < worldsize; p++)
-                {
-                    noisemap[i, p] = dnoisemap[(i + 1) * p];
+            this.noiseMap = new double[mapWidth,mapHeight];
 
+            if (scale<=0)
+            {
+                scale = 0.001f;
+            }
+
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    double sampleX = x/scale;
+                    double sampleY = y/scale;
+                    double perlinValue = perlin.perlin(sampleX, sampleY, 1);
+                    noiseMap[x, y] = perlinValue;
                 }
             }
-            
+            return noiseMap;
+        }
 
-            for (int i = 0; i < worldsize; i++)
+        public void GenerateMap(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice)
+        {
+            double[,] noiseMap = GenerateNoiseMap(worldsize, worldsize, noisescale);
+            GenerateRandomWorld();
+            CreateNoiseMap(spriteBatch,graphicsDevice,noiseMap);
+
+        }
+
+        public void CreateNoiseMap(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice, double[,] noiseMap)
+        {
+            int width = noiseMap.GetLength(0);
+            int height = noiseMap.GetLength(1);
+           
+            this.texture = new Texture2D(graphicsDevice, width, height);
+            this.colourMap = new Color[width * height];
+            for (int y = 0; y < height; y++)
             {
-                for (int u = 0; u < worldsize; u++)
+                for (int x = 0; x < width; x++)
                 {
-                    int rndtile = (int)Math.Round(noisemap[i,u] * (255));
+                    colourMap[y * width + x] = Color.Lerp(Color.Black, Color.White, ToSingle(noiseMap[x, y]));
+                }
+            }
+            this.texture.SetData(colourMap);
+        }
+
+        public void DrawNoiseMap(Camera camera, SpriteFont font, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, new Vector2(0, 0), Color.White);
+            for (int i = 0; i < 5; i++)
+            {
+                spriteBatch.DrawString(font, noiseMap[i,1].ToString(), new Vector2(50 + camera.Position.X, 150 + camera.Position.Y+i*30), Color.White);
+            }
+        }
+        public static float ToSingle(double value)
+        {
+            return (float)value;
+        }
+
+        
+    public void GenerateRandomWorld()
+    {
+        for (int i = 0; i < worldsize; i++)
+        {
+            for (int u = 0; u < worldsize; u++)
+            {
+                    int newrnd = rnd.Next(0, 6);
+                    int rndtile = (int)Math.Round(noiseMap[i, u] * (255));
                     Texture2D rndtexture;
-                    if (rndtile > 150)
+                    if (rndtile < 80)
                     {
-                        rndtexture=texturecollection[2];
+                        rndtexture = texturecollection["water"];
                     }
-                    else if (rndtile < 100)
+                    else if (rndtile <100)
                     {
-                        rndtexture = texturecollection[0];
+                        rndtexture = texturecollection["sand"];
+                    }
+                    else if (rndtile < 160)
+                    {
+                        if (newrnd==5)
+                        {
+                            rndtexture = texturecollection["grasstree"];
+                        }
+                        else
+                        {
+                            rndtexture = texturecollection["grass"];
+                        }
+                        
+                    }
+                    else if (rndtile < 190)
+                    {
+                        rndtexture = texturecollection["stone"];
+                    }
+                    else if (rndtile < 256)
+                    {
+                        rndtexture = texturecollection["snow"];
                     }
                     else
                     {
-                        rndtexture = texturecollection[1];
+                        rndtexture = texturecollection["water"];
                     }
-                    
-                    mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)*100,(u)*100),new Rectangle(new Point((i+1)*100,(u+1)*100),new Point(100,100)));
-                }
+
+                    mapdata[i, u] = new Tile(rndtile, rndtexture, new Vector2((i) * 100, (u) * 100), new Rectangle(new Point((i + 1) * 100, (u + 1) * 100), new Point(100, 100)));
+                mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)*100,(u)*100),new Rectangle(new Point((i+1)*100,(u+1)*100),new Point(100,100)));
             }
-            
-
-
-
-
         }
 
-        public double OctavePerlin(double x, double y, double z, int octaves, double persistence)
-        {
-            double total = 0;
-            double frequency = 1;
-            double amplitude = 1;
-            double maxValue = 0;  // Used for normalizing result to 0.0 - 1.0
-            for (int i = 0; i < octaves; i++)
-            {
-                total += perlin.perlin(x * frequency, y * frequency, z * frequency) * amplitude;
-
-                maxValue += amplitude;
-
-                amplitude *= persistence;
-                frequency *= 2;
-            }
-
-            return total / maxValue;
-        }
-
-        /*
-         * 
-         * 
-         * 
-         *         public void GenerateRandomWorld()
-        {
-            float[,] noisemap = GenerateNoiseMap(worldsize, worldsize, 16);
-            for (int i = 0; i < worldsize; i++)
-            {
-                for (int u = 0; u < worldsize; u++)
-                {
-                    int rndtile = (int)Math.Round(noisemap[i,u] * (255));
-                    Texture2D rndtexture;
-                    if (rndtile > 210)
-                    {
-                        rndtexture=texturecollection[2];
-                    }
-                    else if (rndtile < 50)
-                    {
-                        rndtexture = texturecollection[0];
-                    }
-                    else
-                    {
-                        rndtexture = texturecollection[1];
-                    }
-                    mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)*100,(u)*100),new Rectangle(new Point((i+1)*100,(u+1)*100),new Point(100,100)));
-                }
-            }
-            
-
-
-
-        }
-
-
-
-        public float[,] GenerateNoiseMap(int x, int y, int octaves)
-        {
-            var data = new float[x * y];
-            var min = float.MaxValue;
-            var max = float.MinValue;
-            Noise2d.Reseed();
-
-            var frequency = 0.5f;
-            var amplitude = 0.5f;
-            var persistence = 0.25f;
-
-            for (var octave = 0; octave < octaves; octave++)
-            {
-                Parallel.For(0, x * y, (offset) => {
-                    int i = offset % x;
-                    int j = offset / x;
-                    var noise = Noise2d.Noise(i * frequency * 1f/ x, j * frequency * 1f / y);
-                    noise = data[j * x + i] += noise * amplitude;
-                    min = Math.Min(min, noise);
-                    max = Math.Max(max, noise);
-
-                });
-
-                frequency *= 2;
-                amplitude /= 2;
-            }
-
-            var noisemap = data.Select((f) => { var norm = (f - min) / (max - min); return norm; }).ToArray();
-            float[,] fullnoisemap = new float[worldsize,worldsize];
-            for (int i = 0; i < worldsize; i++)
-            {
-                for (int p = 0; p < worldsize; p++)
-                {
-                        fullnoisemap[i, p] = noisemap[(i+1) * p];
-                    
-                }
-            }
-            //float[] colors = data.Select((f) => { float norm = (f - min) / (max - min); return norm; }).ToArray();
-            return fullnoisemap;
-        }
-        */
-
+    } 
 
         //TILE-GRID POSITIONS
 
@@ -238,6 +209,6 @@ namespace MyBPT.Classes {
             }
         }
 
-        public Dictionary<int, Texture2D> TextureCollection { get => texturecollection; set => texturecollection = value; }
+        public Dictionary<string, Texture2D> TextureCollection { get => texturecollection; set => texturecollection = value; }
     }
 }

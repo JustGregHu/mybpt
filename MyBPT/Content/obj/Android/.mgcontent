@@ -4,8 +4,21 @@
   <Platform>Android</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/sajat/Desktop/MyBPT/MyBPT/Content/regulartext.spritefont</File>
-    <File>C:/Users/sajat/Desktop/MyBPT/MyBPT/Content/grass.png</File>
-    <File>C:/Users/sajat/Desktop/MyBPT/MyBPT/Content/pearl.jpg</File>
+    <File>C:/mybpt/MyBPT/Content/grass.png</File>
+    <File>C:/mybpt/MyBPT/Content/grasstree.png</File>
+    <File>C:/mybpt/MyBPT/Content/regulartext.spritefont</File>
+    <File>C:/mybpt/MyBPT/Content/sand.png</File>
+    <File>C:/mybpt/MyBPT/Content/snow.jpg</File>
+    <File>C:/mybpt/MyBPT/Content/stone.jpg</File>
+    <File>C:/mybpt/MyBPT/Content/water.png</File>
   </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
 </SourceFileCollection>

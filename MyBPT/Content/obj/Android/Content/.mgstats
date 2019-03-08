@@ -1,4 +1,8 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "C:/mybpt/MyBPT/Content/grass.png","C:/mybpt/MyBPT/Content/bin/Android/Content/grass.xnb","TextureProcessor","Texture2DContent",24238,40085,0.0490004
-"C:/mybpt/MyBPT/Content/pearl.jpg","C:/mybpt/MyBPT/Content/bin/Android/Content/pearl.xnb","TextureProcessor","Texture2DContent",2203,40085,0.0090011
+"C:/mybpt/MyBPT/Content/grasstree.png","C:/mybpt/MyBPT/Content/bin/Android/Content/grasstree.xnb","TextureProcessor","Texture2DContent",26857,40085,0.3590777
 "C:/mybpt/MyBPT/Content/regulartext.spritefont","C:/mybpt/MyBPT/Content/bin/Android/Content/regulartext.xnb","FontDescriptionProcessor","SpriteFontContent",2068,136209,1.256073
+"C:/mybpt/MyBPT/Content/sand.png","C:/mybpt/MyBPT/Content/bin/Android/Content/sand.xnb","TextureProcessor","Texture2DContent",3914,40085,0.014
+"C:/mybpt/MyBPT/Content/snow.jpg","C:/mybpt/MyBPT/Content/bin/Android/Content/snow.xnb","TextureProcessor","Texture2DContent",831,40085,0.0070093
+"C:/mybpt/MyBPT/Content/stone.jpg","C:/mybpt/MyBPT/Content/bin/Android/Content/stone.xnb","TextureProcessor","Texture2DContent",2203,40085,0.4050505
+"C:/mybpt/MyBPT/Content/water.png","C:/mybpt/MyBPT/Content/bin/Android/Content/water.xnb","TextureProcessor","Texture2DContent",3286,40085,0.0079991

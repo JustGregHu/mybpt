@@ -108,5 +108,6 @@ namespace MyBPT.Classes {
             }
         }
 
+        public Texture2D Texture { get => texture; set => texture = value; }
     }
 }
