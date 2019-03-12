@@ -61,10 +61,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activity1.cs" />
+    <Compile Include="Classes\Building.cs" />
     <Compile Include="Classes\Camera.cs" />
+    <Compile Include="Classes\GameSession.cs" />
     <Compile Include="Classes\GameWorld.cs" />
     <Compile Include="Classes\GameTextures.cs" />
+    <Compile Include="Classes\Lerper.cs" />
     <Compile Include="Classes\Perlin.cs" />
+    <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

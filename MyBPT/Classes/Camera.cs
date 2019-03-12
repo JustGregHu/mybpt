@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using com.bitbull.meat;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -20,10 +21,13 @@ namespace MyBPT.Classes
         public Matrix transform;
         Viewport view;
         Vector2 position;
+        Vector2 targetposition;
         float zoomamount;
+        Lerper lerper = new Lerper();
 
         public Camera(Viewport newView)
         {
+            targetposition = new Vector2(0, 0);
             position = new Vector2(0, 0);
             view = newView;
             zoomamount = 1;
@@ -39,7 +43,7 @@ namespace MyBPT.Classes
                     GestureSample gs = TouchPanel.ReadGesture();
                     if (GestureType.FreeDrag == gs.GestureType)
                     {
-                        position = new Vector2(position.X - gs.Delta.X, position.Y - gs.Delta.Y);
+                        targetposition = new Vector2(targetposition.X - gs.Delta.X, targetposition.Y - gs.Delta.Y);
                     }
                     else if (GestureType.Pinch == gs.GestureType)
                     {
@@ -48,7 +52,8 @@ namespace MyBPT.Classes
                     }
                 }
             }
-            
+            position.X= lerper.Lerp(position.X, targetposition.X);
+            position.Y = lerper.Lerp(position.Y, targetposition.Y);
             transform = Matrix.CreateTranslation(new Vector3(-position.X-view.Width / 2, -position.Y-view.Height / 2, 0))*Matrix.CreateScale(new Vector3(Zoom,Zoom,0))*Matrix.CreateTranslation(new Vector3(view.Width/2,view.Height/2,0));
 
         }

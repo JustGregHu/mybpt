@@ -36,7 +36,7 @@ namespace MyBPT.Classes {
         public GameWorld(Dictionary<string, Texture2D> texturecollection)
         {
             perlin = new Perlin();
-            worldsize = 64;
+            worldsize = 128;
             noisescale = 12f;
             this.texturecollection = texturecollection;
             mapdata = new Tile[worldsize, worldsize];
@@ -69,7 +69,6 @@ namespace MyBPT.Classes {
             double[,] noiseMap = GenerateNoiseMap(worldsize, worldsize, noisescale);
             GenerateRandomWorld();
             CreateNoiseMap(spriteBatch,graphicsDevice,noiseMap);
-
         }
 
         public void CreateNoiseMap(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice, double[,] noiseMap)
@@ -89,13 +88,9 @@ namespace MyBPT.Classes {
             this.texture.SetData(colourMap);
         }
 
-        public void DrawNoiseMap(Camera camera, SpriteFont font, SpriteBatch spriteBatch)
+        public void DrawNoiseMap(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, new Vector2(0, 0), Color.White);
-            for (int i = 0; i < 5; i++)
-            {
-                spriteBatch.DrawString(font, noiseMap[i,1].ToString(), new Vector2(50 + camera.Position.X, 150 + camera.Position.Y+i*30), Color.White);
-            }
         }
         public static float ToSingle(double value)
         {
@@ -146,7 +141,7 @@ namespace MyBPT.Classes {
                     }
 
                     mapdata[i, u] = new Tile(rndtile, rndtexture, new Vector2((i) * 100, (u) * 100), new Rectangle(new Point((i + 1) * 100, (u + 1) * 100), new Point(100, 100)));
-                mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)*100,(u)*100),new Rectangle(new Point((i+1)*100,(u+1)*100),new Point(100,100)));
+                    mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)*100,(u)*100),new Rectangle(new Point((i+1)*100,(u+1)*100),new Point(100,100)));
             }
         }
 
@@ -210,5 +205,6 @@ namespace MyBPT.Classes {
         }
 
         public Dictionary<string, Texture2D> TextureCollection { get => texturecollection; set => texturecollection = value; }
+        public int Worldsize { get => worldsize; set => worldsize = value; }
     }
 }

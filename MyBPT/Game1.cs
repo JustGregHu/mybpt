@@ -117,27 +117,31 @@ namespace MyBPT
                     }
                 }
             }
-            foreach (var tile in gameworld.MapData)
-            {
-                tile.Draw(spriteBatch);
+
+
+            try {
+                for (int i = (int)((camera.Position.X / 100)); i < (int)((camera.Position.X + 1100)/100); i++) {
+                    for (int p = (int)((camera.Position.Y / 100)); p < (int)((camera.Position.Y + 1500) / 100); p++) {
+                            gameworld.MapData[i, p].Draw(spriteBatch);
+                    }
+                }
+            } catch (Exception) {
+
+                
             }
 
-            
-
-            gameworld.DrawNoiseMap(camera,font,spriteBatch);
-
+            spriteBatch.DrawString(font, camera.Position.X+", "+camera.Position.Y, new Vector2(50 + camera.Position.X, 50 + camera.Position.Y), Color.White);
 
             //DEBUG
-            try
-            {
+            try {
                 if (tc.Count > 0)
                 {
                     if (gameworld.GetTileAtTouchPosition(tc[0]) != null)
                     {
                         TouchLocation tlcameraadjusted = new TouchLocation(tc[0].Id, tc[0].State, new Vector2(tc[0].Position.X + camera.Position.X, tc[0].Position.Y + camera.Position.Y));
-                        spriteBatch.DrawString(font, gameworld.GetTileAtTouchPosition(tlcameraadjusted).Position.ToString(), new Vector2(50 + camera.Position.X, 50 + camera.Position.Y), Color.White);
-                        spriteBatch.DrawString(font, gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).X + " " + gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).Y, new Vector2(50 + camera.Position.X, 100 + camera.Position.Y), Color.White);
-                        spriteBatch.DrawString(font, gameworld.IsGridAvailableAt(tlcameraadjusted.Position.ToPoint()).ToString(), new Vector2(50 + camera.Position.X, 150 + camera.Position.Y), Color.White);
+                        spriteBatch.DrawString(font, gameworld.GetTileAtTouchPosition(tlcameraadjusted).Position.ToString(), new Vector2(50 + camera.Position.X, 100 + camera.Position.Y), Color.White);
+                        spriteBatch.DrawString(font, gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).X + " " + gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).Y, new Vector2(50 + camera.Position.X, 150 + camera.Position.Y), Color.White);
+                        spriteBatch.DrawString(font, gameworld.IsGridAvailableAt(tlcameraadjusted.Position.ToPoint()).ToString(), new Vector2(50 + camera.Position.X, 200 + camera.Position.Y), Color.White);
 
                     }
 
