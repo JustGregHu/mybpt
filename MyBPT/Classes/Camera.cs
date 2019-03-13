@@ -48,7 +48,7 @@ namespace MyBPT.Classes
                     else if (GestureType.Pinch == gs.GestureType)
                     {
                         //ZOOM UNIMPLEMENTED
-                        zoomamount += gs.Delta.X/1000;
+                        this.Zoom += gs.Delta.X/1000;
                     }
                 }
             }
@@ -68,7 +68,6 @@ namespace MyBPT.Classes
             set
             {
                 zoomamount = value;
-                //this does not work .. ?
                 if (zoomamount < 0.5f) zoomamount = 0.5f;
                 if (zoomamount > 2f) zoomamount = 2f;
             }

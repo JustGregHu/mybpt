@@ -62,6 +62,8 @@
   <ItemGroup>
     <Compile Include="Activity1.cs" />
     <Compile Include="Classes\Building.cs" />
+    <Compile Include="Classes\Button.cs" />
+    <Compile Include="Classes\ButtonCollection.cs" />
     <Compile Include="Classes\Camera.cs" />
     <Compile Include="Classes\GameSession.cs" />
     <Compile Include="Classes\GameWorld.cs" />

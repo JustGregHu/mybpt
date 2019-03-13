@@ -22,6 +22,9 @@ namespace MyBPT
         SpriteFont font;
         Camera camera;
 
+        Button zoomin;
+        Button zoomout;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -59,11 +62,22 @@ namespace MyBPT
             texturecollection.AddTexture("grasstree", Content.Load<Texture2D>("grasstree"));
             texturecollection.AddTexture("stone", Content.Load<Texture2D>("stone"));
             texturecollection.AddTexture("snow", Content.Load<Texture2D>("snow"));
+            texturecollection.AddTexture("zoomin", Content.Load<Texture2D>("zoomin"));
+            texturecollection.AddTexture("zoomout", Content.Load<Texture2D>("zoomout"));
             gameworld = new GameWorld(texturecollection.GetTextures());
             gameworld.GenerateMap(spriteBatch, GraphicsDevice);
             font = Content.Load<SpriteFont>("regulartext");
+            zoomin = new Button(new Vector2(50,900),texturecollection.GetTextures()["zoomin"]);
+            zoomout = new Button(new Vector2(120,900), texturecollection.GetTextures()["zoomout"]);
         }
 
+
+        public void ZoomIn() {
+            camera.Zoom += 0.5f;
+        }
+        public void ZoomOut() {
+            camera.Zoom -= 0.5f;
+        }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -81,6 +95,16 @@ namespace MyBPT
         protected override void Update(GameTime gameTime)
         {
             tc = TouchPanel.GetState();
+            if (tc.Count>0) {
+                if (zoomin.IsTapped(tc[0])) {
+                    ZoomIn();
+                }
+                if (zoomout.IsTapped(tc[0])) {
+                    ZoomOut();
+                }
+            }
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
             camera.Update(gameTime,tc);
@@ -93,14 +117,11 @@ namespace MyBPT
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,null,null,null,null,camera.transform);
-
-            
+            spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,null,null,null,null,camera.transform);   
             foreach (var tile in gameworld.MapData)
             {
                 tile.Highlighted = false;
             }
-            
             if (tc.Count > 0)
             {
                
@@ -118,7 +139,6 @@ namespace MyBPT
                 }
             }
 
-
             try {
                 for (int i = (int)((camera.Position.X / 100)); i < (int)((camera.Position.X + 1100)/100); i++) {
                     for (int p = (int)((camera.Position.Y / 100)); p < (int)((camera.Position.Y + 1500) / 100); p++) {
@@ -130,9 +150,13 @@ namespace MyBPT
                 
             }
 
-            spriteBatch.DrawString(font, camera.Position.X+", "+camera.Position.Y, new Vector2(50 + camera.Position.X, 50 + camera.Position.Y), Color.White);
 
             //DEBUG
+
+            spriteBatch.DrawString(font, camera.Position.X + ", " + camera.Position.Y, new Vector2(50 + camera.Position.X, 50 + camera.Position.Y), Color.White);
+            zoomin.Draw(spriteBatch,camera);
+            zoomout.Draw(spriteBatch, camera);
+
             try {
                 if (tc.Count > 0)
                 {
