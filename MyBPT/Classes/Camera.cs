@@ -54,7 +54,7 @@ namespace MyBPT.Classes
             }
             position.X= lerper.Lerp(position.X, targetposition.X);
             position.Y = lerper.Lerp(position.Y, targetposition.Y);
-            transform = Matrix.CreateTranslation(new Vector3(-position.X-view.Width / 2, -position.Y-view.Height / 2, 0))*Matrix.CreateScale(new Vector3(Zoom,Zoom,0))*Matrix.CreateTranslation(new Vector3(view.Width/2,view.Height/2,0));
+            transform = Matrix.CreateTranslation(new Vector3(-position.X-view.Width / 2, -position.Y-view.Height / 2, 0))*Matrix.CreateScale(new Vector3(Zoom,Zoom,0))*Matrix.CreateTranslation(new Vector3(0,0,0));
 
         }
 
@@ -68,7 +68,7 @@ namespace MyBPT.Classes
             set
             {
                 zoomamount = value;
-                if (zoomamount < 0.5f) zoomamount = 0.5f;
+                if (zoomamount < 0.1f) zoomamount = 0.1f;
                 if (zoomamount > 2f) zoomamount = 2f;
             }
         }

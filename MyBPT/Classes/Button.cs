@@ -42,9 +42,9 @@ namespace MyBPT.Classes {
         }
         */
 
-        public void Draw(SpriteBatch spriteBatch, Camera camera) {
+        public void Draw(SpriteBatch spriteBatch) {
             if (visible) {
-                spriteBatch.Draw(texture, new Vector2(camera.Position.X+position.X, camera.Position.Y + position.Y), Color.White);
+                spriteBatch.Draw(texture, new Vector2(position.X, position.Y), Color.White);
             }
         }
 
