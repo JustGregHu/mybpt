@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,12 +15,14 @@ using Microsoft.Xna.Framework.Input.Touch;
 using MyBPT.Classes;
 using System;
 using System.Collections.Generic;
+using Android.Content.PM;
 
 namespace MyBPT.Classes {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class GameSession : Game {
+        int tilewidth = 100;
         FrameCounter frameCounter = new FrameCounter();
         float viewdistance;
         Perlin perlin = new Perlin();
@@ -45,6 +45,7 @@ namespace MyBPT.Classes {
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace MyBPT.Classes {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            viewdistance = 0f;
+            viewdistance = 1f;
             TouchPanel.EnabledGestures = GestureType.FreeDrag | GestureType.Pinch | GestureType.DragComplete;
             camera = new Camera(GraphicsDevice.Viewport);
             hud = new Camera(GraphicsDevice.Viewport);
@@ -80,14 +81,17 @@ namespace MyBPT.Classes {
             gameworld = new GameWorld(texturecollection.GetTextures());
             gameworld.GenerateMap(spriteBatch, GraphicsDevice);
             font = Content.Load<SpriteFont>("regulartext");
-            zoomin = new Button(new Vector2(50, 900), texturecollection.GetTextures()["zoomin"]);
-            zoomout = new Button(new Vector2(120, 900), texturecollection.GetTextures()["zoomout"]);
+
+            int zoomwidth = texturecollection.GetTextures()["zoomout"].Width;
+            int zoommargin = 50;
+            zoomin = new Button(new Vector2(zoomwidth+zoommargin, graphics.PreferredBackBufferHeight - zoomwidth - zoommargin), texturecollection.GetTextures()["zoomin"]);
+            zoomout = new Button(new Vector2((zoomwidth + zoommargin)*2, graphics.PreferredBackBufferHeight - zoomwidth-zoommargin), texturecollection.GetTextures()["zoomout"]);
         }
 
 
         public void ZoomIn() {
             camera.Zoom = 1f;
-            viewdistance = 0f;
+            viewdistance = 1f;
         }
         public void ZoomOut() {
             camera.Zoom = 0.5f;
@@ -124,6 +128,45 @@ namespace MyBPT.Classes {
             base.Update(gameTime);
         }
 
+        public int RemoveOffsetMin(int a) {
+            if (a<0) {
+                return 0;
+            }
+            return a;
+        }
+
+        public int RemoveOffsetMax(int a,int worldsize) {
+            if (a > worldsize) {
+                return worldsize;
+            }
+            return a;
+        }
+
+        public Vector2 FindCenter(int width,int height) {
+            return new Vector2(width/2,height/2);
+        }
+
+        public Point FitTouchPositionToZoomAmount(int width, int height, Vector2 tl,float zoomamount) {
+            Vector2 center =FindCenter(width, height);
+            Vector2 newtl = new Vector2();
+            if (tl.X < center.X) {
+                int difference = (int)((center.X - tl.X) * zoomamount);
+                newtl.X = center.X-difference;
+            } else {
+                int difference = (int)((tl.X-center.X) * zoomamount);
+                newtl.X = center.X + difference;
+            }
+            if (tl.Y < center.Y) {
+                int difference = (int)((center.Y - tl.Y) * zoomamount);
+                newtl.Y = center.Y - difference;
+            } else {
+                int difference = (int)((tl.Y-center.Y) * zoomamount);
+                newtl.Y = center.Y + difference;
+            }
+
+            return newtl.ToPoint();
+        }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -143,9 +186,10 @@ namespace MyBPT.Classes {
                 tile.Highlighted = false;
             }
             if (tc.Count > 0) {
-
-                if (gameworld.GetTileAtTouchPosition(tc[0]) != null) {
-                    TouchLocation tlcameraadjusted = new TouchLocation(tc[0].Id, tc[0].State, new Vector2(tc[0].Position.X + camera.Position.X, tc[0].Position.Y + camera.Position.Y));
+                TouchLocation tlraw = tc[0];
+                Point tlzoomadjusted= FitTouchPositionToZoomAmount(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, tlraw.Position, viewdistance);
+                if (gameworld.GetTileAtTouchPosition(tlraw) != null) {
+                    TouchLocation tlcameraadjusted = new TouchLocation(tlraw.Id,tlraw.State, new Vector2((tlzoomadjusted.X + camera.Position.X), (tlzoomadjusted.Y + camera.Position.Y)));
                     try {
                         gameworld.GetTileAtTouchPosition(tlcameraadjusted).Highlighted = true;
                     } catch (System.Exception) {
@@ -157,8 +201,9 @@ namespace MyBPT.Classes {
 
             //REWRITE THIS PART WITH RELATIVE VIEWPORT SIZES!!!!!!!!!! viewdistance figure out
             try {
-                for (int i = (int)((camera.Position.X / 100)); i < (int)((((camera.Position.X + 1100)+(1100*viewdistance)) / 100) ) ; i++) {
-                    for (int p = (int)((camera.Position.Y / 100)); p < (int)((((camera.Position.Y + 1500)+(1500*viewdistance)) / 100)); p++) {
+                for (int i = RemoveOffsetMin((int)(((camera.Position.X - (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth))); i < RemoveOffsetMax((int)((((camera.Position.X + graphics.PreferredBackBufferWidth + tilewidth) + (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth) ),gameworld.Worldsize) ; i++) {
+
+                    for (int p = RemoveOffsetMin((int)(((camera.Position.Y - (graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth))); p < RemoveOffsetMax((int)((((camera.Position.Y + graphics.PreferredBackBufferHeight + tilewidth) +(graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth)), gameworld.Worldsize); p++) {
                         gameworld.MapData[i, p].Draw(spriteBatch);
                     }
                 }
@@ -239,6 +284,8 @@ namespace MyBPT.Classes {
             var fps = string.Format("FPS: {0}", frameCounter.AverageFramesPerSecond);
 
             spriteBatchHud.DrawString(font, fps, new Vector2(50,200), Color.White);
+            spriteBatchHud.DrawString(font, "Width: " + graphics.PreferredBackBufferWidth.ToString(), new Vector2(50, 250), Color.White);
+            spriteBatchHud.DrawString(font, "Height: " + graphics.PreferredBackBufferHeight.ToString(), new Vector2(50, 300), Color.White);
 
             spriteBatchHud.DrawString(font, camera.Position.X + ", " + camera.Position.Y, new Vector2(50, 50), Color.White);
 
@@ -250,6 +297,7 @@ namespace MyBPT.Classes {
                         spriteBatchHud.DrawString(font, gameworld.GetTileAtTouchPosition(tlcameraadjusted).Position.ToString(), new Vector2(50, 100 ), Color.White);
                         spriteBatchHud.DrawString(font, gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).X + " " + gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).Y, new Vector2(50, 150 ), Color.White);
                         spriteBatchHud.DrawString(font, gameworld.IsGridAvailableAt(tlcameraadjusted.Position.ToPoint()).ToString(), new Vector2(50, 20), Color.White);
+
 
                     }
 
