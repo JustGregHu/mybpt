@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 
 namespace MyBPT.Classes {
     class GameWorld {
+        IsoCalculator isoCalculator = new IsoCalculator();
         Point tileSize = new Point(100,65);
         Perlin perlin;
         int worldsize;
@@ -32,6 +33,7 @@ namespace MyBPT.Classes {
 
 
         //GAME WORLD
+        
 
         public GameWorld(Dictionary<string, Texture2D> texturecollection)
         {
@@ -125,8 +127,10 @@ namespace MyBPT.Classes {
                         rndtexture = texturecollection["water"];
                     }
 
+
+
                     mapdata[i, u] = new Tile(rndtile, rndtexture, new Vector2((i) * tileSize.X, (u) * tileSize.Y), new Rectangle(new Point((i + 1) * tileSize.X, (u + 1) * tileSize.Y), new Point(tileSize.X, tileSize.Y)));
-                    mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)* tileSize.X, (u)* tileSize.Y),new Rectangle(new Point((i+1)* tileSize.X, (u+1)* tileSize.Y),new Point(tileSize.X, tileSize.Y)));
+                  
             }
         }
 

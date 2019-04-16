@@ -40,7 +40,16 @@ namespace MyBPT.Classes {
             }
             else
             {
+
                 spriteBatch.Draw(texture, position, Color.White);
+            }
+        }
+
+        public void CheckIfHighlighted(SpriteBatch spriteBatch)
+        {
+            if (highlighted)
+            {
+                spriteBatch.Draw(new Texture2D(spriteBatch.GraphicsDevice, 100, 100), position, Color.White);
             }
         }
 

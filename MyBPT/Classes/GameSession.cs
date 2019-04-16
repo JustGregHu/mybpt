@@ -18,10 +18,13 @@ using System.Collections.Generic;
 using Android.Content.PM;
 
 namespace MyBPT.Classes {
+
+    
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class GameSession : Game {
+        IsoCalculator isoCalculator = new IsoCalculator();
         int tilewidth = 100;
         FrameCounter frameCounter = new FrameCounter();
         float viewdistance;
@@ -177,7 +180,7 @@ namespace MyBPT.Classes {
 
 
 
-
+            /*
 
             foreach (var tile in gameworld.MapData) {
                 tile.Highlighted = false;
@@ -194,14 +197,59 @@ namespace MyBPT.Classes {
                     }
                 }
             }
+            */
 
 
+
+
+            List<Rectangle> areas = new List<Rectangle>();
+            Texture2D _texture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            _texture.SetData(new Color[] { Color.DarkSlateGray });
+
+
+
+            int draw_x;
+            int draw_y;
+            for (int i = RemoveOffsetMin((int)(((camera.Position.X - (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth))); i < RemoveOffsetMax((int)((((camera.Position.X + graphics.PreferredBackBufferWidth + tilewidth) + (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth)), gameworld.Worldsize); i++)
+            {
+                for (int p = RemoveOffsetMin((int)(((camera.Position.Y - (graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth))); p < RemoveOffsetMax((int)((((camera.Position.Y + graphics.PreferredBackBufferHeight + tilewidth) + (graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth)), gameworld.Worldsize); p++)
+                {
+
+                    draw_x = p * 50;
+                    draw_y = i * 50;
+                    Point temppoint = isoCalculator.TwoDToIso(new Point(draw_x, draw_y));
+
+                    Rectangle area = new Rectangle(temppoint, (new Point(100, 65)));
+                    spriteBatch.Draw(_texture, area, Color.White);
+                    areas.Add(area);
+
+                    spriteBatch.Draw(gameworld.MapData[i,p].Texture, new Vector2(temppoint.X, temppoint.Y), Color.White);
+                    gameworld.MapData[i, p].CheckIfHighlighted(spriteBatch);
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                if (tc.Count > 0)
+                {
+                    spriteBatch.DrawString(font, (new Point((int)tc[0].Position.X, (int)tc[0].Position.Y)).X + "," + isoCalculator.IsoTo2D(new Point((int)tc[0].Position.X, (int)tc[0].Position.Y)).Y, new Vector2(100, 150), Color.White);
+                    spriteBatch.DrawString(font, areas[0].X + "," + areas[0].Y, new Vector2(100, 250), Color.White);
+
+                    if (areas[i].Contains((new Point((int)(tc[0].Position.X+ camera.Position.X), (int)(tc[0].Position.Y+ camera.Position.Y)))))
+                    {
+                        spriteBatch.DrawString(font, "CORRECT touch detected!", new Vector2(100, 350), Color.White);
+                    }
+                }
+            }
+
+
+            /*
             //REWRITE THIS PART WITH RELATIVE VIEWPORT SIZES!!!!!!!!!! viewdistance figure out
             try {
                 for (int i = RemoveOffsetMin((int)(((camera.Position.X - (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth))); i < RemoveOffsetMax((int)((((camera.Position.X + graphics.PreferredBackBufferWidth + tilewidth) + (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth) ),gameworld.Worldsize) ; i++) {
 
                     for (int p = RemoveOffsetMin((int)(((camera.Position.Y - (graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth))); p < RemoveOffsetMax((int)((((camera.Position.Y + graphics.PreferredBackBufferHeight + tilewidth) +(graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth)), gameworld.Worldsize); p++) {
-                        gameworld.MapData[i, p].Draw(spriteBatch);
+                        //gameworld.MapData[i, p].Draw(spriteBatch);
+                        
                     }
                 }
             } catch (Exception) {
@@ -209,7 +257,7 @@ namespace MyBPT.Classes {
 
             }
 
-
+            */
             //DEBUG
 
 

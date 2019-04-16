@@ -74,6 +74,7 @@
     <Compile Include="Classes\Perlin.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Tile.cs" />
+    <Compile Include="Classes\IsoCalculator.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
