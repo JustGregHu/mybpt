@@ -71,11 +71,8 @@ namespace MyBPT.Classes {
             spriteBatchHud = new SpriteBatch(GraphicsDevice);
             texturecollection = new GameTextures();
             texturecollection.AddTexture("water", Content.Load<Texture2D>("water"));
-            texturecollection.AddTexture("sand", Content.Load<Texture2D>("sand"));
+            texturecollection.AddTexture("dirt", Content.Load<Texture2D>("dirtHigh"));
             texturecollection.AddTexture("grass", Content.Load<Texture2D>("grass"));
-            texturecollection.AddTexture("grasstree", Content.Load<Texture2D>("grasstree"));
-            texturecollection.AddTexture("stone", Content.Load<Texture2D>("stone"));
-            texturecollection.AddTexture("snow", Content.Load<Texture2D>("snow"));
             texturecollection.AddTexture("zoomin", Content.Load<Texture2D>("zoomin"));
             texturecollection.AddTexture("zoomout", Content.Load<Texture2D>("zoomout"));
             gameworld = new GameWorld(texturecollection.GetTextures());

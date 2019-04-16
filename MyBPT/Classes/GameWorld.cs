@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace MyBPT.Classes {
     class GameWorld {
-        
+        Point tileSize = new Point(100,65);
         Perlin perlin;
         int worldsize;
         double noisescale;
@@ -111,37 +111,22 @@ namespace MyBPT.Classes {
                     {
                         rndtexture = texturecollection["water"];
                     }
-                    else if (rndtile <100)
+                    else if (rndtile < 200)
                     {
-                        rndtexture = texturecollection["sand"];
-                    }
-                    else if (rndtile < 160)
-                    {
-                        if (newrnd==5)
-                        {
-                            rndtexture = texturecollection["grasstree"];
-                        }
-                        else
-                        {
-                            rndtexture = texturecollection["grass"];
-                        }
+                      rndtexture = texturecollection["grass"];
                         
                     }
-                    else if (rndtile < 190)
+                    else if (rndtile > 200)
                     {
-                        rndtexture = texturecollection["stone"];
-                    }
-                    else if (rndtile < 256)
-                    {
-                        rndtexture = texturecollection["snow"];
+                        rndtexture = texturecollection["dirt"];
                     }
                     else
                     {
                         rndtexture = texturecollection["water"];
                     }
 
-                    mapdata[i, u] = new Tile(rndtile, rndtexture, new Vector2((i) * 100, (u) * 100), new Rectangle(new Point((i + 1) * 100, (u + 1) * 100), new Point(100, 100)));
-                    mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)*100,(u)*100),new Rectangle(new Point((i+1)*100,(u+1)*100),new Point(100,100)));
+                    mapdata[i, u] = new Tile(rndtile, rndtexture, new Vector2((i) * tileSize.X, (u) * tileSize.Y), new Rectangle(new Point((i + 1) * tileSize.X, (u + 1) * tileSize.Y), new Point(tileSize.X, tileSize.Y)));
+                    mapdata[i, u] = new Tile(rndtile,rndtexture,new Vector2((i)* tileSize.X, (u)* tileSize.Y),new Rectangle(new Point((i+1)* tileSize.X, (u+1)* tileSize.Y),new Point(tileSize.X, tileSize.Y)));
             }
         }
 
@@ -151,7 +136,7 @@ namespace MyBPT.Classes {
 
         public Vector2 GetTilePositionAtGridLocation(Point gridlocation)
         {
-            return new Vector2(gridlocation.X*100,gridlocation.Y*100);
+            return new Vector2(gridlocation.X* tileSize.X, gridlocation.Y* tileSize.Y);
         }
 
 
@@ -159,7 +144,7 @@ namespace MyBPT.Classes {
         {
             try
             {
-                return mapdata[(int)(tl.Position.X / 100), (int)(tl.Position.Y / 100)];
+                return mapdata[(int)(tl.Position.X / tileSize.X), (int)(tl.Position.Y / tileSize.Y)];
             }
             catch (Exception)
             {
@@ -172,7 +157,7 @@ namespace MyBPT.Classes {
 
         public Point GetGridPositionAtTouchPosition(TouchLocation tl)
         {
-            return new Point((int)(tl.Position.X) / 100, (int)(tl.Position.Y) / 100);
+            return new Point((int)(tl.Position.X) / tileSize.X, (int)(tl.Position.Y) / tileSize.Y);
         }
 
 
@@ -181,7 +166,7 @@ namespace MyBPT.Classes {
 
         public bool IsGridAvailableAt(Point gridlocation)
         {
-            if (mapdata[(int)(gridlocation.X / 100), (int)(gridlocation.Y / 100)].TextureID==0)
+            if (mapdata[(int)(gridlocation.X / tileSize.X), (int)(gridlocation.Y / tileSize.Y)].TextureID==0)
             {
                 return true;
             }
