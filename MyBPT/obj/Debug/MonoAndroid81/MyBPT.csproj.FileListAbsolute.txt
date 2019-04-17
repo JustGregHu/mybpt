@@ -21,7 +21,6 @@ C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\Mono.
 C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\Mono.Security.pdb
 C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\mscorlib.pdb
 C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\OpenTK-1.0.pdb
-C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\System.ComponentModel.Composition.pdb
 C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\System.Core.pdb
 C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\System.Net.Http.pdb
 C:\Users\Suli\Source\Repos\JustGregHu\mybpt\MyBPT\bin\Android\AnyCPU\Debug\System.pdb

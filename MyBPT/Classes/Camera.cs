@@ -49,6 +49,7 @@ namespace MyBPT.Classes
                     {
                         //ZOOM UNIMPLEMENTED
                         this.Zoom += gs.Delta.X/1000;
+                        this.Zoom += gs.Delta.Y/ 1000;
                     }
                 }
             }
@@ -57,6 +58,8 @@ namespace MyBPT.Classes
             transform = Matrix.CreateTranslation(new Vector3(-position.X-view.Width / 2, -position.Y-view.Height / 2, 0))*Matrix.CreateScale(new Vector3(Zoom,Zoom,0))*Matrix.CreateTranslation(new Vector3(view.Width / 2, view.Height / 2, 0));
 
         }
+
+        public Vector2 TargetPosition { get => targetposition; set => targetposition = value; }
 
         public Vector2 Position { get => position; set => position = value; }
         public float Zoom

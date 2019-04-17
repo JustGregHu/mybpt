@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 namespace MyBPT.Classes {
     class GameWorld {
         IsoCalculator isoCalculator = new IsoCalculator();
-        Point tileSize = new Point(100,65);
+        Point tileSize = new Point(200, 100);
         Perlin perlin;
         int worldsize;
         double noisescale;
@@ -30,10 +30,34 @@ namespace MyBPT.Classes {
         Texture2D texture;
         Color[] colourMap;
         double[,] noiseMap;
+        Point currentTilePosition = new Point(1,1);
+        Tile highlightTile;
 
+        public void UpdateCurrentTile(Point newposition)
+        {
+            // if worldsize smaller bigger 0, etc. ganme needs a jump to highlight button!
+            try
+            {
+                highlightTile.Position = MapData[newposition.X, newposition.Y].Position;
+                highlightTile.Area = MapData[newposition.X, newposition.Y].Area;
+                currentTilePosition = newposition;
+            }
+            catch(Exception e){}
+
+        }
+        public void HighlightCurrentTile(SpriteBatch spriteBatch)
+        {
+            highlightTile.Draw(spriteBatch);      
+        }
+        public void InitiateHighlightTile()
+        {
+            highlightTile = new Tile(0, texturecollection["highlight"], mapdata[currentTilePosition.X, currentTilePosition.Y].Position, mapdata[currentTilePosition.X, currentTilePosition.Y].Area);
+        }
+
+        public Point CurrentTilePosition{get{return currentTilePosition;}set{currentTilePosition = value;}}
 
         //GAME WORLD
-        
+
 
         public GameWorld(Dictionary<string, Texture2D> texturecollection)
         {
@@ -41,8 +65,7 @@ namespace MyBPT.Classes {
             worldsize = 128;
             noisescale = 12f;
             this.texturecollection = texturecollection;
-            mapdata = new Tile[worldsize, worldsize];
-        }
+            mapdata = new Tile[worldsize, worldsize];        }
 
         public double[,] GenerateNoiseMap(int mapWidth, int mapHeight, double scale)
         {
@@ -107,84 +130,45 @@ namespace MyBPT.Classes {
             for (int u = 0; u < worldsize; u++)
             {
                     int newrnd = rnd.Next(0, 6);
-                    int rndtile = (int)Math.Round(noiseMap[i, u] * (255));
+                    int height = (int)Math.Round(noiseMap[i, u] * (255));
                     Texture2D rndtexture;
-                    if (rndtile < 80)
+                    if (height < 90)
                     {
-                        rndtexture = texturecollection["water"];
+                        rndtexture = texturecollection["stone"];
                     }
-                    else if (rndtile < 200)
+                    else if (height < 190)
                     {
                       rndtexture = texturecollection["grass"];
                         
                     }
-                    else if (rndtile > 200)
+                    else if (height > 190)
                     {
-                        rndtexture = texturecollection["dirt"];
+                        rndtexture = texturecollection["snow"];
                     }
                     else
                     {
-                        rndtexture = texturecollection["water"];
+                        rndtexture = texturecollection["grass"];
                     }
 
-
-
-                    mapdata[i, u] = new Tile(rndtile, rndtexture, new Vector2((i) * tileSize.X, (u) * tileSize.Y), new Rectangle(new Point((i + 1) * tileSize.X, (u + 1) * tileSize.Y), new Point(tileSize.X, tileSize.Y)));
-                  
+                    int draw_x = (int)(u * 100);
+                    int draw_y = (int)(i * 100);
+                    Point temppoint = isoCalculator.TwoDToIso(new Point(draw_x, draw_y));
+                    mapdata[i, u] = new Tile(height, rndtexture, new Vector2(temppoint.X, temppoint.Y), new Rectangle(temppoint, (new Point(100, 65)))); 
             }
         }
-
     } 
 
-        //TILE-GRID POSITIONS
-
-        public Vector2 GetTilePositionAtGridLocation(Point gridlocation)
-        {
-            return new Vector2(gridlocation.X* tileSize.X, gridlocation.Y* tileSize.Y);
-        }
-
-
-        public Tile GetTileAtTouchPosition(TouchLocation tl)
-        {
-            try
-            {
-                return mapdata[(int)(tl.Position.X / tileSize.X), (int)(tl.Position.Y / tileSize.Y)];
-            }
-            catch (Exception)
-            {
-                return null;
-                throw;
-            }
-
-        }
-
-
-        public Point GetGridPositionAtTouchPosition(TouchLocation tl)
-        {
-            return new Point((int)(tl.Position.X) / tileSize.X, (int)(tl.Position.Y) / tileSize.Y);
-        }
-
-
         //GRID AVAILABILITY, SNAPPING
-
-
         public bool IsGridAvailableAt(Point gridlocation)
         {
-            if (mapdata[(int)(gridlocation.X / tileSize.X), (int)(gridlocation.Y / tileSize.Y)].TextureID==0)
+            if (mapdata[(int)(gridlocation.X / tileSize.X), (int)(gridlocation.Y / tileSize.Y)].Height==0)
             {
                 return true;
             }
             return false;
         }
 
-        public void SnapToGridIfAvailable()
-        {
-            //NOT IMPLEMENTED YET
-        }
-
-
         //ACCESSORS
-
         public Tile[,] MapData
         {
             get

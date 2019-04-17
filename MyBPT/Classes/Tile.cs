@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace MyBPT.Classes {
     class Tile {
-        int textureid;
+        int height;
         Texture2D texture;
         Vector2 position;
         Vector2 tempposition;
@@ -23,12 +23,12 @@ namespace MyBPT.Classes {
         bool moving;
         bool highlighted;
 
-        public Tile(int textureid, Texture2D texture, Vector2 position, Rectangle area) {
-            this.textureid = textureid;
+        public Tile(int height, Texture2D texture, Vector2 position, Rectangle area) {
+            this.height = height;
             this.texture = texture;
             this.position = position;
             this.tempposition = position;
-            this.area = area;
+            this.Area = area;
             this.moving = false;
             highlighted = false;
         }
@@ -40,44 +40,12 @@ namespace MyBPT.Classes {
             }
             else
             {
-
                 spriteBatch.Draw(texture, position, Color.White);
             }
         }
 
-        public void CheckIfHighlighted(SpriteBatch spriteBatch)
-        {
-            if (highlighted)
-            {
-                spriteBatch.Draw(new Texture2D(spriteBatch.GraphicsDevice, 100, 100), position, Color.White);
-            }
-        }
-
-        public void CheckIfReleased(TouchLocation tl) //because locationstate.released seems inconsistent
-        {
-            if (tl.State != TouchLocationState.Moved)
-            {
-                this.moving = false;
-
-            }
-        }
 
         //ACCESSORS
-
-
-        /*public void MoveIfTouchIsHeld(GameWorld gameworld, SpriteBatch spriteBatch, TouchLocation tl) {
-            area.Location = new Point((int)tempposition.X, (int)tempposition.Y);
-            if (tl.State == TouchLocationState.Pressed && this.area.Contains(tl.Position)) {
-                this.moving = true;
-
-            }
-            if (tl.State == TouchLocationState.Moved && moving) {
-                this.tempposition = new Vector2(tl.Position.X - texture.Width/2, tl.Position.Y - texture.Height/2);
-            }
-            spriteBatch.Draw(texture, tempposition, Color.White);
-            CheckIfReleased(tl);
-        }
-        */
 
         public Vector2 Position {
             get {
@@ -97,11 +65,11 @@ namespace MyBPT.Classes {
             }
         }
 
-        public int TextureID
+        public int Height
         {
             get
             {
-                return textureid;
+                return height;
             }
         }
 
@@ -118,5 +86,6 @@ namespace MyBPT.Classes {
         }
 
         public Texture2D Texture { get => texture; set => texture = value; }
+        public Rectangle Area { get => area; set => area = value; }
     }
 }

@@ -1,0 +1,220 @@
+﻿shelved code..
+
+GAMESESSION
+
+
+
+       
+        public Point FitTouchPositionToZoomAmount(int width, int height, Vector2 tl,float zoomamount) {
+            Vector2 center =FindCenter(width, height);
+            Vector2 newtl = new Vector2();
+            if (tl.X < center.X) {
+                int difference = (int)((center.X - tl.X) * zoomamount);
+                newtl.X = center.X-difference;
+            } else {
+                int difference = (int)((tl.X-center.X) * zoomamount);
+                newtl.X = center.X + difference;
+            }
+            if (tl.Y < center.Y) {
+                int difference = (int)((center.Y - tl.Y) * zoomamount);
+                newtl.Y = center.Y - difference;
+            } else {
+                int difference = (int)((tl.Y-center.Y) * zoomamount);
+                newtl.Y = center.Y + difference;
+            }
+
+            return newtl.ToPoint();
+        }
+
+
+
+
+
+
+
+
+
+
+		
+            foreach (var tile in gameworld.MapData) {
+                tile.Highlighted = false;
+            }
+
+            
+
+
+
+
+		        if (tc.Count > 0) {
+                TouchLocation tlraw = tc[0];
+                Point tlzoomadjusted= FitTouchPositionToZoomAmount(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, tlraw.Position, viewdistance);
+                if (gameworld.GetTileAtTouchPosition(tlraw) != null) {
+                    TouchLocation tlcameraadjusted = new TouchLocation(tlraw.Id,tlraw.State, new Vector2((tlzoomadjusted.X + camera.Position.X), (tlzoomadjusted.Y + camera.Position.Y)));
+                    try {
+                        gameworld.GetTileAtTouchPosition(tlcameraadjusted).Highlighted = true;
+                    } catch (System.Exception) {
+
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+            int draw_x;
+            int draw_y;
+            for (int i = RemoveOffsetMin((int)(((camera.Position.X - (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth))); i < RemoveOffsetMax((int)((((camera.Position.X + graphics.PreferredBackBufferWidth + tilewidth) + (graphics.PreferredBackBufferWidth * viewdistance)) / tilewidth)), gameworld.Worldsize); i++)
+            {
+                for (int p = RemoveOffsetMin((int)(((camera.Position.Y - (graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth))); p < RemoveOffsetMax((int)((((camera.Position.Y + graphics.PreferredBackBufferHeight + tilewidth) + (graphics.PreferredBackBufferHeight * viewdistance)) / tilewidth)), gameworld.Worldsize); p++)
+                {
+
+                    draw_x = p * 50;
+                    draw_y = i * 50;
+                    Point temppoint = isoCalculator.TwoDToIso(new Point(draw_x, draw_y));
+
+                    Rectangle area = new Rectangle(temppoint, (new Point(100, 65)));
+                    spriteBatch.Draw(_texture, area, Color.White);
+                    areas.Add(area);
+
+                    spriteBatch.Draw(gameworld.MapData[i,p].Texture, new Vector2(temppoint.X, temppoint.Y), Color.White);
+                    gameworld.MapData[i, p].CheckIfHighlighted(spriteBatch);
+                }
+
+            }
+
+            for (int i = 0; i < areas.Count; i++)
+            {
+                if (tc.Count > 0)
+                {
+                    spriteBatch.DrawString(font, (new Point((int)tc[0].Position.X, (int)tc[0].Position.Y)).X + "," + isoCalculator.IsoTo2D(new Point((int)tc[0].Position.X, (int)tc[0].Position.Y)).Y, new Vector2(100, 150), Color.White);
+                    spriteBatch.DrawString(font, areas[0].X + "," + areas[0].Y, new Vector2(100, 250), Color.White);
+
+                    if (areas[i].Contains((new Point((int)(tc[0].Position.X+ camera.Position.X), (int)(tc[0].Position.Y+ camera.Position.Y)))))
+                    {
+                        spriteBatch.DrawString(font, "CORRECT touch detected!", new Vector2(100, 350), Color.White);
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+			 List<Rectangle> areas = new List<Rectangle>();
+            Texture2D _texture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            _texture.SetData(new Color[] { Color.DarkSlateGray });
+
+
+			//ciklusban..
+
+			            Rectangle area = new Rectangle(gameworld.MapData[i, p].Area.Location, (new Point(10, 10)));
+                        spriteBatch.Draw(_texture, area, Color.White);
+
+
+
+
+
+
+
+
+
+						
+            try {
+                if (tc.Count > 0) {
+                    if (gameworld.GetTileAtTouchPosition(tc[0]) != null) {
+                        TouchLocation tlcameraadjusted = new TouchLocation(tc[0].Id, tc[0].State, new Vector2(tc[0].Position.X, tc[0].Position.Y));
+                        spriteBatchHud.DrawString(font, gameworld.GetTileAtTouchPosition(tlcameraadjusted).Position.ToString(), new Vector2(50, 100 ), Color.White);
+                        spriteBatchHud.DrawString(font, gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).X + " " + gameworld.GetGridPositionAtTouchPosition(tlcameraadjusted).Y, new Vector2(50, 150 ), Color.White);
+                        spriteBatchHud.DrawString(font, gameworld.IsGridAvailableAt(tlcameraadjusted.Position.ToPoint()).ToString(), new Vector2(50, 20), Color.White);
+
+
+                    }
+
+                }
+            } catch (System.Exception) {
+
+            }
+
+
+
+
+
+			GAMEWORLD
+
+
+
+
+
+
+
+
+		public Vector2 GetTilePositionAtGridLocation(Point gridlocation)
+        {
+            return new Vector2(gridlocation.X* tileSize.X, gridlocation.Y* tileSize.Y);
+        }
+
+
+        public Tile GetTileAtTouchPosition(TouchLocation tl)
+        {
+            tl = new TouchLocation(tl.Id, tl.State, isoCalculator.TwoDToIso(new Vector2(tl.Position.X,tl.Position.Y)));
+            try
+            {
+                return mapdata[(int)(tl.Position.X / tileSize.X), (int)(tl.Position.Y / tileSize.Y)];
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+
+
+        public Point GetGridPositionAtTouchPosition(TouchLocation tl)
+        {
+            return new Point((int)(tl.Position.X) / tileSize.X, (int)(tl.Position.Y) / tileSize.Y);
+        }
+
+
+
+
+
+
+		TILE
+
+
+
+
+
+
+
+
+
+		public void CheckIfHighlighted(SpriteBatch spriteBatch)
+        {
+            if (highlighted)
+            {
+                spriteBatch.Draw(new Texture2D(spriteBatch.GraphicsDevice, 100, 100), position, Color.White);
+            }
+        }
+
+        public void CheckIfReleased(TouchLocation tl) //because locationstate.released seems inconsistent
+        {
+            if (tl.State != TouchLocationState.Moved)
+            {
+                this.moving = false;
+
+            }
+        }

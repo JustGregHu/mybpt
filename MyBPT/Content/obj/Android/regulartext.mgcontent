@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/mybpt/MyBPT/Content/regulartext.spritefont</SourceFile>
-  <SourceTime>2019-03-01T22:24:56.1509763+01:00</SourceTime>
-  <DestFile>C:/mybpt/MyBPT/Content/bin/Android/regulartext.xnb</DestFile>
-  <DestTime>2019-04-16T20:07:58.2520341+02:00</DestTime>
+  <SourceFile>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/regulartext.spritefont</SourceFile>
+  <SourceTime>2019-04-10T07:51:25.2844589+02:00</SourceTime>
+  <DestFile>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/bin/Android/regulartext.xnb</DestFile>
+  <DestTime>2019-04-17T13:42:07.0957196+02:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
-  <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
+  <ImporterTime>2017-03-01T16:05:36+01:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
-  <ProcessorTime>2018-12-08T17:35:54+01:00</ProcessorTime>
+  <ProcessorTime>2017-03-01T16:05:36+01:00</ProcessorTime>
   <Parameters>
     <Key>PremultiplyAlpha</Key>
     <Value>True</Value>

@@ -4,19 +4,16 @@
   <Platform>Android</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/mybpt/MyBPT/Content/dirtHigh.png</File>
-    <File>C:/mybpt/MyBPT/Content/grass.png</File>
-    <File>C:/mybpt/MyBPT/Content/regulartext.spritefont</File>
-    <File>C:/mybpt/MyBPT/Content/water.png</File>
-    <File>C:/mybpt/MyBPT/Content/zoomin.png</File>
-    <File>C:/mybpt/MyBPT/Content/zoomout.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/regulartext.spritefont</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/zoomin.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/zoomout.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/grass.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/snow.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/stone.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/highlight.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/arrow_e.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/arrow_n.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/arrow_s.png</File>
+    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/arrow_w.png</File>
   </SourceFiles>
-  <DestFiles>
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-  </DestFiles>
 </SourceFileCollection>

@@ -19,7 +19,6 @@ namespace MyBPT.Classes {
         Rectangle area;
         bool highlighted;
         bool visible;
-        //Action activateevent;
         Texture2D texture;
         SpriteFont text;
        
@@ -31,21 +30,26 @@ namespace MyBPT.Classes {
             this.texture = texture;
 
             this.position = position;
-            //this.activateevent = activate;
             area = new Rectangle(position.ToPoint(),new Point(texture.Width, texture.Height));
 
         }
-
-        /*
-        public void Activate() {
-            activateevent();
-        }
-        */
 
         public void Draw(SpriteBatch spriteBatch) {
             if (visible) {
                 spriteBatch.Draw(texture, new Vector2(position.X, position.Y), Color.White);
             }
+        }
+
+        public void DrawWithRotation(SpriteBatch spriteBatch, float angle)
+        {
+            if (visible)
+            {
+                Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
+                Rectangle destinationRectangle = new Rectangle((int)position.X,(int)position.Y, texture.Width, texture.Height);
+                destinationRectangle.X += destinationRectangle.Width / 2;
+                destinationRectangle.Y += destinationRectangle.Height / 2;
+                spriteBatch.Draw(texture, destinationRectangle, null, Color.White, angle, origin, SpriteEffects.None, 0);
+            }      
         }
 
         public bool IsTapped(TouchLocation tl) {
