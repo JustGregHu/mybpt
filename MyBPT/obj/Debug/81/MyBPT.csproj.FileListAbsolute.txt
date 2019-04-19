@@ -118,5 +118,3 @@ C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.ServiceModel.Internals.pdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.Xml.Linq.pdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.Xml.pdb
 C:\mybpt\MyBPT\obj\Debug\81\MyBPT.csprojAssemblyReference.cache
-C:\mybpt\MyBPT\bin\Android\AnyCPU\Debug\MyBPT.dll
-C:\mybpt\MyBPT\obj\Debug\81\linksrc\MyBPT.dll.mdb

@@ -46,12 +46,13 @@ namespace MyBPT.Classes
         Button dpad_right;
         BuyMenu buymenu;
         Point preferredscreensize = new Point(1280, 720);
-        List<Building> buildings = new List<Building>();
-        Player player = new Player("testperson");
+        List<Station> stations = new List<Station>();
+        List<Station> termini = new List<Station>();
+        Player player = new Player("testperson",1000,1);
         bool movingbuilding = false;
         bool buyingbuilding = false;
 
-        Building testbuilding;
+        Station testbuilding;
 
 #if DEBUG
 
@@ -92,6 +93,7 @@ namespace MyBPT.Classes
             texturecollection.AddTexture("grass", Content.Load<Texture2D>("grass"));
 
             texturecollection.AddTexture("station", Content.Load<Texture2D>("station"));
+            texturecollection.AddTexture("terminus", Content.Load<Texture2D>("terminus"));
 
             texturecollection.AddTexture("highlight", Content.Load<Texture2D>("highlight"));
             texturecollection.AddTexture("highlight_lightblue", Content.Load<Texture2D>("highlight_lightblue"));
@@ -102,6 +104,9 @@ namespace MyBPT.Classes
             texturecollection.AddTexture("buymenu_close", Content.Load<Texture2D>("buymenu_close"));
             texturecollection.AddTexture("buymenu_station", Content.Load<Texture2D>("buymenu_station"));
             texturecollection.AddTexture("buymenu_terminus", Content.Load<Texture2D>("buymenu_terminus"));
+            texturecollection.AddTexture("buildingmenu_move", Content.Load<Texture2D>("buildingmenu_move"));
+            texturecollection.AddTexture("buildingmenu_sell", Content.Load<Texture2D>("buildingmenu_sell"));
+            texturecollection.AddTexture("buildingmenu_upgrade", Content.Load<Texture2D>("buildingmenu_upgrade"));
             texturecollection.AddTexture("arrow_n", Content.Load<Texture2D>("arrow_n"));
             texturecollection.AddTexture("arrow_e", Content.Load<Texture2D>("arrow_e"));
             texturecollection.AddTexture("arrow_w", Content.Load<Texture2D>("arrow_w"));
@@ -126,7 +131,9 @@ namespace MyBPT.Classes
             dpad_up = new Button(new Vector2( 120 + hudmargin, preferredscreensize.Y - 220 - hudmargin), texturecollection.GetTextures()["arrow_n"]);
             dpad_down = new Button(new Vector2(hudmargin-20, preferredscreensize.Y -70 -hudmargin), texturecollection.GetTextures()["arrow_s"]);
 
-            testbuilding = new Building(texturecollection,gameworld,new Point(5,5),2,"Allows your vehicles to stop here.",100,false,1);
+            stations.Add(new Station(texturecollection,gameworld,new Point(16,5),2,"Astoria",100,false,4));
+            stations.Add(new Station(texturecollection, gameworld, new Point(9,5), 2, "Blaha Lujza Ter", 100, false, 3));
+            stations.Add(new Station(texturecollection, gameworld, new Point(5, 5), 2, "Keleti Palyaudvar", 100, true, 4));
         }
 
         public void SnapCameraToSelectedTile()
@@ -209,7 +216,11 @@ namespace MyBPT.Classes
 
         protected override void Update(GameTime gameTime)
         {
-            testbuilding.CheckIfHighlighted(gameworld.CurrentTilePosition);
+            for (int i = 0; i < stations.Count; i++)
+            {
+                stations[i].CheckIfHighlighted(gameworld.CurrentTilePosition);
+
+            }
 
 
             if (buymenu.BuymenuIsOpen)
@@ -269,6 +280,9 @@ namespace MyBPT.Classes
                     SnapCameraToSelectedTile();
                 }
             }
+
+           // player.UpdatePlayerLevel(terminus count);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
             camera.Update(gameTime, tc);
@@ -317,7 +331,12 @@ namespace MyBPT.Classes
             }
             catch (Exception) { }
             gameworld.HighlightCurrentTile(spriteBatch);
-            testbuilding.Draw(spriteBatch);
+
+            for (int i = 0; i < stations.Count; i++)
+            {
+                stations[i].Draw(spriteBatch);
+            }
+
 
             spriteBatch.End();
 
@@ -334,26 +353,37 @@ namespace MyBPT.Classes
                 dpad_right.Draw(spriteBatchHud);
                 dpad_down.Draw(spriteBatchHud);
                 dpad_left.Draw(spriteBatchHud);
+
+                bool stationhighlighted = false;
+                for (int i = 0; i < stations.Count; i++)
+                {
+                    if (stations[i].Highlighted)
+                    {
+                        stationhighlighted = true;
+                        if (stations[i].Isterminus)
+                        {
+                            spriteBatchHud.DrawString(font, "Terminus", new Vector2(50, 50), Color.White);
+                        }
+                        else
+                        {
+                            spriteBatchHud.DrawString(font, "Station", new Vector2(50, 50), Color.White);
+                        }
+                        spriteBatchHud.DrawString(font, stations[i].GetStationType(), new Vector2(50, 100), Color.White);
+                        spriteBatchHud.DrawString(font, "Influence : " + stations[i].Effectradius.ToString() + " blocks", new Vector2(50, 150), Color.White);
+                        spriteBatchHud.DrawString(font, stations[i].Description, new Vector2(50, 200), Color.White);
+                        stations[i].MoveButton.Draw(spriteBatchHud);
+                        stations[i].SellButton.Draw(spriteBatchHud);
+                        stations[i].UpgradeButton.Draw(spriteBatchHud);
+                    }
+                }
+                if(!stationhighlighted){
+                    spriteBatchHud.DrawString(font, player.Name + "   Lvl " + player.Level, new Vector2(50, 50), Color.White);
+                    spriteBatchHud.DrawString(font, "Cash: " + player.Money, new Vector2(50, 100), Color.White);
+                }
+
+
             }
             buymenu.Draw(spriteBatchHud);
-
-
-
-            if (testbuilding.Highlighted)
-            {
-                if (testbuilding.Isterminus)
-                {
-                    spriteBatchHud.DrawString(font, "Terminus", new Vector2(50, 50), Color.White);
-                }
-                else
-                {
-                    spriteBatchHud.DrawString(font, "Station", new Vector2(50, 50), Color.White);
-                }
-                spriteBatchHud.DrawString(font, testbuilding.GetStationType(), new Vector2(50, 100), Color.White);
-                spriteBatchHud.DrawString(font, "Influence : "+testbuilding.Effectradius.ToString()+" blocks", new Vector2(50, 150), Color.White);
-                spriteBatchHud.DrawString(font, testbuilding.Description, new Vector2(50, 200), Color.White);
-            }
-
 
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             frameCounter.Update(deltaTime);

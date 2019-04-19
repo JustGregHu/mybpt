@@ -3,6 +3,9 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "C:/mybpt/MyBPT/Content/arrow_n.png","C:/mybpt/MyBPT/Content/bin/Android/Content/arrow_n.xnb","TextureProcessor","Texture2DContent",2122,40085,0.0129997
 "C:/mybpt/MyBPT/Content/arrow_s.png","C:/mybpt/MyBPT/Content/bin/Android/Content/arrow_s.xnb","TextureProcessor","Texture2DContent",2137,40085,0.0059998
 "C:/mybpt/MyBPT/Content/arrow_w.png","C:/mybpt/MyBPT/Content/bin/Android/Content/arrow_w.xnb","TextureProcessor","Texture2DContent",2107,40085,0.0069988
+"C:/mybpt/MyBPT/Content/buildingmenu_move.png","C:/mybpt/MyBPT/Content/bin/Android/Content/buildingmenu_move.xnb","TextureProcessor","Texture2DContent",1988,90085,0.7856018
+"C:/mybpt/MyBPT/Content/buildingmenu_sell.png","C:/mybpt/MyBPT/Content/bin/Android/Content/buildingmenu_sell.xnb","TextureProcessor","Texture2DContent",2675,90085,0.0185012
+"C:/mybpt/MyBPT/Content/buildingmenu_upgrade.png","C:/mybpt/MyBPT/Content/bin/Android/Content/buildingmenu_upgrade.xnb","TextureProcessor","Texture2DContent",3123,90085,0.0210018
 "C:/mybpt/MyBPT/Content/buymenu_close.png","C:/mybpt/MyBPT/Content/bin/Android/Content/buymenu_close.xnb","TextureProcessor","Texture2DContent",1357,40085,0.5580727
 "C:/mybpt/MyBPT/Content/buymenu_open.png","C:/mybpt/MyBPT/Content/bin/Android/Content/buymenu_open.xnb","TextureProcessor","Texture2DContent",971,90085,0.3935513
 "C:/mybpt/MyBPT/Content/buymenu_station.png","C:/mybpt/MyBPT/Content/bin/Android/Content/buymenu_station.xnb","TextureProcessor","Texture2DContent",7560,360085,0.4071305
@@ -16,3 +19,4 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "C:/mybpt/MyBPT/Content/snow.png","C:/mybpt/MyBPT/Content/bin/Android/Content/snow.xnb","TextureProcessor","Texture2DContent",3412,80085,0.0149845
 "C:/mybpt/MyBPT/Content/station.png","C:/mybpt/MyBPT/Content/bin/Android/Content/station.xnb","TextureProcessor","Texture2DContent",5000,40085,0.5835746
 "C:/mybpt/MyBPT/Content/stone.png","C:/mybpt/MyBPT/Content/bin/Android/Content/stone.xnb","TextureProcessor","Texture2DContent",3131,80085,0.0090006
+"C:/mybpt/MyBPT/Content/terminus.png","C:/mybpt/MyBPT/Content/bin/Android/Content/terminus.xnb","TextureProcessor","Texture2DContent",5186,40085,0.5030653

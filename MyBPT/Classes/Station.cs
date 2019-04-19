@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MyBPT.Classes {
-    class Building {
+    class Station {
         Texture2D texture;
         Vector2 tileposition;
         bool highlighted;
@@ -27,15 +27,32 @@ namespace MyBPT.Classes {
         Point coordinates;
         int type;
 
+        Button movebutton;
+        Button sellbutton;
+        Button upgradebutton;
+
         public bool Highlighted { get => highlighted; set => highlighted = value; }
         public bool Isterminus { get => isterminus; set => isterminus = value; }
         public int Effectradius { get => effectradius; set => effectradius = value; }
         public string Description { get => description; set => description = value; }
         public int Type { get => type; set => type = value; }
+        public Button MoveButton { get => movebutton; set => movebutton = value; }
+        public Button SellButton { get => sellbutton; set => sellbutton = value; }
+        public Button UpgradeButton { get => upgradebutton; set => upgradebutton = value; }
 
-        public Building(GameTextures texturecollection, GameWorld gameWorld, Point coordinates,  int effectradius, string description, int cost,bool isterminus, int type)
+        public Station(GameTextures texturecollection, GameWorld gameWorld, Point coordinates,  int effectradius, string description, int cost,bool isterminus, int type)
         {
-            this.texture = texturecollection.GetTextures()["station"];
+            movebutton=new Button(new Vector2(400, 50), texturecollection.GetTextures()["buildingmenu_move"]);
+            sellbutton = new Button(new Vector2(550, 50), texturecollection.GetTextures()["buildingmenu_sell"]);
+            upgradebutton = new Button(new Vector2(700, 50), texturecollection.GetTextures()["buildingmenu_upgrade"]);
+
+            if (isterminus)
+            {
+                this.texture = texturecollection.GetTextures()["terminus"];
+            }else
+            {
+                this.texture = texturecollection.GetTextures()["station"];
+            }
             this.tileposition = gameWorld.MapData[coordinates.X, coordinates.Y].Position;
             this.effectradius = effectradius;
             this.description = description;
