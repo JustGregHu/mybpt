@@ -42,7 +42,7 @@ namespace MyBPT.Classes {
                 highlightTile.Area = MapData[newposition.X, newposition.Y].Area;
                 currentTilePosition = newposition;
             }
-            catch(Exception e){}
+            catch(Exception){}
 
         }
         public void HighlightCurrentTile(SpriteBatch spriteBatch)
@@ -129,7 +129,6 @@ namespace MyBPT.Classes {
         {
             for (int u = 0; u < worldsize; u++)
             {
-                    int newrnd = rnd.Next(0, 6);
                     int height = (int)Math.Round(noiseMap[i, u] * (255));
                     Texture2D rndtexture;
                     if (height < 90)

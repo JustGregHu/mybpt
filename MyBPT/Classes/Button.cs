@@ -21,12 +21,12 @@ namespace MyBPT.Classes {
         bool visible;
         Texture2D texture;
         SpriteFont text;
-       
 
+        public bool Visible { get => visible; set => visible = value; }
 
         public Button(Vector2 position, Texture2D texture) {
             highlighted = false;
-            visible = true;
+            Visible = true;
             this.texture = texture;
 
             this.position = position;
@@ -35,14 +35,14 @@ namespace MyBPT.Classes {
         }
 
         public void Draw(SpriteBatch spriteBatch) {
-            if (visible) {
+            if (Visible) {
                 spriteBatch.Draw(texture, new Vector2(position.X, position.Y), Color.White);
             }
         }
 
         public void DrawWithRotation(SpriteBatch spriteBatch, float angle)
         {
-            if (visible)
+            if (Visible)
             {
                 Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
                 Rectangle destinationRectangle = new Rectangle((int)position.X,(int)position.Y, texture.Width, texture.Height);

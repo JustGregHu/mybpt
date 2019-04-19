@@ -64,6 +64,7 @@
     <Compile Include="Classes\Building.cs" />
     <Compile Include="Classes\Button.cs" />
     <Compile Include="Classes\ButtonCollection.cs" />
+    <Compile Include="Classes\BuyMenu.cs" />
     <Compile Include="Classes\Camera.cs" />
     <Compile Include="Classes\FrameCounter.cs" />
     <Compile Include="Classes\GameSession.cs" />
@@ -98,7 +99,9 @@
     <AndroidResource Include="Resources\Values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <MonoGameContentReference Include="Content\Content.mgcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
