@@ -11,7 +11,7 @@ namespace MyBPT
         , Icon = "@drawable/icon"
         , AlwaysRetainTaskState = true
         , LaunchMode = Android.Content.PM.LaunchMode.SingleInstance
-        , ScreenOrientation = ScreenOrientation.Landscape
+        , ScreenOrientation = ScreenOrientation.ReverseLandscape
         , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout)]
     public class AppStart : Microsoft.Xna.Framework.AndroidGameActivity
     {

@@ -20,13 +20,16 @@ namespace MyBPT.Classes
         bool selectingbuylocation;
         Button openbutton;
         Button closebutton;
-        List<Button> choices = new List<Button>();
+        Button stationbuybutton;
+        Button terminusbuybutton;
         Texture2D background;
 
         public Button OpenButton { get => openbutton; set => openbutton = value; }
         public Button CloseButton { get => closebutton; set => closebutton = value; }
         public bool BuymenuIsOpen { get => buymenuisopen; set => buymenuisopen = value; }
         public bool SelectingBuyLocation { get => selectingbuylocation; set => selectingbuylocation = value; }
+        internal Button TerminusBuyButton { get => terminusbuybutton; set => terminusbuybutton = value; }
+        internal Button StationBuyButton { get => stationbuybutton; set => stationbuybutton = value; }
 
         public BuyMenu(GraphicsDevice graphicsdevice, Point preferrecscreensize, GameTextures texturecollection)
         {
@@ -36,8 +39,8 @@ namespace MyBPT.Classes
                 data[i] = Color.White;
             background.SetData(data);
 
-            choices.Add(new Button(new Vector2(400, 300), texturecollection.GetTextures()["buymenu_station"]));
-            choices.Add(new Button(new Vector2(800, 300), texturecollection.GetTextures()["buymenu_terminus"]));
+            stationbuybutton=(new Button(new Vector2(400, 300), texturecollection.GetTextures()["buymenu_station"]));
+            terminusbuybutton = (new Button(new Vector2(800, 300), texturecollection.GetTextures()["buymenu_terminus"]));
             openbutton = new Button(new Vector2(1000, 400), texturecollection.GetTextures()["buymenu_open"]);
             closebutton = new Button(new Vector2(preferrecscreensize.X-200, 100), texturecollection.GetTextures()["buymenu_close"]);
             CloseBuyMenu();
@@ -62,18 +65,14 @@ namespace MyBPT.Classes
 
         private void ToggleChoicesVisibility(bool visibility)
         {
-            for (int i = 0; i < choices.Count; i++)
-            {
-                choices[i].Visible = visibility;
-            }
+            stationbuybutton.Visible = visibility;
+            TerminusBuyButton.Visible = visibility;
         }
 
         private void DrawChoices(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < choices.Count; i++)
-            {
-                choices[i].Draw(spriteBatch);
-            }
+            stationbuybutton.Draw(spriteBatch);
+            TerminusBuyButton.Draw(spriteBatch);
         }
 
         public void OpenBuyMenu()
@@ -81,6 +80,8 @@ namespace MyBPT.Classes
             ToggleChoicesVisibility(true);
             openbutton.Visible = false;
             closebutton.Visible = true;
+            stationbuybutton.Visible = true;
+            stationbuybutton.Visible = true;
             selectingbuylocation = false;
             buymenuisopen = true;
         }
@@ -91,6 +92,8 @@ namespace MyBPT.Classes
             openbutton.Visible = true;
             closebutton.Visible = false;
             selectingbuylocation = false;
+            stationbuybutton.Visible = false;
+            stationbuybutton.Visible = false;
             buymenuisopen = false;
         }
 

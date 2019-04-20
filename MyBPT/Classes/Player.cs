@@ -27,11 +27,20 @@ namespace MyBPT.Classes {
             this.level = level;
         }
 
-        public void UpdatePlayerLevel(int terminuscount)
+        public void UpdateLevel(int terminuscount)
         {
             if (terminuscount>0)
             {
                 level = terminuscount;
+            }
+        }
+
+        public void AddMoney(int newmoney)
+        {
+            money += newmoney;
+            if (money<0)
+            {
+                money = 0;
             }
         }
 
