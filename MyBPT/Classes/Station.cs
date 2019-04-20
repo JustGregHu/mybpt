@@ -21,7 +21,6 @@ namespace MyBPT.Classes {
         int effectradius;
         String description;
         int cost;
-        int sellprice;
         bool isterminus;
         bool visible = true;
         Tile highlighttile;

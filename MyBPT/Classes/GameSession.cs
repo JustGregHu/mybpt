@@ -50,9 +50,12 @@ namespace MyBPT.Classes {
         bool movingbuilding;
         bool buyingbuilding;
         int highlightedbuildingid;
+        int highlightedobstacleid;
         Point preferredscreensize;
         Point tileSize;
         float viewdistance;
+        int stationcost;
+        int terminuscost;
 
         //Core functions
 
@@ -92,6 +95,8 @@ namespace MyBPT.Classes {
 
             //Gameworld variables
             stations = new List<Station>();
+            stationcost=300;
+            terminuscost=1500;
             base.Initialize();
         }
         protected override void LoadContent()
@@ -120,9 +125,9 @@ namespace MyBPT.Classes {
             dpad_down = new Button(new Vector2(hudmargin-20, preferredscreensize.Y -70 -hudmargin), texturecollection.GetTextures()["arrow_s"]);
 
             //DEBUG STATIONS
-            stations.Add(new Station(texturecollection,gameworld,new Point(16,5),2,"Astoria",200,false,4));
-            stations.Add(new Station(texturecollection, gameworld, new Point(9,5), 2, "Blaha Lujza Ter", 250, false, 3));
-            stations.Add(new Station(texturecollection, gameworld, new Point(5, 5), 2, "Keleti Palyaudvar", 1000, true, 4));
+            stations.Add(new Station(texturecollection, gameworld, new Point(16,5),2,"Astoria", stationcost, false,4));
+            stations.Add(new Station(texturecollection, gameworld, new Point(9,5), 2, "Blaha Lujza Ter", stationcost, false, 3));
+            stations.Add(new Station(texturecollection, gameworld, new Point(5, 5), 2, "Keleti Palyaudvar", terminuscost, true, 4));
         }
         protected override void UnloadContent()
         {
@@ -133,7 +138,9 @@ namespace MyBPT.Classes {
             UpdateTouchCollection();
             //HUD Element, Button press handlers
             CheckIfAnyStationsAreHighlighted();
+            CheckIfAnyObstaclesAreHighlighted();
             UpdateHudVisibilityBasedOnBuyMenu();
+            UpdatePlayerLevel();
             if (tc.Count > 0)
             {
                 TouchLocation currenttouchlocation = tc[0];
@@ -141,6 +148,7 @@ namespace MyBPT.Classes {
                 HandleDpadPresses(currenttouchlocation);
                 HandleBuyMenuButtonPresses(currenttouchlocation);
                 HandleStationButtonPresses(currenttouchlocation);
+                HandleDemolishButtonPresses(currenttouchlocation);
             }
             // should go here : player.UpdatePlayerLevel(terminus count);
 
@@ -157,6 +165,7 @@ namespace MyBPT.Classes {
             UpdateIsometricCamera();
             DrawMap();
             UpdateHighlightedTile();
+            DrawObstacles();
             DrawStations();
             spriteBatch.End();
 
@@ -167,6 +176,7 @@ namespace MyBPT.Classes {
                                 RasterizerState.CullNone);
             DrawMainHud();
             DrawBuyMenuElements();
+            DrawDemolitionMenu();
 #if DEBUG
             DrawFPS(gameTime);
 #endif
@@ -180,6 +190,10 @@ namespace MyBPT.Classes {
             texturecollection.AddTexture("stone", Content.Load<Texture2D>("stone"));
             texturecollection.AddTexture("snow", Content.Load<Texture2D>("snow"));
             texturecollection.AddTexture("grass", Content.Load<Texture2D>("grass"));
+            texturecollection.AddTexture("water", Content.Load<Texture2D>("water"));
+            texturecollection.AddTexture("sand", Content.Load<Texture2D>("sand"));
+            texturecollection.AddTexture("hill", Content.Load<Texture2D>("hill"));
+            texturecollection.AddTexture("snowyhill", Content.Load<Texture2D>("snowyhill"));
             texturecollection.AddTexture("station", Content.Load<Texture2D>("station"));
             texturecollection.AddTexture("terminus", Content.Load<Texture2D>("terminus"));
             texturecollection.AddTexture("highlight", Content.Load<Texture2D>("highlight"));
@@ -193,6 +207,7 @@ namespace MyBPT.Classes {
             texturecollection.AddTexture("buildingmenu_move", Content.Load<Texture2D>("buildingmenu_move"));
             texturecollection.AddTexture("buildingmenu_sell", Content.Load<Texture2D>("buildingmenu_sell"));
             texturecollection.AddTexture("buildingmenu_upgrade", Content.Load<Texture2D>("buildingmenu_upgrade"));
+            texturecollection.AddTexture("demolishmenu_clear", Content.Load<Texture2D>("demolishmenu_clear"));
             texturecollection.AddTexture("arrow_n", Content.Load<Texture2D>("arrow_n"));
             texturecollection.AddTexture("arrow_e", Content.Load<Texture2D>("arrow_e"));
             texturecollection.AddTexture("arrow_w", Content.Load<Texture2D>("arrow_w"));
@@ -200,40 +215,47 @@ namespace MyBPT.Classes {
             texturecollection.AddTexture("zoomin", Content.Load<Texture2D>("zoomin"));
             texturecollection.AddTexture("zoomout", Content.Load<Texture2D>("zoomout"));
         }
-        public void ReInitiateTouchCollection()
+        private void ReInitiateTouchCollection()
         {
             tc = new TouchCollection();
             tc = TouchPanel.GetState();
         }
-        public void UpdateTouchCollection()
+        private void UpdateTouchCollection()
         {
             tc = TouchPanel.GetState();
         }
-        public void SnapCameraToSelectedTile()
+        private void SnapCameraToSelectedTile()
         {
             Tile currenttile = gameworld.MapData[gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y];
             float mapx = currenttile.Position.X-preferredscreensize.X/2+ currenttile.Texture.Width/2;
             float mapy = currenttile.Position.Y- preferredscreensize.Y / 2 + currenttile.Texture.Height / 2; ;
             camera.TargetPosition = (new Vector2(mapx, mapy));
         }
-        public void UpdateIsometricCamera()
+        private void UpdateIsometricCamera()
         {
             isometriccameraposition = isoCalculator.IsoTo2D(new Vector2(-camera.Position.X * 2, camera.Position.Y));
         }
 
         //Highlighted tile related functions
-        public void UpdateHighlightedTile()
+        private void UpdateHighlightedTile()
         {
             gameworld.HighlightCurrentTile(spriteBatch);
         }
-        public void CheckIfAnyStationsAreHighlighted()
+        private void CheckIfAnyStationsAreHighlighted()
         {
             for (int i = 0; i < stations.Count; i++)
             {
                 stations[i].CheckIfHighlighted(gameworld.CurrentTilePosition);
             }
         }
-        public int IdOfHighlightedStation
+        private void CheckIfAnyObstaclesAreHighlighted()
+        {
+            for (int i = 0; i < gameworld.Obstacles.Count; i++)
+            {
+                gameworld.Obstacles[i].CheckIfHighlighted(gameworld.CurrentTilePosition);
+            }
+        }
+        private int IdOfHighlightedStation
         {
             get
             {
@@ -249,7 +271,7 @@ namespace MyBPT.Classes {
         }
 
         //Draw functions
-        public void DrawMap()
+        private void DrawMap()
         {
             try
             {
@@ -264,7 +286,7 @@ namespace MyBPT.Classes {
             }
             catch (Exception) { }
         }
-        public void DrawStations()
+        private void DrawStations()
         {
             for (int i = 0; i < stations.Count; i++)
             {
@@ -275,22 +297,30 @@ namespace MyBPT.Classes {
                 stations[i].Draw(spriteBatch);
             }
         }
-        public void DrawZoomButtons()
+        private void DrawObstacles()
+        {
+            for (int i = 0; i < gameworld.Obstacles.Count; i++)
+            {
+                gameworld.Obstacles[i].Draw(spriteBatch);
+            }
+        }
+        private void DrawZoomButtons()
         {
             zoomin.Draw(spriteBatchHud);
             zoomout.Draw(spriteBatchHud);
         }
-        public void DrawDpad()
+        private void DrawDpad()
         {
             dpad_up.Draw(spriteBatchHud);
             dpad_right.Draw(spriteBatchHud);
             dpad_down.Draw(spriteBatchHud);
             dpad_left.Draw(spriteBatchHud);
         }
-        public void DrawMainHud()
+        private void DrawMainHud()
         {
             if (!buymenu.BuymenuIsOpen)
             {
+                DrawZoomButtons();
                 DrawDpad();
                 int idofhighlightedstation = IdOfHighlightedStation;
                 if (idofhighlightedstation > 0)
@@ -315,14 +345,25 @@ namespace MyBPT.Classes {
                 }
             }
         }
-        public void DrawBuyMenuElements()
+        private void DrawBuyMenuElements()
         {
             if (!movingbuilding)
             {
                 buymenu.Draw(spriteBatchHud);
             }
         }
-        public void DrawFPS(GameTime gameTime)
+        private void DrawDemolitionMenu()
+        {
+            if (!movingbuilding && !buymenu.BuymenuIsOpen)
+            {
+                for (int i = 0; i < gameworld.Obstacles.Count; i++)
+                {
+                    gameworld.Obstacles[i].DrawButtons(spriteBatchHud);
+                }
+            }
+
+        }
+        private void DrawFPS(GameTime gameTime)
         {
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             frameCounter.Update(deltaTime);
@@ -353,16 +394,23 @@ namespace MyBPT.Classes {
         }
         private void FinishBuildingPlacement()
         {
-            stations[highlightedbuildingid].Highlighted = false;
-            stations[highlightedbuildingid].FinalizeMove(gameworld);
-            movingbuilding = false;
-            buyingbuilding = false;
+            if (!gameworld.IsThereanObstacleAt(stations[highlightedbuildingid].Coordinates) && !gameworld.IsThereWaterAt(stations[highlightedbuildingid].Coordinates))
+            {
+                stations[highlightedbuildingid].Highlighted = false;
+                stations[highlightedbuildingid].FinalizeMove(gameworld);
+                movingbuilding = false;
+                buyingbuilding = false;
+            }
         }
         private void MakeBuildingPurchase()
         {
-            player.AddMoney(-stations[highlightedbuildingid].Cost);
-            FinishBuildingPlacement();
-            buyingbuilding = false;
+            if (!gameworld.IsThereanObstacleAt(stations[highlightedbuildingid].Coordinates) && !gameworld.IsThereWaterAt(stations[highlightedbuildingid].Coordinates))
+            {
+                player.AddMoney(-stations[highlightedbuildingid].Cost);
+                FinishBuildingPlacement();
+                buyingbuilding = false;
+            }
+
         }
         private void UndoBuildingPlacement()
         {
@@ -381,6 +429,12 @@ namespace MyBPT.Classes {
             player.AddMoney(stations[highlightedbuildingid].SellPrice);
             stations.RemoveAt(highlightedbuildingid);
             highlightedbuildingid = -1;
+        }
+        private void DemolishHighlightedObstacle()
+        {
+            player.AddMoney(-gameworld.Obstacles[highlightedobstacleid].Cost);
+            gameworld.Obstacles.RemoveAt(highlightedobstacleid);
+            highlightedobstacleid = -1;
         }
 
         //Building movement
@@ -402,39 +456,39 @@ namespace MyBPT.Classes {
         }
 
         //Button click events
-        public void ZoomIn()
+        private void ZoomIn()
         {
             camera.Zoom = 1f;
             viewdistance = 1.1f;
         }
-        public void ZoomOut()
+        private void ZoomOut()
         {
             camera.Zoom = 0.5f;
             viewdistance = 2.2f;
         }
 
-        public void DPAD_Up()
+        private void DPAD_Up()
         {
             gameworld.UpdateCurrentTile(new Point(gameworld.CurrentTilePosition.X - 1, gameworld.CurrentTilePosition.Y));
             SnapCameraToSelectedTile();
         }
-        public void DPAD_Down()
+        private void DPAD_Down()
         {
             gameworld.UpdateCurrentTile(new Point(gameworld.CurrentTilePosition.X + 1, gameworld.CurrentTilePosition.Y));
             SnapCameraToSelectedTile();
         }
-        public void DPAD_Left()
+        private void DPAD_Left()
         {
             gameworld.UpdateCurrentTile(new Point(gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y - 1));
             SnapCameraToSelectedTile();
         }
-        public void DPAD_Right()
+        private void DPAD_Right()
         {
             gameworld.UpdateCurrentTile(new Point(gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y + 1));
             SnapCameraToSelectedTile();
         }
 
-        public void HandleZoomButtonPresses(TouchLocation currenttouchlocation)
+        private void HandleZoomButtonPresses(TouchLocation currenttouchlocation)
         {
             if (zoomin.IsTapped(currenttouchlocation) && zoomin.Visible)
             {
@@ -445,7 +499,7 @@ namespace MyBPT.Classes {
                 ZoomOut();
             }
         }
-        public void HandleDpadPresses(TouchLocation currenttouchlocation)
+        private void HandleDpadPresses(TouchLocation currenttouchlocation)
         {
             if (dpad_up.IsTapped(currenttouchlocation) && dpad_up.Visible)
             {
@@ -480,7 +534,7 @@ namespace MyBPT.Classes {
                 }
             }
         }
-        public void HandleBuyMenuButtonPresses(TouchLocation currenttouchlocation)
+        private void HandleBuyMenuButtonPresses(TouchLocation currenttouchlocation)
         {
             if (buymenu.OpenButton.IsTapped(currenttouchlocation) && buymenu.OpenButton.Visible)
             {
@@ -496,19 +550,33 @@ namespace MyBPT.Classes {
             {
                 if (buymenu.TerminusBuyButton.IsTapped(currenttouchlocation) && buymenu.TerminusBuyButton.Visible)
                 {
-                    CloseBuyMenu();
-                    SnapCameraToSelectedTile();
-                    MarkPlacementForPurchase(true);
+                    if (player.CanAfford(terminuscost))
+                    {
+                        CloseBuyMenu();
+                        SnapCameraToSelectedTile();
+                        MarkPlacementForPurchase(true);
+                    }
+                    else
+                    {
+                        //MESSAGE: CANT AFFORD TERMINUS!
+                    }
                 }
                 if (buymenu.StationBuyButton.IsTapped(currenttouchlocation) && buymenu.StationBuyButton.Visible)
                 {
-                    CloseBuyMenu();
-                    SnapCameraToSelectedTile();
-                    MarkPlacementForPurchase(false);
+                    if (player.CanAfford(stationcost))
+                    {
+                        CloseBuyMenu();
+                        SnapCameraToSelectedTile();
+                        MarkPlacementForPurchase(false);
+                    }
+                    else
+                    {
+                        //MESSAGE: CANT AFFORD STATION!
+                    }
                 }
             }
         }
-        public void HandleStationButtonPresses(TouchLocation currenttouchlocation)
+        private void HandleStationButtonPresses(TouchLocation currenttouchlocation)
         {
             for (int i = 0; i < stations.Count; i++)
             {
@@ -568,9 +636,31 @@ namespace MyBPT.Classes {
                 }
             }
         }
+        private void HandleDemolishButtonPresses(TouchLocation currenttouchlocation)
+        {
+            for (int i = 0; i < gameworld.Obstacles.Count; i++)
+            {
+                if (gameworld.Obstacles[i].DemolishButton.IsTapped(currenttouchlocation))
+                {
+                    if (gameworld.Obstacles[i].DemolishButton.Visible)
+                    {
+                        if (player.CanAfford(gameworld.Obstacles[i].Cost))
+                        {
+                            highlightedobstacleid = i;
+                            DemolishHighlightedObstacle();
+                            i = stations.Count;
+                        }
+                        else
+                        {
+                            //MESSAGE: CANT AFFORD STATION!
+                        }
+                    }
+                }
+            }
+        }
 
         //Location, maths, renderdistance functions
-        public int RemoveOffsetMin(int a)
+        private int RemoveOffsetMin(int a)
         {
             if (a < 0)
             {
@@ -578,7 +668,7 @@ namespace MyBPT.Classes {
             }
             return a;
         }
-        public int RemoveOffsetMax(int a, int worldsize)
+        private int RemoveOffsetMax(int a, int worldsize)
         {
             if (a > worldsize)
             {
@@ -586,21 +676,21 @@ namespace MyBPT.Classes {
             }
             return a;
         }
-        public Vector2 FindCenter(int width, int height)
+        private Vector2 FindCenter(int width, int height)
         {
             return new Vector2(width / 2, height / 2);
         }
 
         //Buymenu logic functions
-        public void OpenBuyMenu()
+        private void OpenBuyMenu()
         {
             buymenu.OpenBuyMenu();
         }
-        public void CloseBuyMenu()
+        private void CloseBuyMenu()
         {
             buymenu.CloseBuyMenu();
         }
-        public void UpdateHudVisibilityBasedOnBuyMenu()
+        private void UpdateHudVisibilityBasedOnBuyMenu()
         {
             if (buymenu.BuymenuIsOpen)
             {
@@ -621,9 +711,26 @@ namespace MyBPT.Classes {
                 dpad_right.Visible = true;
             }
         }
+        private int CountTerminiOnMap()
+        {
+            int count = 0;
+            for (int i = 0; i < stations.Count; i++)
+            {
+                if (stations[i].Isterminus)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+        private void UpdatePlayerLevel()
+        {
+            player.Level = CountTerminiOnMap();
+        }
+
 
         //Misc.
-        public void ExitAppIfBackButtonIsPressed()
+        private void ExitAppIfBackButtonIsPressed()
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();

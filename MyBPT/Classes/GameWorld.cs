@@ -32,6 +32,30 @@ namespace MyBPT.Classes {
         double[,] noiseMap;
         Point currentTilePosition = new Point(1,1);
         Tile highlightTile;
+        int waterheight = 60;
+
+        List<Obstacle> obstacles = new List<Obstacle>();
+        
+        public bool IsThereanObstacleAt(Point coordinates)
+        {
+            for (int i = 0; i < obstacles.Count; i++)
+            {
+                if (obstacles[i].Coordinates==coordinates)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsThereWaterAt(Point coordinates)
+        {
+            if (mapdata[coordinates.X, coordinates.Y].Height<waterheight)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public void UpdateCurrentTile(Point newposition)
         {
@@ -62,10 +86,11 @@ namespace MyBPT.Classes {
         public GameWorld(Dictionary<string, Texture2D> texturecollection)
         {
             perlin = new Perlin();
-            worldsize = 128;
+            worldsize = 64;
             noisescale = 12f;
             this.texturecollection = texturecollection;
-            mapdata = new Tile[worldsize, worldsize];        }
+            mapdata = new Tile[worldsize, worldsize];
+        }
 
         public double[,] GenerateNoiseMap(int mapWidth, int mapHeight, double scale)
         {
@@ -131,29 +156,41 @@ namespace MyBPT.Classes {
             {
                     int height = (int)Math.Round(noiseMap[i, u] * (255));
                     Texture2D rndtexture;
-                    if (height < 90)
+                    if (height < waterheight)
                     {
-                        rndtexture = texturecollection["stone"];
+                        rndtexture = texturecollection["water"];
+                    }
+                    else if (height < 75)
+                    {
+                      rndtexture = texturecollection["sand"];
+                        
+                    }
+                    else if (height < 170)
+                    {
+                        rndtexture = texturecollection["grass"];
                     }
                     else if (height < 190)
                     {
-                      rndtexture = texturecollection["grass"];
-                        
+                        rndtexture = texturecollection["stone"];
                     }
-                    else if (height > 190)
+                    else if (height < 255)
                     {
                         rndtexture = texturecollection["snow"];
                     }
                     else
                     {
-                        rndtexture = texturecollection["grass"];
+                        rndtexture = texturecollection["water"];
                     }
 
                     int draw_x = (int)(u * 100);
                     int draw_y = (int)(i * 100);
                     Point temppoint = isoCalculator.TwoDToIso(new Point(draw_x, draw_y));
-                    mapdata[i, u] = new Tile(height, rndtexture, new Vector2(temppoint.X, temppoint.Y), new Rectangle(temppoint, (new Point(100, 65)))); 
-            }
+                    mapdata[i, u] = new Tile(height, rndtexture, new Vector2(temppoint.X, temppoint.Y), new Rectangle(temppoint, (new Point(100, 65))));
+                    if (height > 195)
+                        obstacles.Add(new Obstacle(texturecollection, "snowyhill", this, new Point(i, u), 1000)); 
+                    else if (height > 180)
+                        obstacles.Add(new Obstacle(texturecollection, "hill", this, new Point(i, u), 500));
+                }
         }
     } 
 
@@ -178,5 +215,6 @@ namespace MyBPT.Classes {
 
         public Dictionary<string, Texture2D> TextureCollection { get => texturecollection; set => texturecollection = value; }
         public int Worldsize { get => worldsize; set => worldsize = value; }
+        internal List<Obstacle> Obstacles { get => obstacles; set => obstacles = value; }
     }
 }

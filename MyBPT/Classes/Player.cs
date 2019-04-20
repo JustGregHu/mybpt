@@ -44,6 +44,15 @@ namespace MyBPT.Classes {
             }
         }
 
+        public bool CanAfford(int cost)
+        {
+            if (cost <= Money)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public string Name { get => name; set => name = value; }
         public int Money { get => money; set => money = value; }
         public int Level { get => level; set => level = value; }
