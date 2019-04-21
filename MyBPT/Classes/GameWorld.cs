@@ -30,12 +30,27 @@ namespace MyBPT.Classes {
         Texture2D texture;
         Color[] colourMap;
         double[,] noiseMap;
-        Point currentTilePosition = new Point(1,1);
+        Point currentTilePosition;
         Tile highlightTile;
         int waterheight = 60;
-
+        int hillheight = 180;
+        int snowyhillheight = 195;
+        List<Road> roads = new List<Road>();
         List<Obstacle> obstacles = new List<Obstacle>();
-        
+        List<Building> buildings = new List<Building>();
+
+        public bool IsThereABuildingAt(Point coordinates)
+        {
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                if (buildings[i].Coordinates == coordinates)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool IsThereanObstacleAt(Point coordinates)
         {
             for (int i = 0; i < obstacles.Count; i++)
@@ -53,6 +68,61 @@ namespace MyBPT.Classes {
             if (mapdata[coordinates.X, coordinates.Y].Height<waterheight)
             {
                 return true;
+            }
+            return false;
+        }
+
+        public bool IsThereARoadNextTo(Point coordinates,int distance)
+        {
+            for (int i = 0; i < roads.Count; i++)
+            {
+                for (int x = -distance; x < distance+1; x++)
+                {
+                    for (int y = -distance; y < distance+1; y++)
+                    {
+                        Point currentposition = new Point(coordinates.X + x, coordinates.Y + y);
+                        if (roads[i].Coordinates == currentposition && MapData[currentposition.X, currentposition.Y].Height>waterheight)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool IsThereARoadAt(Point coordinates)
+
+        {
+            for (int i = 0; i < roads.Count; i++)
+            {
+                if (roads[i].Coordinates == coordinates)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool AreThereHillsInX(int x)
+        {
+            for (int i = 0; i < worldsize; i++)
+            {
+                if (mapdata[x,i].Height>=hillheight)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool AreThereHillsInY(int y)
+        {
+            for (int i = 0; i < worldsize; i++)
+            {
+                if (mapdata[i,y ].Height >= hillheight)
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -86,7 +156,8 @@ namespace MyBPT.Classes {
         public GameWorld(Dictionary<string, Texture2D> texturecollection)
         {
             perlin = new Perlin();
-            worldsize = 64;
+            worldsize = 40;
+            currentTilePosition = new Point(worldsize / 2, worldsize / 2);
             noisescale = 12f;
             this.texturecollection = texturecollection;
             mapdata = new Tile[worldsize, worldsize];
@@ -186,12 +257,160 @@ namespace MyBPT.Classes {
                     int draw_y = (int)(i * 100);
                     Point temppoint = isoCalculator.TwoDToIso(new Point(draw_x, draw_y));
                     mapdata[i, u] = new Tile(height, rndtexture, new Vector2(temppoint.X, temppoint.Y), new Rectangle(temppoint, (new Point(100, 65))));
-                    if (height > 195)
-                        obstacles.Add(new Obstacle(texturecollection, "snowyhill", this, new Point(i, u), 1000)); 
-                    else if (height > 180)
-                        obstacles.Add(new Obstacle(texturecollection, "hill", this, new Point(i, u), 500));
                 }
         }
+
+            Random rand = new Random();
+            List<int> roadpositionsX = new List<int>();
+            List<int> roadpositionsY = new List<int>();
+            for (int i = 0; i < rand.Next(3,6); i++)
+            {
+                int newrand=(rand.Next(1, worldsize - 1));
+                bool randisnew = true;
+                for (int u = 0; u < roadpositionsX.Count; u++)
+                {
+                    if (newrand == roadpositionsX[u])
+                    {
+                        randisnew = false;
+                    }
+                }
+                if (randisnew)
+                {
+                    roadpositionsX.Add(newrand);
+                }
+               
+            }
+            for (int i = 0; i < rand.Next(3,6); i++)
+            {
+                int newrand = (rand.Next(1, worldsize - 1));
+                bool randisnew = true;
+                for (int u = 0; u < roadpositionsY.Count; u++)
+                {
+                    if (newrand==roadpositionsY[u])
+                    {
+                        randisnew = false; ;
+                    }
+                }
+                if (randisnew)
+                {
+                    roadpositionsY.Add(newrand);
+                }
+            }
+
+            for (int i = 0; i < worldsize; i++)
+            {
+                for (int u = 0; u < worldsize; u++)
+                {
+                    if (MapData[i, u].Height > snowyhillheight)
+                        obstacles.Add(new Obstacle(texturecollection, "snowyhill", this, new Point(i, u), 1000));
+                    else if (MapData[i, u].Height > hillheight)
+                        obstacles.Add(new Obstacle(texturecollection, "hill", this, new Point(i, u), 500));
+                    for (int x = 0; x < roadpositionsX.Count; x++)
+                    {
+                        if (i == roadpositionsX[x] && !AreThereHillsInX(roadpositionsX[x]))
+                        {
+                            if (MapData[i, u].Height < waterheight)
+                            {
+                                roads.Add(new Road(texturecollection, "bridgeleft", this, new Point(i, u)));
+                            }
+                            else if (MapData[i, u].Height > hillheight)
+                            {
+                                //hegyre nem helyez utat
+                            }
+                            else
+                            {
+                                roads.Add(new Road(texturecollection, "roadleft", this, new Point(i, u)));
+                            }
+                        }
+                    }
+                    for (int y = 0; y < roadpositionsY.Count; y++)
+                    {
+                        if (u == roadpositionsY[y] && !AreThereHillsInY(roadpositionsY[y]))
+                        {
+                            if (IsThereARoadAt(new Point(i, u)))
+                            {
+                                roads.Add(new Road(texturecollection, "roadcross", this, new Point(i, u)));
+                            }
+                            else
+                            {
+                                if (MapData[i, u].Height < waterheight)
+                                {
+                                    roads.Add(new Road(texturecollection, "bridgeright", this, new Point(i, u)));
+                                }
+                                else if (MapData[i, u].Height > 180)
+                                {
+                                    //hegyre nem helyez utat
+                                }
+                                else
+                                {
+                                    roads.Add(new Road(texturecollection, "roadright", this, new Point(i, u)));
+                                }
+                            }
+
+                        }
+                    }
+
+                    
+
+                }
+            }
+
+            for (int i = 0; i < worldsize; i++)
+            {
+                for (int u = 0; u < worldsize; u++)
+                {
+
+
+                    if (!IsThereARoadAt(new Point(i, u)) && !IsThereanObstacleAt(new Point(i, u)) && !IsThereWaterAt(new Point(i, u))&&IsThereARoadNextTo(new Point(i,u),6))
+                    {
+                        int type = 1;
+                        int level = 1;
+                        int random1 = rand.Next(0, 101);
+                        if (random1 < 60)
+                        {
+                            type = 0;
+                        }
+                        else if (random1 < 85)
+                        {
+                            type = 1;
+                        }
+                        else
+                        {
+                            type = 2;
+                        }
+                        if (random1 > 80)
+                        {
+                            level = 2;
+                        }
+                        if (MapData[i, u].Height < 160 && MapData[i, u].Height > 90)
+                        {
+                            if (rand.Next(1, 100) > 85)
+                            {
+                                buildings.Add(new Building(texturecollection, this, new Point(i, u),type,level));
+
+                            }
+                        }
+                        else if (MapData[i, u].Height > 160)
+                        {
+                            if (rand.Next(1, 100) > 95)
+                            {
+                                buildings.Add(new Building(texturecollection, this, new Point(i, u), type, level));
+
+                            }
+                        }
+                        else if (MapData[i, u].Height < 90)
+                        {
+                            if (rand.Next(1, 100) > 90)
+                            {
+                                buildings.Add(new Building(texturecollection, this, new Point(i, u), type, level));
+
+                            }
+
+
+                        }
+                    }
+                }
+            }
     } 
 
         //GRID AVAILABILITY, SNAPPING
@@ -216,5 +435,7 @@ namespace MyBPT.Classes {
         public Dictionary<string, Texture2D> TextureCollection { get => texturecollection; set => texturecollection = value; }
         public int Worldsize { get => worldsize; set => worldsize = value; }
         internal List<Obstacle> Obstacles { get => obstacles; set => obstacles = value; }
+        internal List<Road> Roads { get => roads; set => roads = value; }
+        internal List<Building> Buildings { get => buildings; set => buildings = value; }
     }
 }

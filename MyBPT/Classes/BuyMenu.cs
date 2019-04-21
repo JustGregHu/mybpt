@@ -54,8 +54,6 @@ namespace MyBPT.Classes
                 spriteBatch.Draw(background, new Vector2(300,0), new Color(30, 30, 30,90));
                 closebutton.Draw(spriteBatch);
                 DrawChoices(spriteBatch);
-
-
             }
             else if(!selectingbuylocation)
             {

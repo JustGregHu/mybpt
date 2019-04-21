@@ -61,7 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppStart.cs" />
+    <Compile Include="Classes\Building.cs" />
     <Compile Include="Classes\Obstacle.cs" />
+    <Compile Include="Classes\Road.cs" />
     <Compile Include="Classes\Station.cs" />
     <Compile Include="Classes\Button.cs" />
     <Compile Include="Classes\ButtonCollection.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Classes\IsoCalculator.cs" />
+    <Compile Include="Classes\UpgradeMenu.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
