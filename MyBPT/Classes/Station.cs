@@ -19,13 +19,16 @@ namespace MyBPT.Classes {
         bool highlighted;
         bool moving;
         int effectradius;
-        String description;
         int cost;
         bool isterminus;
         bool visible = true;
         Tile highlighttile;
         int type;
+        int level;
+        int maxlevel;
+        int income;
 
+        Texture2D background;
         Point coordinates;
         Point safecoordinates;
         Vector2 safeposition;
@@ -38,7 +41,6 @@ namespace MyBPT.Classes {
         public bool Highlighted { get => highlighted; set => highlighted = value; }
         public bool Isterminus { get => isterminus; set => isterminus = value; }
         public int Effectradius { get => effectradius; set => effectradius = value; }
-        public string Description { get => description; set => description = value; }
         public int Type { get => type; set => type = value; }
         public Button MoveButton { get => movebutton; set => movebutton = value; }
         public Button SellButton { get => sellbutton; set => sellbutton = value; }
@@ -48,29 +50,166 @@ namespace MyBPT.Classes {
         public Point Coordinates { get => coordinates; set => coordinates = value; }
         public bool Moving { get => moving; set => moving = value; }
 
-        public Station(GameTextures texturecollection, GameWorld gameWorld, Point coordinates, int effectradius, string description, int cost, bool isterminus, int type)
+        public string Description_LevelAndType
         {
-            movebutton = new Button(new Vector2(400, 50), texturecollection.GetTextures()["buildingmenu_move"]);
-            sellbutton = new Button(new Vector2(550, 50), texturecollection.GetTextures()["buildingmenu_sell"]);
-            upgradebutton = new Button(new Vector2(700, 50), texturecollection.GetTextures()["buildingmenu_upgrade"]);
-            acceptbutton = new Button(new Vector2(500, 200), texturecollection.GetTextures()["selection_tick"]);
-            cancelbutton = new Button(new Vector2(650, 200), texturecollection.GetTextures()["selection_cross"]);
+            get
+            {
+                string stationtype = "";
+                if (isterminus)
+                {
+                    stationtype = "Terminus";
+                }
+                else
+                {
+                    stationtype = "Station";
+                }
+                return "LVL " + level + " " + stationtype;
+            }
+        }
 
+        public void ApplyIncome(GameWorld gameworld)
+        {
+            income = 100;
+            for (int y = -effectradius; y < effectradius + 1; y++)
+            {
+                for (int x = -effectradius; x < effectradius + 1; x++)
+                {
+                    if (gameworld.IsThereABuildingAt(new Point(coordinates.X+x,coordinates.Y+y)))
+                    {
+                        for (int i = 0; i < gameworld.Buildings.Count; i++)
+                        {
+                            if (gameworld.Buildings[i].Coordinates== (new Point(coordinates.X + x, coordinates.Y + y)))
+                            {
+                                income= income + gameworld.Buildings[i].Influenceamount;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public string Description_Influence_Worth
+        {
+            get
+            {
+                return "Income: " + income;
+            }
+        }
+        public string Description_Influence_Tiles
+        {
+            get
+            {
+                return "Influence: " + effectradius;
+            }
+        }
+        public string Description_UpgradeCost
+        {
+            get {
+                return "Upgrade Cost: " + UpgradeCost;
+            }
+        }
+        public string Description_SellPrice
+        {
+            get
+            {
+                return "Sell Price: " + SellPrice;
+            }
+        }
+        public string Description_Cost
+        {
+            get
+            {
+                return "Cost :"+cost;
+                
+            }
+           
+        }
+
+        public int UpgradeCost
+        {
+            get
+            {
+                return cost * 2;
+            }
+        }
+        public void ApplyEffectRadius()
+        {
+            effectradius = 1;
             if (isterminus)
             {
-                this.texture = texturecollection.GetTextures()["terminus"];
-            } else
-            {
-                this.texture = texturecollection.GetTextures()["station"];
+                effectradius += 1;
             }
+            effectradius += level;
+        }
+        public void ApplyCost()
+        {
+            if (isterminus)
+            {
+                cost = 1000;
+            }
+            else
+            {
+                cost = 350;
+            }
+            cost = cost * level;
+        }
+        public void LevelStationUp(GameTextures texturecollection,GameWorld gameworld)
+        {
+            level += 1;
+            if (level> maxlevel)
+            {
+                level = maxlevel;
+            }
+            
+            switch (level)
+            {
+                case 2:
+                    if (isterminus)
+                    {
+                        this.texture = texturecollection.GetTextures()["world_terminus_2"];
+                    }
+                    else
+                    {
+                        this.texture = texturecollection.GetTextures()["world_station_2"];
+                    }
+                    break;
+                default:
+                    if (isterminus)
+                    {
+                        this.texture = texturecollection.GetTextures()["world_terminus_1"];
+                    }
+                    else
+                    {
+                        this.texture = texturecollection.GetTextures()["world_station_1"];
+                    }
+                    break;
+            }
+            ApplyEffectRadius();
+            ApplyCost();
+            ApplyIncome(gameworld);
+        }
+
+        public Station(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection, GameWorld gameWorld, Point coordinates, bool isterminus)
+        {
+            Color[] data = new Color[preferredscreensize.X * preferredscreensize.Y];
+            background = new Texture2D(graphicsdevice, preferredscreensize.X, preferredscreensize.Y);
+            for (int i = 0; i < data.Length; ++i)
+                data[i] = Color.White;
+            background.SetData(data);
+
+            movebutton = new Button(new Vector2(400, 50), texturecollection.GetTextures()["hud_button_station_move"]);
+            sellbutton = new Button(new Vector2(550, 50), texturecollection.GetTextures()["hud_button_station_sell"]);
+            upgradebutton = new Button(new Vector2(700, 50), texturecollection.GetTextures()["hud_button_station_upgrade"]);
+            acceptbutton = new Button(new Vector2(500, 200), texturecollection.GetTextures()["hud_button_apply"]);
+            cancelbutton = new Button(new Vector2(650, 200), texturecollection.GetTextures()["hud_button_cancel"]);
             this.tileposition = gameWorld.MapData[coordinates.X, coordinates.Y].Position;
-            this.effectradius = effectradius;
-            this.description = description;
             this.isterminus = isterminus;
-            this.cost = cost;
             this.coordinates = coordinates;
-            this.type = type;
-            highlighttile = new Tile(0, texturecollection.GetTextures()["highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
+            level = 0;
+            maxlevel = 2;
+            LevelStationUp(texturecollection, gameWorld);
+            ApplyIncome(gameWorld);
+            highlighttile = new Tile(0, texturecollection.GetTextures()["world_highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
             ButtonVisibility_NoSelection();
         }
 
@@ -83,6 +222,9 @@ namespace MyBPT.Classes {
         }
 
         public int Cost { get => cost; set => cost = value; }
+        public int Level { get => level; set => level = value; }
+        public int Maxlevel { get => maxlevel; set => maxlevel = value; }
+        public int Income { get => income; set => income = value; }
 
         private void ButtonVisibility_NoSelection()
         {
@@ -156,19 +298,6 @@ namespace MyBPT.Classes {
             ButtonVisibility_NoSelection();
         }
 
-        public string GetStationType()
-        {
-            switch (type)
-            {
-                case 1: return "Bus Stop";
-                case 2: return "Trolley Stop";
-                case 3: return "Tram Stop";
-                case 4: return "Metro Stop";
-                default: return "Undefined";
-            }
-            
-        }
-
         public void CheckIfHighlighted(Point coordinatetocheck)
         {
             if (coordinatetocheck==coordinates)
@@ -183,7 +312,7 @@ namespace MyBPT.Classes {
 
         private Vector2 DisplayPosition()
         {
-            return new Vector2((tileposition.X + 150) - (texture.Width), (tileposition.Y + 75) - (texture.Height));
+            return new Vector2((tileposition.X + 200) - (texture.Width), (tileposition.Y + 150) - (texture.Height));
         }
 
         public void DrawAffectionOfArea(SpriteBatch spriteBatch)
@@ -219,8 +348,18 @@ namespace MyBPT.Classes {
             }
         }
 
+        public void DrawInfo(SpriteBatch spriteBatchHud, SpriteFont font)
+        {
+            spriteBatchHud.DrawString(font, Description_LevelAndType, new Vector2(50, 50), Color.White);
+            spriteBatchHud.DrawString(font, Description_Influence_Tiles, new Vector2(50, 100), Color.White);
+            spriteBatchHud.DrawString(font, Description_Influence_Worth, new Vector2(50, 150), Color.White);
+            spriteBatchHud.DrawString(font, Description_UpgradeCost, new Vector2(50, 200), Color.White);
+            spriteBatchHud.DrawString(font, Description_SellPrice, new Vector2(50, 250), Color.White);
+        }
+
         public void DrawButtons(SpriteBatch spriteBatchHud)
         {
+            spriteBatchHud.Draw(background, new Vector2(-900, -400), new Color(0, 0, 0, 85));
             if (moving)
             {
                 AcceptButton.Draw(spriteBatchHud);

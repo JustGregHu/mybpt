@@ -1,10 +1,18 @@
+using System;
+
 public class Perlin
 {
-
+    private int[] generatedpermutation;
     public int repeat;
 
     public Perlin(int repeat = -1)
     {
+        generatedpermutation = new int[256];
+        Random rnd = new Random();
+        for (int i = 0; i < generatedpermutation.Length; i++)
+        {
+            generatedpermutation[i] = rnd.Next(1, 256);
+        }
         this.repeat = repeat;
     }
 
@@ -27,6 +35,7 @@ public class Perlin
         return total / maxValue;
     }
 
+
     private static readonly int[] permutation = { 151,160,137,91,90,15,					// Hash lookup table as defined by Ken Perlin.  This is a randomly
 		131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,	// arranged array of all numbers from 0-255 inclusive.
 		190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
@@ -42,14 +51,20 @@ public class Perlin
         138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
     };
 
-    private static readonly int[] p;                                                    // Doubled permutation to avoid overflow
+    private int[] p;                                                    // Doubled permutation to avoid overflow
 
-    static Perlin()
+    public Perlin()
     {
+        generatedpermutation = new int[256];
+        Random rnd = new Random();
+        for (int i = 0; i < generatedpermutation.Length; i++)
+        {
+            generatedpermutation[i] = rnd.Next(1, 256);
+        }
         p = new int[512];
         for (int x = 0; x < 512; x++)
         {
-            p[x] = permutation[x % 256];
+            p[x] = generatedpermutation[x % 256];
         }
     }
 

@@ -40,13 +40,13 @@ namespace MyBPT.Classes
                     switch (type)
                     {
                         case 0:
-                            this.texture = texturecollection["building_residential1"];
+                            this.texture = texturecollection["world_building_residential_1"];
                             break;
                         case 1:
-                            this.texture = texturecollection["building_commercial1"];
+                            this.texture = texturecollection["world_building_commercial_1"];
                             break;
                         case 2:
-                            this.texture = texturecollection["building_industrial1"];
+                            this.texture = texturecollection["world_building_industrial_1"];
                             break;
                         default: 
                             break;
@@ -56,13 +56,13 @@ namespace MyBPT.Classes
                     switch (type)
                     {
                         case 0:
-                            this.texture = texturecollection["building_residential2"];
+                            this.texture = texturecollection["world_building_residential_2"];
                             break;
                         case 1:
-                            this.texture = texturecollection["building_commercial2"];
+                            this.texture = texturecollection["world_building_commercial_2"];
                             break;
                         case 2:
-                            this.texture = texturecollection["building_industrial2"];
+                            this.texture = texturecollection["world_building_industrial_2"];
                             break;
                         default:
                             
@@ -75,18 +75,18 @@ namespace MyBPT.Classes
             switch (type)
             {
                 case 0:
-                    SetInfluenceAmount(50);
+                    SetInfluenceAmount(50*level);
                     break;
-                case 1: SetInfluenceAmount(100);
+                case 1: SetInfluenceAmount(100* level);
                     break;
-                case 2: SetInfluenceAmount(125);
+                case 2: SetInfluenceAmount(125* level);
                     break;
                 default:
                     break;
             }
             this.coordinates = coordinates;
-            demolishbutton = new Button(new Vector2(550, 50), texturecollection["demolishmenu_clear"]);
-            highlighttile = new Tile(0, texturecollection["highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
+            demolishbutton = new Button(new Vector2(550, 50), texturecollection["hud_button_demolish"]);
+            highlighttile = new Tile(0, texturecollection["world_highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
             this.tileposition = gameWorld.MapData[coordinates.X, coordinates.Y].Position;
             ButtonVisibility_NoSelection();
         }
@@ -131,7 +131,7 @@ namespace MyBPT.Classes
 
         private Vector2 DisplayPosition()
         {
-            return new Vector2((tileposition.X + 150) - (texture.Width), (tileposition.Y + 75) - (texture.Height));
+            return new Vector2((tileposition.X + 200) - (texture.Width), (tileposition.Y + 150) - (texture.Height));
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -35,8 +35,8 @@ namespace MyBPT.Classes
             this.texture = texturecollection[textureid];
             this.cost = cost;
             this.coordinates = coordinates;
-            demolishbutton = new Button(new Vector2(550, 50), texturecollection["demolishmenu_clear"]);
-            highlighttile = new Tile(0, texturecollection["highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
+            demolishbutton = new Button(new Vector2(550, 50), texturecollection["hud_button_demolish"]);
+            highlighttile = new Tile(0, texturecollection["world_highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
             this.tileposition = gameWorld.MapData[coordinates.X, coordinates.Y].Position;
             ButtonVisibility_NoSelection();
         }
@@ -65,7 +65,7 @@ namespace MyBPT.Classes
 
         private Vector2 DisplayPosition()
         {
-            return new Vector2((tileposition.X + 150) - (texture.Width), (tileposition.Y + 75) - (texture.Height));
+            return new Vector2((tileposition.X + 200) - (texture.Width), (tileposition.Y + 150) - (texture.Height));
         }
 
         public void Draw(SpriteBatch spriteBatch)

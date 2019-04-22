@@ -20,11 +20,11 @@ using System.Threading.Tasks;
 namespace MyBPT.Classes {
     class GameWorld {
         IsoCalculator isoCalculator = new IsoCalculator();
+        Random rnd = new Random();
         Point tileSize = new Point(200, 100);
         Perlin perlin;
         int worldsize;
         double noisescale;
-        Random rnd = new Random();
         Tile[,] mapdata;
         Dictionary<string, Texture2D> texturecollection;
         Texture2D texture;
@@ -32,12 +32,12 @@ namespace MyBPT.Classes {
         double[,] noiseMap;
         Point currentTilePosition;
         Tile highlightTile;
-        int waterheight = 60;
+        int waterheight = 70;
         int hillheight = 180;
-        int snowyhillheight = 195;
         List<Road> roads = new List<Road>();
         List<Obstacle> obstacles = new List<Obstacle>();
         List<Building> buildings = new List<Building>();
+        List<Station> stations = new List<Station>();
 
         public bool IsThereABuildingAt(Point coordinates)
         {
@@ -51,6 +51,54 @@ namespace MyBPT.Classes {
             return false;
         }
 
+        public bool IsLevelingUpAllowed()
+        {
+            if (CountTerminiOnMap()==0 || CountStationsOnMap() >= CountTerminiOnMap()*5)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public int CountTerminiOnMap()
+        {
+            int count = 0;
+            for (int i = 0; i < stations.Count; i++)
+            {
+                if (stations[i].Isterminus)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public int CountStationsOnMap()
+        {
+            int count = 0;
+            for (int i = 0; i < stations.Count; i++)
+            {
+                if (!stations[i].Isterminus)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public int CurrentIncome
+        {
+            get
+            {
+                int income = 0;
+                for (int i = 0; i < stations.Count; i++)
+                {
+                    income += stations[i].Income;
+                }
+                return income;
+            }
+        }
+        
         public bool IsThereanObstacleAt(Point coordinates)
         {
             for (int i = 0; i < obstacles.Count; i++)
@@ -145,7 +193,7 @@ namespace MyBPT.Classes {
         }
         public void InitiateHighlightTile()
         {
-            highlightTile = new Tile(0, texturecollection["highlight"], mapdata[currentTilePosition.X, currentTilePosition.Y].Position, mapdata[currentTilePosition.X, currentTilePosition.Y].Area);
+            highlightTile = new Tile(0, texturecollection["world_highlight_white"], mapdata[currentTilePosition.X, currentTilePosition.Y].Position, mapdata[currentTilePosition.X, currentTilePosition.Y].Area);
         }
 
         public Point CurrentTilePosition{get{return currentTilePosition;}set{currentTilePosition = value;}}
@@ -229,28 +277,28 @@ namespace MyBPT.Classes {
                     Texture2D rndtexture;
                     if (height < waterheight)
                     {
-                        rndtexture = texturecollection["water"];
+                        rndtexture = texturecollection["world_tile_water"];
                     }
                     else if (height < 75)
                     {
-                      rndtexture = texturecollection["sand"];
+                      rndtexture = texturecollection["world_tile_sand"];
                         
                     }
                     else if (height < 170)
                     {
-                        rndtexture = texturecollection["grass"];
+                        rndtexture = texturecollection["world_tile_grass"];
                     }
                     else if (height < 190)
                     {
-                        rndtexture = texturecollection["stone"];
+                        rndtexture = texturecollection["world_tile_stone"];
                     }
                     else if (height < 255)
                     {
-                        rndtexture = texturecollection["snow"];
+                        rndtexture = texturecollection["world_tile_snow"];
                     }
                     else
                     {
-                        rndtexture = texturecollection["water"];
+                        rndtexture = texturecollection["world_tile_water"];
                     }
 
                     int draw_x = (int)(u * 100);
@@ -260,12 +308,11 @@ namespace MyBPT.Classes {
                 }
         }
 
-            Random rand = new Random();
             List<int> roadpositionsX = new List<int>();
             List<int> roadpositionsY = new List<int>();
-            for (int i = 0; i < rand.Next(3,6); i++)
+            for (int i = 0; i < rnd.Next(3,6); i++)
             {
-                int newrand=(rand.Next(1, worldsize - 1));
+                int newrand=(rnd.Next(1, worldsize - 1));
                 bool randisnew = true;
                 for (int u = 0; u < roadpositionsX.Count; u++)
                 {
@@ -280,9 +327,9 @@ namespace MyBPT.Classes {
                 }
                
             }
-            for (int i = 0; i < rand.Next(3,6); i++)
+            for (int i = 0; i < rnd.Next(3,6); i++)
             {
-                int newrand = (rand.Next(1, worldsize - 1));
+                int newrand = (rnd.Next(1, worldsize - 1));
                 bool randisnew = true;
                 for (int u = 0; u < roadpositionsY.Count; u++)
                 {
@@ -301,17 +348,15 @@ namespace MyBPT.Classes {
             {
                 for (int u = 0; u < worldsize; u++)
                 {
-                    if (MapData[i, u].Height > snowyhillheight)
-                        obstacles.Add(new Obstacle(texturecollection, "snowyhill", this, new Point(i, u), 1000));
-                    else if (MapData[i, u].Height > hillheight)
-                        obstacles.Add(new Obstacle(texturecollection, "hill", this, new Point(i, u), 500));
+                    if (MapData[i, u].Height > hillheight)
+                        obstacles.Add(new Obstacle(texturecollection, "world_obstacle_hill", this, new Point(i, u), 500));
                     for (int x = 0; x < roadpositionsX.Count; x++)
                     {
                         if (i == roadpositionsX[x] && !AreThereHillsInX(roadpositionsX[x]))
                         {
                             if (MapData[i, u].Height < waterheight)
                             {
-                                roads.Add(new Road(texturecollection, "bridgeleft", this, new Point(i, u)));
+                                roads.Add(new Road(texturecollection, "world_bridge_west_east", this, new Point(i, u)));
                             }
                             else if (MapData[i, u].Height > hillheight)
                             {
@@ -319,7 +364,7 @@ namespace MyBPT.Classes {
                             }
                             else
                             {
-                                roads.Add(new Road(texturecollection, "roadleft", this, new Point(i, u)));
+                                roads.Add(new Road(texturecollection, "world_road_west_east", this, new Point(i, u)));
                             }
                         }
                     }
@@ -329,13 +374,13 @@ namespace MyBPT.Classes {
                         {
                             if (IsThereARoadAt(new Point(i, u)))
                             {
-                                roads.Add(new Road(texturecollection, "roadcross", this, new Point(i, u)));
+                                roads.Add(new Road(texturecollection, "world_roadcross", this, new Point(i, u)));
                             }
                             else
                             {
                                 if (MapData[i, u].Height < waterheight)
                                 {
-                                    roads.Add(new Road(texturecollection, "bridgeright", this, new Point(i, u)));
+                                    roads.Add(new Road(texturecollection, "world_bridge_north_south", this, new Point(i, u)));
                                 }
                                 else if (MapData[i, u].Height > 180)
                                 {
@@ -343,15 +388,11 @@ namespace MyBPT.Classes {
                                 }
                                 else
                                 {
-                                    roads.Add(new Road(texturecollection, "roadright", this, new Point(i, u)));
+                                    roads.Add(new Road(texturecollection, "world_road_north_south", this, new Point(i, u)));
                                 }
                             }
-
                         }
                     }
-
-                    
-
                 }
             }
 
@@ -359,18 +400,17 @@ namespace MyBPT.Classes {
             {
                 for (int u = 0; u < worldsize; u++)
                 {
-
-
                     if (!IsThereARoadAt(new Point(i, u)) && !IsThereanObstacleAt(new Point(i, u)) && !IsThereWaterAt(new Point(i, u))&&IsThereARoadNextTo(new Point(i,u),6))
                     {
                         int type = 1;
                         int level = 1;
-                        int random1 = rand.Next(0, 101);
-                        if (random1 < 60)
+                        int random1 = rnd.Next(0, 101); 
+                        int random2 = rnd.Next(0, 101);
+                        if (random1 < 65)
                         {
                             type = 0;
                         }
-                        else if (random1 < 85)
+                        else if (random1 < 90)
                         {
                             type = 1;
                         }
@@ -378,13 +418,13 @@ namespace MyBPT.Classes {
                         {
                             type = 2;
                         }
-                        if (random1 > 80)
+                        if (random2 > 80)
                         {
                             level = 2;
                         }
                         if (MapData[i, u].Height < 160 && MapData[i, u].Height > 90)
                         {
-                            if (rand.Next(1, 100) > 85)
+                            if (rnd.Next(1, 100) > 85)
                             {
                                 buildings.Add(new Building(texturecollection, this, new Point(i, u),type,level));
 
@@ -392,7 +432,7 @@ namespace MyBPT.Classes {
                         }
                         else if (MapData[i, u].Height > 160)
                         {
-                            if (rand.Next(1, 100) > 95)
+                            if (rnd.Next(1, 100) > 95)
                             {
                                 buildings.Add(new Building(texturecollection, this, new Point(i, u), type, level));
 
@@ -400,7 +440,7 @@ namespace MyBPT.Classes {
                         }
                         else if (MapData[i, u].Height < 90)
                         {
-                            if (rand.Next(1, 100) > 90)
+                            if (rnd.Next(1, 100) > 90)
                             {
                                 buildings.Add(new Building(texturecollection, this, new Point(i, u), type, level));
 
@@ -437,5 +477,6 @@ namespace MyBPT.Classes {
         internal List<Obstacle> Obstacles { get => obstacles; set => obstacles = value; }
         internal List<Road> Roads { get => roads; set => roads = value; }
         internal List<Building> Buildings { get => buildings; set => buildings = value; }
+        internal List<Station> Stations { get => stations; set => stations = value; }
     }
 }
