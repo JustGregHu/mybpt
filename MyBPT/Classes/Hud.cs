@@ -11,7 +11,6 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using com.bitbull.meat;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 

@@ -24,11 +24,13 @@ namespace MyBPT.Classes {
         IsoCalculator isoCalculator;
         Perlin perlin;
         CountDown incometimer;
+        CountDown gametimer;
 
         //Graphical objects
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteBatch spriteBatchHud;
+        SpriteBatch spriteBatchMenu;
         SpriteFont font;
         GameTextures texturecollection;
 
@@ -43,8 +45,11 @@ namespace MyBPT.Classes {
 
         //Gameworld objects
         GameWorld gameworld;
+        bool hardmode;
+        bool sandbox;
 
         //Buttons, menus
+        Menu menu;
         BuyMenu buymenu;
         Button zoomin;
         Button zoomout;
@@ -54,6 +59,7 @@ namespace MyBPT.Classes {
         Button dpad_right;
 
         //Variables
+        bool isgamesessionactive;
         int hudmargin;
         bool movingbuilding;
         bool buyingbuilding;
@@ -65,17 +71,18 @@ namespace MyBPT.Classes {
         int stationcost;
         int terminuscost;
         int incomeinterval;
+        int lengthofgametime;
+        int monthcount;
+        int currentyear;
 
         //Core functions
-
-
         public GameSession()
         {
             //Initiates graphics, loads content file (throws if a nonexistant texture is being referenced)
             preferredscreensize = new Point(1280, 720);
             graphics = new GraphicsDeviceManager(this);
             try { Content.RootDirectory = "Content"; }
-            catch (Exception e){Console.WriteLine(e.StackTrace);}
+            catch (Exception){}
             graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = preferredscreensize.X;
             graphics.PreferredBackBufferHeight = preferredscreensize.Y;
@@ -84,6 +91,7 @@ namespace MyBPT.Classes {
         }
         protected override void Initialize()
         {   //Display variables
+            DeactivateGame();
             tileSize = new Point(200, 100);
             hudmargin = 50;
             viewdistance = 2.2f;
@@ -92,25 +100,20 @@ namespace MyBPT.Classes {
             isoCalculator = new IsoCalculator();
             perlin = new Perlin();
             incometimer = new CountDown();
-
-            //Logic variables
-            movingbuilding = false;
-            buyingbuilding = false;
+            gametimer = new CountDown();
 
             //Player variables
             TouchPanel.EnabledGestures = GestureType.FreeDrag | GestureType.Pinch | GestureType.DragComplete;
             font = Content.Load<SpriteFont>("regulartext");
             camera = new Camera(GraphicsDevice.Viewport);
             hud = new Camera(GraphicsDevice.Viewport);
-            player = new Player("testperson", 2000, 1);
             dpadmoveintervalinitial = 10;
             dpadmoveinterval = dpadmoveintervalinitial;
 
             //Gameworld variables
-            stationcost=300;
-            terminuscost=1500;
-            incomeinterval = 30;
-            incometimer.StartTimer(incomeinterval);
+            stationcost=350;
+            terminuscost=1000;
+
             base.Initialize();
         }
         protected override void LoadContent()
@@ -118,16 +121,12 @@ namespace MyBPT.Classes {
             //Textures, SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatchHud = new SpriteBatch(GraphicsDevice);
+            spriteBatchMenu = new SpriteBatch(GraphicsDevice);
             texturecollection = new GameTextures();
             LoadTexturesIntoTextureCollection();
 
-            //Map Generation
-            gameworld = new GameWorld(texturecollection.GetTextures());
-            gameworld.GenerateMap(spriteBatch, GraphicsDevice);
-            gameworld.InitiateHighlightTile();
-            SnapCameraToSelectedTile();
-
             //Buttons, Menus
+            menu = new Menu(GraphicsDevice, preferredscreensize, texturecollection);
             buymenu = new BuyMenu(GraphicsDevice, preferredscreensize, texturecollection);
             int zoomwidth = texturecollection.GetTextures()["hud_zoom_in"].Width;
             zoomin = new Button(new Vector2(preferredscreensize.X - (zoomwidth + hudmargin), preferredscreensize.Y - zoomwidth - hudmargin), texturecollection.GetTextures()["hud_zoom_in"]);
@@ -138,30 +137,72 @@ namespace MyBPT.Classes {
             dpad_up = new Button(new Vector2( 120 + hudmargin, preferredscreensize.Y - 220 - hudmargin), texturecollection.GetTextures()["hud_dpad_north"]);
             dpad_down = new Button(new Vector2(hudmargin-20, preferredscreensize.Y -70 -hudmargin), texturecollection.GetTextures()["hud_dpad_south"]);
         }
+        private void InitializeSession(bool isupgradable, bool size,bool issandbox)
+        {
+            menu.CloseMenu();
+            //Logic variables
+            movingbuilding = false;
+            buyingbuilding = false;
+
+            //Player variables
+            player = new Player("testperson", 2000, 1);
+
+            //Map Generation
+            gameworld = new GameWorld(texturecollection.GetTextures(),size);
+            hardmode = isupgradable;
+            sandbox = issandbox;
+            gameworld.GenerateMap(spriteBatch, GraphicsDevice);
+            gameworld.InitiateHighlightTile();
+            SnapCameraToSelectedTile();
+
+            //Gameworld variables
+            InitializeYear();
+            InitializeMonth();
+            if (!issandbox)
+            {
+                lengthofgametime = 720;
+                gametimer.StartTimer(lengthofgametime);
+            }
+            incomeinterval = 30;
+            incometimer.StartTimer(incomeinterval);
+        }
         protected override void UnloadContent()
         {
 
         }
         protected override void Update(GameTime gameTime)
         {
-            PayIncome();
+            if (!sandbox || gametimer.Timeleft<1)
+            {
+                //msg game over ! save profile.
+            }
             UpdateTouchCollection();
-            //HUD Element, Button press handlers
-            CheckIfAnyStationsAreHighlighted();
-            CheckIfAnyObstaclesAreHighlighted();
-            CheckIfAnyBuildingsAreHighlighted();
-            UpdateHudVisibilityBasedOnBuyMenu();
-            UpdatePlayerLevel();
+            if (isgamesessionactive)
+            {
+                PayIncome();
+                //HUD Element, Button press handlers
+                CheckIfAnyStationsAreHighlighted();
+                CheckIfAnyObstaclesAreHighlighted();
+                CheckIfAnyBuildingsAreHighlighted();
+                UpdateHudVisibilityBasedOnBuyMenu();
+                UpdatePlayerLevel();
+                if (tc.Count > 0)
+                {
+                    TouchLocation currenttouchlocation = tc[0];
+                    HandleZoomButtonPresses(currenttouchlocation);
+                    HandleDpadPresses(currenttouchlocation);
+                    HandleBuyMenuButtonPresses(currenttouchlocation);
+                    HandleStationButtonPresses(currenttouchlocation);
+                    HandleObstacleDemolishButtonPresses(currenttouchlocation);
+                    HandleBuildingDemolishButtonPresses(currenttouchlocation);
+                }
+            }
             if (tc.Count > 0)
             {
                 TouchLocation currenttouchlocation = tc[0];
-                HandleZoomButtonPresses(currenttouchlocation);
-                HandleDpadPresses(currenttouchlocation);
-                HandleBuyMenuButtonPresses(currenttouchlocation);
-                HandleStationButtonPresses(currenttouchlocation);
-                HandleObstacleDemolishButtonPresses(currenttouchlocation);
-                HandleBuildingDemolishButtonPresses(currenttouchlocation);
+                HandleMenuButtonPresses(currenttouchlocation);
             }
+
 
             //Updates the camera position
             camera.Update(gameTime, tc);
@@ -173,161 +214,51 @@ namespace MyBPT.Classes {
         protected override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transform);
-            UpdateIsometricCamera();
-            DrawMap();
-            DrawRoads();
-            UpdateHighlightedTile();
-            DrawObstacles();
-            DrawStations();
-            DrawBuildings();
-            spriteBatch.End();
+            if (isgamesessionactive)
+            {
 
-            spriteBatchHud.Begin(SpriteSortMode.Immediate,
-                                BlendState.AlphaBlend,
-                                SamplerState.PointClamp,
-                                DepthStencilState.None,
-                                RasterizerState.CullNone);
-            DrawMainHud();
-            DrawBuyMenuElements();
-            DrawObstacleDemolitionMenu();
-            DrawBuildingDemolitionMenu();
+                UpdateIsometricCamera();
+                DrawMap();
+                DrawRoads();
+                UpdateHighlightedTile();
+                DrawObstacles();
+                DrawStations();
+                DrawBuildings();
+            }
+            spriteBatch.End();
+            if (isgamesessionactive)
+            {
+
+
+
+                spriteBatchHud.Begin(SpriteSortMode.Immediate,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        DepthStencilState.None,
+                        RasterizerState.CullNone);
+                DrawMainHud();
+                DrawBuyMenuElements();
+                DrawObstacleDemolitionMenu();
+                DrawBuildingDemolitionMenu();
 #if DEBUG
-            DrawFPS(gameTime);
+                DrawFPS(gameTime);
 #endif
-            spriteBatchHud.End();
+                spriteBatchHud.End();
+
+            }
+
+            spriteBatchMenu.Begin(SpriteSortMode.Immediate,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        DepthStencilState.None,
+                        RasterizerState.CullNone);
+
+            DrawMenuElements();
+            spriteBatchMenu.End();
             base.Draw(gameTime);
         }
 
-
-
-        private static SqliteConnection GetConnection()
-        {
-            Debug.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString());
-            var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "mybpt.db");
-            bool exists = File.Exists(dbPath);
-
-
-            var conn = new SqliteConnection("Data Source=" + dbPath);
-
-
-
-            return conn;
-        }
-
-        private static void CreateDatabase(SqliteConnection connection)
-        {
-            var sql = "CREATE TABLE textures (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name ntext);";
-
-            connection.Open();
-
-            using (var cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = sql;
-                cmd.ExecuteNonQuery();
-            }
-
-            // Create a sample note to get the user started
-            sql = "INSERT INTO textures (Name) VALUES (@Name);";
-
-            using (var cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = sql;
-                cmd.Parameters.AddWithValue("@Name", "world_tile_grass");
-
-                cmd.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-
-
         //Player, camera, touch functions
-        private void LoadTexturesIntoTextureCollection()
-        {
-            var sql = "SELECT `Name` FROM `textures`;";
-
-            using (var conn = GetConnection())
-            {
-                conn.Open();
-
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            texturecollection.AddTexture(reader.GetString(0), Content.Load<Texture2D>(reader.GetString(0)));
-                    }
-                }
-            }
-
-
-
-
-
-
-            /*
-            var db = new SQLiteConnection("mybpt.db");
-            TableQuery<textures> table = db.Table<textures>();
-            foreach (var s in table)
-            {
-                texturecollection.AddTexture(s.name, Content.Load<Texture2D>(s.name));
-            }
-
-            */
-
-            /*
-            texturecollection.AddTexture("world_tile_water", Content.Load<Texture2D>("world_tile_water"));
-            texturecollection.AddTexture("world_tile_sand", Content.Load<Texture2D>("world_tile_sand"));
-            texturecollection.AddTexture("world_tile_grass", Content.Load<Texture2D>("world_tile_grass"));
-            texturecollection.AddTexture("world_tile_stone", Content.Load<Texture2D>("world_tile_stone"));
-            texturecollection.AddTexture("world_tile_snow", Content.Load<Texture2D>("world_tile_snow"));
-
-            texturecollection.AddTexture("world_obstacle_hill", Content.Load<Texture2D>("world_obstacle_hill"));
-
-            texturecollection.AddTexture("world_highlight_white", Content.Load<Texture2D>("world_highlight_white"));
-
-            texturecollection.AddTexture("world_highlight_lightblue", Content.Load<Texture2D>("world_highlight_lightblue"));
-            texturecollection.AddTexture("world_building_residential_1", Content.Load<Texture2D>("world_building_residential_1"));
-            texturecollection.AddTexture("world_building_residential_2", Content.Load<Texture2D>("world_building_residential_2"));
-            texturecollection.AddTexture("world_building_commercial_1", Content.Load<Texture2D>("world_building_commercial_1"));
-            texturecollection.AddTexture("world_building_commercial_2", Content.Load<Texture2D>("world_building_commercial_2"));
-            texturecollection.AddTexture("world_building_industrial_1", Content.Load<Texture2D>("world_building_industrial_1"));
-            texturecollection.AddTexture("world_building_industrial_2", Content.Load<Texture2D>("world_building_industrial_2"));
-
-            texturecollection.AddTexture("world_station_1", Content.Load<Texture2D>("world_station_1"));
-            texturecollection.AddTexture("world_station_2", Content.Load<Texture2D>("world_station_2"));
-            texturecollection.AddTexture("world_terminus_1", Content.Load<Texture2D>("world_terminus_1"));
-            texturecollection.AddTexture("world_terminus_2", Content.Load<Texture2D>("world_terminus_2"));
-
-            texturecollection.AddTexture("world_road_west_east", Content.Load<Texture2D>("world_road_west_east"));
-            texturecollection.AddTexture("world_road_north_south", Content.Load<Texture2D>("world_road_north_south"));
-            texturecollection.AddTexture("world_roadcross", Content.Load<Texture2D>("world_roadcross"));
-            texturecollection.AddTexture("world_bridge_west_east", Content.Load<Texture2D>("world_bridge_west_east"));
-            texturecollection.AddTexture("world_bridge_north_south", Content.Load<Texture2D>("world_bridge_north_south"));
-            texturecollection.AddTexture("world_vehicle_bus_front", Content.Load<Texture2D>("world_vehicle_bus_back"));
-
-            texturecollection.AddTexture("hud_zoom_in", Content.Load<Texture2D>("hud_zoom_in"));
-            texturecollection.AddTexture("hud_zoom_out", Content.Load<Texture2D>("hud_zoom_out"));
-            texturecollection.AddTexture("hud_dpad_east", Content.Load<Texture2D>("hud_dpad_east"));
-            texturecollection.AddTexture("hud_dpad_north", Content.Load<Texture2D>("hud_dpad_north"));
-            texturecollection.AddTexture("hud_dpad_south", Content.Load<Texture2D>("hud_dpad_south"));
-            texturecollection.AddTexture("hud_dpad_west", Content.Load<Texture2D>("hud_dpad_west"));
-
-            texturecollection.AddTexture("hud_button_buy_open", Content.Load<Texture2D>("hud_button_buy_open"));
-            texturecollection.AddTexture("hud_button_buy_close", Content.Load<Texture2D>("hud_button_buy_close"));
-            texturecollection.AddTexture("hud_button_buy_terminus", Content.Load<Texture2D>("hud_button_buy_terminus"));
-            texturecollection.AddTexture("hud_button_buy_station", Content.Load<Texture2D>("hud_button_buy_station"));
-            texturecollection.AddTexture("hud_button_station_move", Content.Load<Texture2D>("hud_button_station_move"));
-            texturecollection.AddTexture("hud_button_station_upgrade", Content.Load<Texture2D>("hud_button_station_upgrade"));
-            texturecollection.AddTexture("hud_button_station_sell", Content.Load<Texture2D>("hud_button_station_sell"));
-            texturecollection.AddTexture("hud_button_apply", Content.Load<Texture2D>("hud_button_apply"));
-            texturecollection.AddTexture("hud_button_cancel", Content.Load<Texture2D>("hud_button_cancel"));
-            texturecollection.AddTexture("hud_button_demolish", Content.Load<Texture2D>("hud_button_demolish"));
-            */
-
-        }
         private void ReInitiateTouchCollection()
         {
             tc = new TouchCollection();
@@ -459,7 +390,7 @@ namespace MyBPT.Classes {
         }
         private void DrawMainHud()
         {
-            if (!buymenu.BuymenuIsOpen)
+            if (!buymenu.BuymenuIsOpen || !menu.MenuIsOpen)
             {
                 DrawZoomButtons();
                 DrawDpad();
@@ -471,21 +402,30 @@ namespace MyBPT.Classes {
                 }
                 else
                 {
-                    spriteBatchHud.DrawString(font, player.Name + "   Lvl " + player.Level, new Vector2(50, 50), Color.White);
+                    spriteBatchHud.DrawString(font, "Lvl " + player.Level, new Vector2(50, 50), Color.White);
                     spriteBatchHud.DrawString(font, "Cash: " + player.Money, new Vector2(50, 100), Color.White);
+                    spriteBatchHud.DrawString(font, "Next month: " + incometimer.Timeleft + "s", new Vector2(50, 200), Color.White);
+                    spriteBatchHud.DrawString(font, currentyear +" "+CurrentMonth, new Vector2(50, 250), Color.White);
                 }
+            }
+        }
+        private void DrawMenuElements()
+        {
+            if (!buymenu.BuymenuIsOpen)
+            {
+                menu.Draw(spriteBatchMenu);
             }
         }
         private void DrawBuyMenuElements()
         {
-            if (!movingbuilding)
+            if (!movingbuilding && (!menu.MenuIsOpen) )
             {
                 buymenu.Draw(spriteBatchHud);
             }
         }
         private void DrawObstacleDemolitionMenu()
         {
-            if (!movingbuilding && !buymenu.BuymenuIsOpen)
+            if (!movingbuilding && !buymenu.BuymenuIsOpen &&!menu.MenuIsOpen)
             {
                 for (int i = 0; i < gameworld.Obstacles.Count; i++)
                 {
@@ -496,7 +436,7 @@ namespace MyBPT.Classes {
         }
         private void DrawBuildingDemolitionMenu()
         {
-            if (!movingbuilding && !buymenu.BuymenuIsOpen)
+            if (!movingbuilding && !buymenu.BuymenuIsOpen && !menu.MenuIsOpen)
             {
                 for (int i = 0; i < gameworld.Buildings.Count; i++)
                 {
@@ -597,30 +537,83 @@ namespace MyBPT.Classes {
         }
         private void UpgradeHighlightedBuilding()
         {
-            player.AddMoney(-gameworld.Stations[highlightedstationid].UpgradeCost);
-            gameworld.Stations[highlightedstationid].LevelStationUp(texturecollection, gameworld);
+            if (!hardmode)
+            {
+
+                if (gameworld.Stations[highlightedstationid].Level != gameworld.Stations[highlightedstationid].Maxlevel)
+                {
+                    if (player.CanAfford(gameworld.Stations[highlightedstationid].UpgradeCost))
+                    {
+                        gameworld.Stations[highlightedstationid].LevelStationUp(texturecollection, gameworld);
+                    }
+                    else
+                    {
+                        //msg: player cannot afford!
+                    }
+                }
+                else
+                {
+                    //msg: building already max level!
+                }
+
+                player.AddMoney(-gameworld.Stations[highlightedstationid].UpgradeCost);
+                gameworld.Stations[highlightedstationid].LevelStationUp(texturecollection, gameworld);
+            }
+            else
+            {
+                //msg: cannot in classic mode
+            }
         }
 
         //Building movement
         private void MoveBuildingUp()
         {
-            gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
-            gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X - 1, gameworld.Stations[highlightedstationid].Coordinates.Y),gameworld);
+            if (!gameworld.IsThereAStationAt(new Point(gameworld.Stations[highlightedstationid].Coordinates.X - 1, gameworld.Stations[highlightedstationid].Coordinates.Y)))
+            {
+                gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
+                gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X - 1, gameworld.Stations[highlightedstationid].Coordinates.Y), gameworld);
+            }
+            else
+            {
+                gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+            }
+
         }
         private void MoveBuildingDown()
         {
-            gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
-            gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X + 1, gameworld.Stations[highlightedstationid].Coordinates.Y ), gameworld);
+            if (!gameworld.IsThereAStationAt(new Point(gameworld.Stations[highlightedstationid].Coordinates.X + 1, gameworld.Stations[highlightedstationid].Coordinates.Y)))
+            {
+                gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
+                gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X + 1, gameworld.Stations[highlightedstationid].Coordinates.Y ), gameworld);
+            }
+            else
+            {
+                gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+            }
         }
         private void MoveBuildingLeft()
         {
-            gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
-            gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X, gameworld.Stations[highlightedstationid].Coordinates.Y - 1), gameworld);;
+            if (!gameworld.IsThereAStationAt(new Point(gameworld.Stations[highlightedstationid].Coordinates.X, gameworld.Stations[highlightedstationid].Coordinates.Y - 1)))
+            {
+                gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
+                 gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X, gameworld.Stations[highlightedstationid].Coordinates.Y - 1), gameworld);;
+            }
+            else
+            {
+                gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+            }
         }
         private void MoveBuildingRight()
         {
-            gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
-            gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X, gameworld.Stations[highlightedstationid].Coordinates.Y + 1), gameworld);
+            if (!gameworld.IsThereAStationAt(new Point(gameworld.Stations[highlightedstationid].Coordinates.X, gameworld.Stations[highlightedstationid].Coordinates.Y + 1)))
+            {
+                gameworld.Stations[highlightedstationid].ApplyIncome(gameworld);
+                gameworld.Stations[highlightedstationid].MoveStationTo(new Point(gameworld.Stations[highlightedstationid].Coordinates.X, gameworld.Stations[highlightedstationid].Coordinates.Y + 1), gameworld);
+            }
+            else
+            {
+                gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+            }
         }
 
         //Button click events
@@ -690,8 +683,6 @@ namespace MyBPT.Classes {
                         InitializeDpadMoveInterval();
                 }
             }
-
-
             if (dpad_down.Visible)
             {
                 if (dpad_down.IsHeld(currenttouchlocation))
@@ -756,12 +747,83 @@ namespace MyBPT.Classes {
                 }
             }
         }
+
+        private void HandleMenuButtonPresses(TouchLocation currenttouchlocation)
+        {
+            if (menu.GoToPlaymenuButton.IsTapped(currenttouchlocation)&&menu.GoToPlaymenuButton.Visible)
+            {
+                currenttouchlocation = new TouchLocation();
+                OpenPlayMenu();
+            }
+            if (menu.GoToOptionsButton.IsTapped(currenttouchlocation) && menu.GoToOptionsButton.Visible)
+            {
+                OpenOptions();
+            }
+            if (menu.GoToScoresButton.IsTapped(currenttouchlocation) && menu.GoToScoresButton.Visible)
+            {
+                OpenScores();
+            }
+            if (menu.GoToExitButton.IsTapped(currenttouchlocation) && menu.GoToExitButton.Visible)
+            {
+                Exit();
+            }
+            if (menu.GoToMainmenuButton.IsTapped(currenttouchlocation) && menu.GoToMainmenuButton.Visible)
+            {
+                OpenMainMenu();
+            }
+            if (menu.PlayRegularButton.IsTapped(currenttouchlocation) && menu.PlayRegularButton.Visible)
+            {
+                StartRegularSession();
+            }
+            if (menu.PlayHardButton.IsTapped(currenttouchlocation) && menu.PlayHardButton.Visible)
+            {
+                StartHardSession();
+            }
+            if (menu.PlaySandboxButton.IsTapped(currenttouchlocation) && menu.PlaySandboxButton.Visible)
+            {
+                StartSandboxSession();
+            }
+            if (menu.ToggleSoundButton.IsTapped(currenttouchlocation) && menu.ToggleSoundButton.Visible)
+            {
+                ToggleSound();
+            }
+            if (menu.ResetStatsButton.IsTapped(currenttouchlocation) && menu.ResetStatsButton.Visible)
+            {
+                ResetStats();
+            }
+
+            if (menu.OpenButton.IsTapped(currenttouchlocation) && menu.OpenButton.Visible)
+            {
+                if (!buymenu.BuymenuIsOpen)
+                {
+                    currenttouchlocation = new TouchLocation();
+                    OpenMainMenu();
+                }
+                
+            }
+            if (menu.CloseButton.IsTapped(currenttouchlocation) && menu.CloseButton.Visible)
+            {
+                if (!buymenu.BuymenuIsOpen)
+                {
+                    currenttouchlocation = new TouchLocation();
+                    CloseMenu();
+                }
+            }
+        }
         private void HandleBuyMenuButtonPresses(TouchLocation currenttouchlocation)
         {
             if (buymenu.OpenButton.IsTapped(currenttouchlocation) && buymenu.OpenButton.Visible)
             {
-                currenttouchlocation = new TouchLocation();
-                OpenBuyMenu();
+                if (!gameworld.IsThereAStationAt(gameworld.CurrentTilePosition))
+                {
+                    currenttouchlocation = new TouchLocation();
+                    OpenBuyMenu();
+                }
+                else
+                {
+                    //msg theres a station in the way
+                }
+
             }
             if (buymenu.CloseButton.IsTapped(currenttouchlocation) && buymenu.CloseButton.Visible)
             {
@@ -867,21 +929,9 @@ namespace MyBPT.Classes {
                     {
                         if (gameworld.Stations[i].UpgradeButton.Visible)
                         {
-                            if (gameworld.Stations[i].Level!=gameworld.Stations[i].Maxlevel)
-                            {
-                                if (player.CanAfford(gameworld.Stations[i].UpgradeCost))
-                                {
-                                    gameworld.Stations[highlightedstationid].LevelStationUp(texturecollection, gameworld); 
-                                }
-                                else
-                                {
-                                    //msg: player cannot afford!
-                                }
-                            }
-                            else
-                            {
-                               //msg: building already max level!
-                            }
+                            highlightedstationid = i;
+                            UpgradeHighlightedBuilding();
+                            i = gameworld.Stations.Count;
                         }
                     }
                 }
@@ -971,13 +1021,101 @@ namespace MyBPT.Classes {
             {
                 incometimer.StartTimer(incomeinterval);
                 player.AddMoney(gameworld.CurrentIncome);
+                NextMonth();
             }
+        }
+        private void InitializeYear()
+        {
+            currentyear=DateTime.Now.Year;
+        }
+        private void InitializeMonth()
+        {
+            monthcount = 1;
+        }
+        private void NextMonth()
+        {
+            monthcount++;
+            if (monthcount>12)
+            {
+                currentyear += 1;
+                monthcount = 1;
+            }
+        }
+        private string CurrentMonth
+        {
+            get
+            {
+                switch (monthcount)
+                {
+                    case 1: return "January";
+                    case 2: return "February";
+                    case 3: return "March";
+                    case 4: return "April";
+                    case 5: return "May";
+                    case 6: return "June";
+                    case 7: return "July";
+                    case 8: return "August";
+                    case 9: return "September";
+                    case 10: return "October";
+                    case 11: return "November";
+                    case 12: return "December";
+                    default:return "undefined";   
+                }
+            }
+        }
+
+        //Menu logic functions
+        private void OpenMainMenu()
+        {
+            menu.OpenMainMenu();
+        }
+        private void OpenPlayMenu()
+        {
+            menu.OpenPlayMenu();
+        }
+        private void StartRegularSession()
+        {
+            ActivateGame();
+            InitializeSession(false,false,false);
+        }
+        private void StartHardSession()
+        {
+            ActivateGame();
+            InitializeSession(true, true, false);
+        }
+        private void StartSandboxSession()
+        {
+            ActivateGame();
+            InitializeSession(false, false,true);
+        }
+        private void OpenOptions()
+        {
+            menu.OpenOptions();
+        }
+        private void ToggleSound()
+        {
+            //toggle sound
+        }
+        private void ResetStats()
+        {
+            //resetstats
+        }
+        private void OpenScores()
+        {
+            //scores
+        }
+        private void CloseMenu()
+        {
+            menu.CloseMenu();
         }
 
         //Buymenu logic functions
         private void OpenBuyMenu()
         {
-            buymenu.OpenBuyMenu();
+            if (!menu.MenuIsOpen)
+            {
+                buymenu.OpenBuyMenu();
+            }
         }
         private void CloseBuyMenu()
         {
@@ -1009,13 +1147,65 @@ namespace MyBPT.Classes {
             player.Level = gameworld.CountTerminiOnMap();
         }
 
-
-        //Misc.
+        //Session functions
+        private void ActivateGame()
+        {
+            menu.StartGameSession();
+            isgamesessionactive = true;
+        }
+        private void DeactivateGame()
+        {
+            isgamesessionactive = false;
+        }
         private void ExitAppIfBackButtonIsPressed()
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
         }
 
+        //SQL Connections
+        private static SqliteConnection GetConnection()
+        {
+            Debug.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString());
+            var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "mybpt.db");
+            bool exists = File.Exists(dbPath);
+            var conn = new SqliteConnection("Data Source=" + dbPath);
+            return conn;
+        }
+        private void LoadTexturesIntoTextureCollection()
+        {
+            var sql = "SELECT `Name` FROM `textures`;";
+
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            texturecollection.AddTexture(reader.GetString(0), Content.Load<Texture2D>(reader.GetString(0)));
+                    }
+                }
+            }
+        }
+        private static void CreateNewPlayer(SqliteConnection connection, string playername)
+        {
+
+            string sql = "INSERT INTO players (Name) VALUES (@Name);";
+
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("@Name", playername);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
     }
 }

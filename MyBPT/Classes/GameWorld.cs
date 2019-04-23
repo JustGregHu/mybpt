@@ -38,12 +38,26 @@ namespace MyBPT.Classes {
         List<Obstacle> obstacles = new List<Obstacle>();
         List<Building> buildings = new List<Building>();
         List<Station> stations = new List<Station>();
+        int largeworldsize = 50;
+        int smallworldsize = 28;
 
         public bool IsThereABuildingAt(Point coordinates)
         {
             for (int i = 0; i < buildings.Count; i++)
             {
                 if (buildings[i].Coordinates == coordinates)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsThereAStationAt(Point coordinates)
+        {
+            for (int i = 0; i < stations.Count; i++)
+            {
+                if (stations[i].Coordinates == coordinates)
                 {
                     return true;
                 }
@@ -201,10 +215,17 @@ namespace MyBPT.Classes {
         //GAME WORLD
 
 
-        public GameWorld(Dictionary<string, Texture2D> texturecollection)
+        public GameWorld(Dictionary<string, Texture2D> texturecollection,bool size)
         {
             perlin = new Perlin();
-            worldsize = 40;
+            if (size)
+            {
+                worldsize = smallworldsize;
+            }
+            else
+            {
+                worldsize = largeworldsize;
+            }
             currentTilePosition = new Point(worldsize / 2, worldsize / 2);
             noisescale = 12f;
             this.texturecollection = texturecollection;

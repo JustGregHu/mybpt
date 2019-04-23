@@ -46,7 +46,6 @@ namespace MyBPT.Classes
             CloseBuyMenu();
         }
 
-
         public void Draw(SpriteBatch spriteBatch)
         {
             if (buymenuisopen)

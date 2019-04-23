@@ -20,7 +20,6 @@ namespace MyBPT.Classes {
         bool highlighted;
         bool visible;
         Texture2D texture;
-        SpriteFont text;
 
         public bool Visible { get => visible; set => visible = value; }
 
@@ -33,6 +32,7 @@ namespace MyBPT.Classes {
             area = new Rectangle(position.ToPoint(),new Point(texture.Width, texture.Height));
 
         }
+
 
         public void Draw(SpriteBatch spriteBatch) {
             if (Visible) {

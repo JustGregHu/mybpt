@@ -9,6 +9,7 @@ namespace MyBPT
     [Activity(Label = "MyBPT"
         , MainLauncher = true
         , Icon = "@drawable/icon"
+        , Theme = "@style/Theme.Splash"
         , AlwaysRetainTaskState = true
         , LaunchMode = Android.Content.PM.LaunchMode.SingleInstance
         , ScreenOrientation = ScreenOrientation.ReverseLandscape

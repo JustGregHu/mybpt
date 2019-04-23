@@ -33,6 +33,7 @@ namespace MyBPT.Classes
 
         public Building(Dictionary<string, Texture2D> texturecollection, GameWorld gameWorld, Point coordinates, int type, int level)
         {
+            this.level = level;
             this.type = type;
             switch (level)
             {
