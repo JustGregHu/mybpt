@@ -18,6 +18,7 @@ namespace MyBPT
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+            SQLiteConnectionBuddy.SQLiteConnectionHelper.CopyEmbeddedDatabase("mybpt.db", this);
             var g = new GameSession();
             SetContentView((View)g.Services.GetService(typeof(View)));
             g.Run();

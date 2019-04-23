@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using SQLite;
+using SQLiteConnectionBuddy;
+using Mono.Data.Sqlite;
+using SQLiteNetExtensions.Extensions;
 
 
 #if DEBUG
@@ -61,6 +67,7 @@ namespace MyBPT.Classes {
         int incomeinterval;
 
         //Core functions
+
 
         public GameSession()
         {
@@ -191,10 +198,86 @@ namespace MyBPT.Classes {
             base.Draw(gameTime);
         }
 
+
+
+        private static SqliteConnection GetConnection()
+        {
+            Debug.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Personal).ToString());
+            var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "mybpt.db");
+            bool exists = File.Exists(dbPath);
+
+
+            var conn = new SqliteConnection("Data Source=" + dbPath);
+
+
+
+            return conn;
+        }
+
+        private static void CreateDatabase(SqliteConnection connection)
+        {
+            var sql = "CREATE TABLE textures (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name ntext);";
+
+            connection.Open();
+
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
+            }
+
+            // Create a sample note to get the user started
+            sql = "INSERT INTO textures (Name) VALUES (@Name);";
+
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("@Name", "world_tile_grass");
+
+                cmd.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
+
+
         //Player, camera, touch functions
         private void LoadTexturesIntoTextureCollection()
         {
+            var sql = "SELECT `Name` FROM `textures`;";
 
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            texturecollection.AddTexture(reader.GetString(0), Content.Load<Texture2D>(reader.GetString(0)));
+                    }
+                }
+            }
+
+
+
+
+
+
+            /*
+            var db = new SQLiteConnection("mybpt.db");
+            TableQuery<textures> table = db.Table<textures>();
+            foreach (var s in table)
+            {
+                texturecollection.AddTexture(s.name, Content.Load<Texture2D>(s.name));
+            }
+
+            */
+
+            /*
             texturecollection.AddTexture("world_tile_water", Content.Load<Texture2D>("world_tile_water"));
             texturecollection.AddTexture("world_tile_sand", Content.Load<Texture2D>("world_tile_sand"));
             texturecollection.AddTexture("world_tile_grass", Content.Load<Texture2D>("world_tile_grass"));
@@ -242,8 +325,8 @@ namespace MyBPT.Classes {
             texturecollection.AddTexture("hud_button_apply", Content.Load<Texture2D>("hud_button_apply"));
             texturecollection.AddTexture("hud_button_cancel", Content.Load<Texture2D>("hud_button_cancel"));
             texturecollection.AddTexture("hud_button_demolish", Content.Load<Texture2D>("hud_button_demolish"));
+            */
 
-           
         }
         private void ReInitiateTouchCollection()
         {

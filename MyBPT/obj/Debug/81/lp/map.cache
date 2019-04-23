@@ -1,2 +1,11 @@
 MonoGame.Framework
+Newtonsoft.Json
+SQLite-net
+SQLiteConnectionBuddy.Android
+SQLiteNetExtensions
+SQLitePCLRaw.batteries_green
+SQLitePCLRaw.batteries_v2
+SQLitePCLRaw.core
+SQLitePCLRaw.lib.e_sqlite3
+SQLitePCLRaw.provider.e_sqlite3
 System.Runtime

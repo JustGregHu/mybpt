@@ -108,6 +108,15 @@ class MonoPackageManager_Resources {
 		/* We need to ensure that "MyBPT.dll" comes first in this list. */
 		"MyBPT.dll",
 		"MonoGame.Framework.dll",
+		"Newtonsoft.Json.dll",
+		"SQLite-net.dll",
+		"SQLiteConnectionBuddy.Android.dll",
+		"SQLiteNetExtensions.dll",
+		"SQLitePCLRaw.batteries_green.dll",
+		"SQLitePCLRaw.batteries_v2.dll",
+		"SQLitePCLRaw.core.dll",
+		"SQLitePCLRaw.lib.e_sqlite3.dll",
+		"SQLitePCLRaw.provider.e_sqlite3.dll",
 	};
 	public static final String[] Dependencies = new String[]{
 	};

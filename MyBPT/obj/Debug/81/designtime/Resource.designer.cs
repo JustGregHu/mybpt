@@ -26,6 +26,8 @@ namespace MyBPT
 		
 		public static void UpdateIdValues()
 		{
+			global::SQLiteConnectionBuddy.Android.Resource.String.ApplicationName = global::MyBPT.Resource.String.ApplicationName;
+			global::SQLiteConnectionBuddy.Android.Resource.String.Hello = global::MyBPT.Resource.String.Hello;
 		}
 		
 		public partial class Drawable
