@@ -4,61 +4,125 @@
   <Platform>Android</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/game_loading.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_apply.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_buy_close.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_buy_open.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_buy_station.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_buy_terminus.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_cancel.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_demolish.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_station_move.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_station_sell.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_button_station_upgrade.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_dpad_east.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_dpad_north.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_dpad_south.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_dpad_west.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_back.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_close.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_exit.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_LOGO.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_open.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_options.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_play.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_play_hardmode.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_play_normal.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_play_options_reset.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_play_options_toggle.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_play_sandbox.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_menu_scores.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_zoom_in.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/hud_zoom_out.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/regulartext.spritefont</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_bridge_north_south.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_bridge_west_east.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_building_commercial_1.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_building_commercial_2.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_building_industrial_1.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_building_industrial_2.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_building_residential_1.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_building_residential_2.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_highlight_lightblue.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_highlight_white.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_obstacle_hill.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_road_north_south.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_road_west_east.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_roadcross.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_station_1.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_station_2.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_terminus_1.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_terminus_2.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_tile_grass.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_tile_sand.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_tile_snow.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_tile_stone.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_tile_water.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_vehicle_bus_back.png</File>
-    <File>C:/Users/Suli/Source/Repos/JustGregHu/mybpt/MyBPT/Content/world_vehicle_bus_front.png</File>
+    <File>C:/mybpt/MyBPT/Content/game_loading.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_apply.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_buy_close.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_buy_open.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_buy_station.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_buy_terminus.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_cancel.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_demolish.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_station_move.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_station_sell.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_button_station_upgrade.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_dpad_east.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_dpad_north.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_dpad_south.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_dpad_west.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_keyboard_key.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_keyboard_key_del.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_keyboard_submit.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_back.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_close.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_exit.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_LOGO.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_open.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_options.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play_hardmode.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play_normal.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play_options_reset.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play_options_toggle.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play_sandbox.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_scores.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_zoom_in.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_zoom_out.png</File>
+    <File>C:/mybpt/MyBPT/Content/regulartext.spritefont</File>
+    <File>C:/mybpt/MyBPT/Content/world_bridge_north_south.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_bridge_west_east.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_building_commercial_1.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_building_commercial_2.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_building_industrial_1.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_building_industrial_2.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_building_residential_1.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_building_residential_2.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_highlight_lightblue.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_highlight_white.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_obstacle_hill.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_road_north_south.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_road_west_east.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_roadcross.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_station_1.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_station_2.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_terminus_1.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_terminus_2.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_tile_grass.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_tile_sand.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_tile_snow.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_tile_stone.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_tile_water.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_vehicle_bus_back.png</File>
+    <File>C:/mybpt/MyBPT/Content/world_vehicle_bus_front.png</File>
   </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
 </SourceFileCollection>

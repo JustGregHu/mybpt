@@ -22,6 +22,7 @@ namespace MyBPT.Classes {
         Texture2D texture;
 
         public bool Visible { get => visible; set => visible = value; }
+        public Vector2 Position { get => position; set => position = value; }
 
         public Button(Vector2 position, Texture2D texture) {
             highlighted = false;

@@ -19,6 +19,9 @@
     <File>C:/mybpt/MyBPT/Content/hud_dpad_north.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_dpad_south.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_dpad_west.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_keyboard_key.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_keyboard_key_del.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_keyboard_submit.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_back.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_close.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_exit.png</File>
@@ -62,6 +65,9 @@
     <File>C:/mybpt/MyBPT/Content/world_vehicle_bus_front.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

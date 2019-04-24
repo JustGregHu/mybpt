@@ -14,6 +14,9 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "C:/mybpt/MyBPT/Content/hud_dpad_north.png","C:/mybpt/MyBPT/Content/bin/Android/hud_dpad_north.xnb","TextureProcessor","Texture2DContent",2122,40085,0.0079972
 "C:/mybpt/MyBPT/Content/hud_dpad_south.png","C:/mybpt/MyBPT/Content/bin/Android/hud_dpad_south.xnb","TextureProcessor","Texture2DContent",2137,40085,0.0070003
 "C:/mybpt/MyBPT/Content/hud_dpad_west.png","C:/mybpt/MyBPT/Content/bin/Android/hud_dpad_west.xnb","TextureProcessor","Texture2DContent",2107,40085,0.0079987
+"C:/mybpt/MyBPT/Content/hud_keyboard_key.png","C:/mybpt/MyBPT/Content/bin/Android/hud_keyboard_key.xnb","TextureProcessor","Texture2DContent",332,10085,1.275071
+"C:/mybpt/MyBPT/Content/hud_keyboard_key_del.png","C:/mybpt/MyBPT/Content/bin/Android/hud_keyboard_key_del.xnb","TextureProcessor","Texture2DContent",671,10085,0.5150665
+"C:/mybpt/MyBPT/Content/hud_keyboard_submit.png","C:/mybpt/MyBPT/Content/bin/Android/hud_keyboard_submit.xnb","TextureProcessor","Texture2DContent",1677,20085,0.0090031
 "C:/mybpt/MyBPT/Content/hud_menu_back.png","C:/mybpt/MyBPT/Content/bin/Android/hud_menu_back.xnb","TextureProcessor","Texture2DContent",372,10085,0.0059999
 "C:/mybpt/MyBPT/Content/hud_menu_close.png","C:/mybpt/MyBPT/Content/bin/Android/hud_menu_close.xnb","TextureProcessor","Texture2DContent",1078,10085,0.0069998
 "C:/mybpt/MyBPT/Content/hud_menu_exit.png","C:/mybpt/MyBPT/Content/bin/Android/hud_menu_exit.xnb","TextureProcessor","Texture2DContent",2126,120085,0.0160009
@@ -29,7 +32,7 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "C:/mybpt/MyBPT/Content/hud_menu_scores.png","C:/mybpt/MyBPT/Content/bin/Android/hud_menu_scores.xnb","TextureProcessor","Texture2DContent",3498,120085,0.0140011
 "C:/mybpt/MyBPT/Content/hud_zoom_in.png","C:/mybpt/MyBPT/Content/bin/Android/hud_zoom_in.xnb","TextureProcessor","Texture2DContent",540,10085,0.0059999
 "C:/mybpt/MyBPT/Content/hud_zoom_out.png","C:/mybpt/MyBPT/Content/bin/Android/hud_zoom_out.xnb","TextureProcessor","Texture2DContent",535,10085,0.005004
-"C:/mybpt/MyBPT/Content/regulartext.spritefont","C:/mybpt/MyBPT/Content/bin/Android/regulartext.xnb","FontDescriptionProcessor","SpriteFontContent",2068,136209,0.8240468
+"C:/mybpt/MyBPT/Content/regulartext.spritefont","C:/mybpt/MyBPT/Content/bin/Android/regulartext.xnb","FontDescriptionProcessor","SpriteFontContent",2068,136209,4.821588
 "C:/mybpt/MyBPT/Content/world_bridge_north_south.png","C:/mybpt/MyBPT/Content/bin/Android/world_bridge_north_south.xnb","TextureProcessor","Texture2DContent",4184,80085,0.010001
 "C:/mybpt/MyBPT/Content/world_bridge_west_east.png","C:/mybpt/MyBPT/Content/bin/Android/world_bridge_west_east.xnb","TextureProcessor","Texture2DContent",4248,80085,0.0119983
 "C:/mybpt/MyBPT/Content/world_building_commercial_1.png","C:/mybpt/MyBPT/Content/bin/Android/world_building_commercial_1.xnb","TextureProcessor","Texture2DContent",6077,160085,0.0290001

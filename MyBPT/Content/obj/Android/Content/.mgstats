@@ -14,6 +14,9 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "C:/mybpt/MyBPT/Content/hud_dpad_north.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_dpad_north.xnb","TextureProcessor","Texture2DContent",2122,40085,0.0070003
 "C:/mybpt/MyBPT/Content/hud_dpad_south.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_dpad_south.xnb","TextureProcessor","Texture2DContent",2137,40085,0.0260009
 "C:/mybpt/MyBPT/Content/hud_dpad_west.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_dpad_west.xnb","TextureProcessor","Texture2DContent",2107,40085,0.0080012
+"C:/mybpt/MyBPT/Content/hud_keyboard_key.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_keyboard_key.xnb","TextureProcessor","Texture2DContent",332,10085,0.5140301
+"C:/mybpt/MyBPT/Content/hud_keyboard_key_del.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_keyboard_key_del.xnb","TextureProcessor","Texture2DContent",671,10085,0.5030663
+"C:/mybpt/MyBPT/Content/hud_keyboard_submit.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_keyboard_submit.xnb","TextureProcessor","Texture2DContent",1677,20085,0.014502
 "C:/mybpt/MyBPT/Content/hud_menu_back.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_menu_back.xnb","TextureProcessor","Texture2DContent",372,10085,0.3961126
 "C:/mybpt/MyBPT/Content/hud_menu_close.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_menu_close.xnb","TextureProcessor","Texture2DContent",1078,10085,0.0055009
 "C:/mybpt/MyBPT/Content/hud_menu_exit.png","C:/mybpt/MyBPT/Content/bin/Android/Content/hud_menu_exit.xnb","TextureProcessor","Texture2DContent",2126,120085,0.0510054

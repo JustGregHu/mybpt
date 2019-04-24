@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Android.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -29,6 +31,7 @@ namespace MyBPT.Classes
         SpriteBatch spriteBatch;
         SpriteBatch spriteBatchHud;
         SpriteBatch spriteBatchMenu;
+        SpriteBatch spriteBatchKeyboard;
         SpriteFont font;
         GameTextures texturecollection;
 
@@ -56,6 +59,7 @@ namespace MyBPT.Classes
         Button dpad_left;
         Button dpad_right;
         string gamemessage;
+        OnScreenKeyboard onscreenkeyboard;
 
         //Variables
         bool isgamesessionactive;
@@ -125,6 +129,7 @@ namespace MyBPT.Classes
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatchHud = new SpriteBatch(GraphicsDevice);
             spriteBatchMenu = new SpriteBatch(GraphicsDevice);
+            spriteBatchKeyboard = new SpriteBatch(GraphicsDevice);
             texturecollection = new GameTextures();
             LoadTexturesIntoTextureCollection();
 
@@ -139,6 +144,8 @@ namespace MyBPT.Classes
             dpad_right = new Button(new Vector2( 120 + hudmargin, preferredscreensize.Y - 70 - hudmargin), texturecollection.GetTextures()["hud_dpad_east"]);
             dpad_up = new Button(new Vector2( 120 + hudmargin, preferredscreensize.Y - 220 - hudmargin), texturecollection.GetTextures()["hud_dpad_north"]);
             dpad_down = new Button(new Vector2(hudmargin-20, preferredscreensize.Y -70 -hudmargin), texturecollection.GetTextures()["hud_dpad_south"]);
+
+            onscreenkeyboard = new OnScreenKeyboard(GraphicsDevice, preferredscreensize, texturecollection);
         }
         private void InitializeSession(bool isupgradable, bool size,bool issandbox)
         {
@@ -177,8 +184,11 @@ namespace MyBPT.Classes
 
         protected override void Update(GameTime gameTime)
         {
-            if (!sandbox && gametimer.Timeleft<1)
+            if (isgamesessionactive && !sandbox && gametimer.Timeleft<1)
             {
+                CloseMenu();
+                CloseBuyMenu();
+                onscreenkeyboard.OpenKeyboard();
                 InitializeGameMessage("GAME OVER");
             }
             UpdateTouchCollection();
@@ -206,8 +216,8 @@ namespace MyBPT.Classes
             {
                 TouchLocation currenttouchlocation = tc[0];
                 HandleMenuButtonPresses(currenttouchlocation);
+                HandleOnScreenKeyboardButtonPresses(currenttouchlocation);
             }
-
 
             //Updates the camera position
             camera.Update(gameTime, tc);
@@ -259,6 +269,17 @@ namespace MyBPT.Classes
 
             DrawMenuElements();
             spriteBatchMenu.End();
+
+
+            spriteBatchKeyboard.Begin(SpriteSortMode.Immediate,
+            BlendState.AlphaBlend,
+            SamplerState.PointClamp,
+            DepthStencilState.None,
+            RasterizerState.CullNone);
+
+            DrawOnScreenKeyboard();
+            spriteBatchKeyboard.End();
+
             base.Draw(gameTime);
         }
 
@@ -382,19 +403,25 @@ namespace MyBPT.Classes
         }
         private void DrawZoomButtons()
         {
-            zoomin.Draw(spriteBatchHud);
-            zoomout.Draw(spriteBatchHud);
+            if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
+            {
+                zoomin.Draw(spriteBatchHud);
+                zoomout.Draw(spriteBatchHud);
+            }
         }
         private void DrawDpad()
         {
-            dpad_up.Draw(spriteBatchHud);
-            dpad_right.Draw(spriteBatchHud);
-            dpad_down.Draw(spriteBatchHud);
-            dpad_left.Draw(spriteBatchHud);
+            if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
+            {
+                dpad_up.Draw(spriteBatchHud);
+                dpad_right.Draw(spriteBatchHud);
+                dpad_down.Draw(spriteBatchHud);
+                dpad_left.Draw(spriteBatchHud);
+            }
         }
         private void DrawMainHud()
         {
-            if (!buymenu.BuymenuIsOpen || !menu.MenuIsOpen)
+            if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
             {
                 DrawZoomButtons();
                 DrawDpad();
@@ -415,38 +442,50 @@ namespace MyBPT.Classes
         }
         private void DrawMenuElements()
         {
-            if (!buymenu.BuymenuIsOpen)
+            if (!buymenu.BuymenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
             {
                 menu.Draw(spriteBatchMenu);
+                if (menu.ScoresAreVisible)
+                {
+                    menu.DrawScores(spriteBatchMenu, font, GetAllScores());
+                }
+                
             }
         }
         private void DrawBuyMenuElements()
         {
-            if (!movingbuilding && (!menu.MenuIsOpen) )
+            if (!movingbuilding && (!menu.MenuIsOpen) && !onscreenkeyboard.KeyboardIsOpen)
             {
                 buymenu.Draw(spriteBatchHud);
             }
         }
         private void DrawObstacleDemolitionMenu()
         {
-            if (!movingbuilding && !buymenu.BuymenuIsOpen &&!menu.MenuIsOpen)
-            {
-                for (int i = 0; i < gameworld.Obstacles.Count; i++)
+            if (!movingbuilding)
+                if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
                 {
-                    gameworld.Obstacles[i].DrawButtons(spriteBatchHud);
+                        for (int i = 0; i < gameworld.Obstacles.Count; i++)
+                        {
+                            gameworld.Obstacles[i].DrawButtons(spriteBatchHud);
+                        }
                 }
-            }
+
 
         }
         private void DrawBuildingDemolitionMenu()
         {
-            if (!movingbuilding && !buymenu.BuymenuIsOpen && !menu.MenuIsOpen)
-            {
+            if (!movingbuilding)
+                if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
+                {
                 for (int i = 0; i < gameworld.Buildings.Count; i++)
                 {
                     gameworld.Buildings[i].DrawButtons(spriteBatchHud);
                 }
             }
+        }
+        private void DrawOnScreenKeyboard()
+        {
+            onscreenkeyboard.DrawOnScreenKeyboard(spriteBatchKeyboard, font);
         }
         private void DrawGameMessage()
         {
@@ -993,6 +1032,20 @@ namespace MyBPT.Classes
             }
         }
 
+        private void HandleOnScreenKeyboardButtonPresses(TouchLocation currenttouchlocation)
+        {
+            onscreenkeyboard.AddPressedKey(tc);
+            if (onscreenkeyboard.SubmitButton.IsTapped(currenttouchlocation) && onscreenkeyboard.SubmitButton.Visible)
+            {
+                var conn = GetConnection();
+                CreateNewPlayer(onscreenkeyboard.CurrentText);
+                onscreenkeyboard.CloseKeyboard();
+                isgamesessionactive = false;
+                OpenMainMenu();
+                menu.EndGameSession();
+            }
+        }
+
         //Location, maths, renderdistance, time functions
         private int RemoveOffsetMin(int a)
         {
@@ -1119,7 +1172,7 @@ namespace MyBPT.Classes
         }
         private void OpenScores()
         {
-            //scores
+            menu.OpenScores();
         }
         private void CloseMenu()
         {
@@ -1207,22 +1260,52 @@ namespace MyBPT.Classes
                             texturecollection.AddTexture(reader.GetString(0), Content.Load<Texture2D>(reader.GetString(0)));
                     }
                 }
+                conn.Close();
             }
         }
-        private static void CreateNewPlayer(SqliteConnection connection, string playername)
+        private static void CreateNewPlayer(string playername)
         {
 
             string sql = "INSERT INTO players (Name) VALUES (@Name);";
 
-            using (var cmd = connection.CreateCommand())
+            using (var conn = GetConnection())
             {
-                cmd.CommandText = sql;
-                cmd.Parameters.AddWithValue("@Name", playername);
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@Name", playername);
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteScalar();
+                }
+
+                conn.Close();
             }
+        }
 
-            connection.Close();
+        private static List<string> GetAllScores()
+        {
+                List<string> scores = new List<string>();
+               var sql = "SELECT * FROM players;";
+
+                using (var conn = GetConnection())
+                {
+                    conn.Open();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = sql;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                               scores.Add(reader.GetString(1));
+                        }
+                    }
+                     conn.Close();
+                }
+                return scores;
+
         }
     }
 }

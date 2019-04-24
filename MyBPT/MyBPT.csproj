@@ -94,6 +94,7 @@
     <Compile Include="Classes\CountDown.cs" />
     <Compile Include="Classes\Menu.cs" />
     <Compile Include="Classes\Obstacle.cs" />
+    <Compile Include="Classes\OnScreenKeyboard.cs" />
     <Compile Include="Classes\Road.cs" />
     <Compile Include="Classes\Station.cs" />
     <Compile Include="Classes\Button.cs" />

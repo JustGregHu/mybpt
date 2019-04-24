@@ -1,7 +1,9 @@
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
+using Android.Views.InputMethods;
 using MyBPT.Classes;
 
 namespace MyBPT
@@ -16,28 +18,15 @@ namespace MyBPT
         , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout)]
     public class AppStart : Microsoft.Xna.Framework.AndroidGameActivity
     {
+        GameSession g;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SQLiteConnectionBuddy.SQLiteConnectionHelper.CopyEmbeddedDatabase("mybpt.db", this);
-            var g = new GameSession();
+            g = new GameSession();
             SetContentView((View)g.Services.GetService(typeof(View)));
             g.Run();
         }
-
-        //https://stackoverflow.com/questions/38810168/open-on-screen-keyboard-for-xamarin-monogame
-        /*
-        public void ShowKeyboard()
-        {
-            var pView = game.Services.GetService<View>();
-            var inputMethodManager = Application.GetSystemService(Context.InputMethodService) as InputMethodManager;
-            inputMethodManager.ShowSoftInput(pView, ShowFlags.Forced);
-            inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
-        }
-        */
     }
-
-
-
 }
 

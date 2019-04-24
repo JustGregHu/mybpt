@@ -18,6 +18,8 @@ namespace MyBPT.Classes
     {
         bool isgamesessionactive;
         bool menuisopen;
+        bool scoresarevisible;
+
         Texture2D logo;
         Texture2D background;
 
@@ -38,6 +40,7 @@ namespace MyBPT.Classes
         Button togglesound;
         Button resetstats;
 
+
         public bool MenuIsOpen { get => menuisopen; set => menuisopen = value; }
         internal Button GoToPlaymenuButton { get => gotoplaymenu; set => gotoplaymenu = value; }
         internal Button GoToOptionsButton { get => gotooptions; set => gotooptions = value; }
@@ -51,10 +54,16 @@ namespace MyBPT.Classes
         internal Button ResetStatsButton { get => resetstats; set => resetstats = value; }
         internal Button OpenButton { get => openbutton; set => openbutton = value; }
         internal Button CloseButton { get => closebutton; set => closebutton = value; }
+        public bool ScoresAreVisible { get => scoresarevisible; set => scoresarevisible = value; }
 
         public void StartGameSession()
         {
             isgamesessionactive = true;
+        }
+
+        public void EndGameSession()
+        {
+            isgamesessionactive = false;
         }
 
         public Menu(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection)
@@ -114,9 +123,22 @@ namespace MyBPT.Classes
             }
         }
 
+
+        public void DrawScores(SpriteBatch spriteBatch,SpriteFont font, List<String> scores)
+        {
+            if (scoresarevisible)
+            {
+                for (int i = 0; i < scores.Count; i++)
+                {
+                    spriteBatch.DrawString(font, scores[i], new Vector2(100, 200 + 50 * i),Color.White);
+                }
+            }
+        }
+
         public void OpenMainMenu()
         {
             menuisopen = true;
+            scoresarevisible = false;
             gotoplaymenu.Visible = true;
             gotooptions.Visible = true;
             gotoscores.Visible = true;
@@ -134,6 +156,7 @@ namespace MyBPT.Classes
         public void CloseMenu()
         {
             menuisopen = false;
+            scoresarevisible = false;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
             gotoscores.Visible = false;
@@ -152,6 +175,7 @@ namespace MyBPT.Classes
         public void OpenPlayMenu()
         {
             menuisopen = true;
+            scoresarevisible = false;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
             gotoscores.Visible = false;
@@ -169,6 +193,7 @@ namespace MyBPT.Classes
         public void OpenOptions()
         {
             menuisopen = true;
+            scoresarevisible = false;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
             gotoscores.Visible = false;
@@ -186,6 +211,7 @@ namespace MyBPT.Classes
         public void OpenScores()
         {
             menuisopen = true;
+            scoresarevisible = true;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
             gotoscores.Visible = false;
@@ -194,8 +220,8 @@ namespace MyBPT.Classes
             playregular.Visible = false;
             playhard.Visible = false;
             playsandbox.Visible = false;
-            togglesound.Visible = true;
-            resetstats.Visible = true;
+            togglesound.Visible = false;
+            resetstats.Visible = false;
             openbutton.Visible = false;
             closebutton.Visible = true;
         }
