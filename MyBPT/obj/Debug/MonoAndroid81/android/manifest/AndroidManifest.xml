@@ -6,7 +6,7 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <application android:label="MyBPT" android:icon="@drawable/icon" android:name="android.app.Application" android:allowBackup="true" android:debuggable="true">
-    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:icon="@drawable/icon" android:label="MyBPT" android:launchMode="singleInstance" android:screenOrientation="landscape" android:name="md565724d908bbf8d1d0089bc5676a56324.AppStart">
+    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:icon="@drawable/icon" android:label="MyBPT" android:launchMode="singleInstance" android:screenOrientation="reverseLandscape" android:theme="@style/Theme.Splash" android:name="md565724d908bbf8d1d0089bc5676a56324.AppStart">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

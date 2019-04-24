@@ -24,6 +24,20 @@ namespace MyBPT
             SetContentView((View)g.Services.GetService(typeof(View)));
             g.Run();
         }
+
+        //https://stackoverflow.com/questions/38810168/open-on-screen-keyboard-for-xamarin-monogame
+        /*
+        public void ShowKeyboard()
+        {
+            var pView = game.Services.GetService<View>();
+            var inputMethodManager = Application.GetSystemService(Context.InputMethodService) as InputMethodManager;
+            inputMethodManager.ShowSoftInput(pView, ShowFlags.Forced);
+            inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
+        }
+        */
     }
+
+
+
 }
 

@@ -27,10 +27,7 @@ namespace MyBPT.Classes {
         }
 
         public void Update(GameTime gameTime, TouchCollection tc) {
-
-
             transform = Matrix.CreateTranslation(new Vector3(-position.X - view.Width / 2, -position.Y - view.Height / 2, 0));
-
         }
     }
 }

@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using SQLite;
-using SQLiteConnectionBuddy;
 using Mono.Data.Sqlite;
-using SQLiteNetExtensions.Extensions;
 
 
 #if DEBUG
 //debug function
 #endif
 
-namespace MyBPT.Classes { 
+namespace MyBPT.Classes
+{
     public class GameSession : Game
     {
         //Objects for calculation
@@ -25,6 +22,7 @@ namespace MyBPT.Classes {
         Perlin perlin;
         CountDown incometimer;
         CountDown gametimer;
+        CountDown messagetimer;
 
         //Graphical objects
         GraphicsDeviceManager graphics;
@@ -57,6 +55,7 @@ namespace MyBPT.Classes {
         Button dpad_down;
         Button dpad_left;
         Button dpad_right;
+        string gamemessage;
 
         //Variables
         bool isgamesessionactive;
@@ -70,8 +69,9 @@ namespace MyBPT.Classes {
         float viewdistance;
         int stationcost;
         int terminuscost;
-        int incomeinterval;
+        int lengthofincomeinterval;
         int lengthofgametime;
+        int lengthofmessageshow;
         int monthcount;
         int currentyear;
 
@@ -101,6 +101,9 @@ namespace MyBPT.Classes {
             perlin = new Perlin();
             incometimer = new CountDown();
             gametimer = new CountDown();
+            messagetimer=new CountDown();
+            gamemessage = "";
+            messagetimer.StartTimer(1);
 
             //Player variables
             TouchPanel.EnabledGestures = GestureType.FreeDrag | GestureType.Pinch | GestureType.DragComplete;
@@ -160,21 +163,23 @@ namespace MyBPT.Classes {
             InitializeMonth();
             if (!issandbox)
             {
-                lengthofgametime = 720;
+                lengthofgametime = 5;
                 gametimer.StartTimer(lengthofgametime);
             }
-            incomeinterval = 30;
-            incometimer.StartTimer(incomeinterval);
+            lengthofincomeinterval = 30;
+            incometimer.StartTimer(lengthofincomeinterval);
         }
         protected override void UnloadContent()
         {
 
         }
+
+
         protected override void Update(GameTime gameTime)
         {
-            if (!sandbox || gametimer.Timeleft<1)
+            if (!sandbox && gametimer.Timeleft<1)
             {
-                //msg game over ! save profile.
+                InitializeGameMessage("GAME OVER");
             }
             UpdateTouchCollection();
             if (isgamesessionactive)
@@ -228,9 +233,7 @@ namespace MyBPT.Classes {
             spriteBatch.End();
             if (isgamesessionactive)
             {
-
-
-
+ 
                 spriteBatchHud.Begin(SpriteSortMode.Immediate,
                         BlendState.AlphaBlend,
                         SamplerState.PointClamp,
@@ -243,6 +246,7 @@ namespace MyBPT.Classes {
 #if DEBUG
                 DrawFPS(gameTime);
 #endif
+                DrawGameMessage();
                 spriteBatchHud.End();
 
             }
@@ -444,6 +448,13 @@ namespace MyBPT.Classes {
                 }
             }
         }
+        private void DrawGameMessage()
+        {
+            if (messagetimer.Timeleft>0)
+            {
+                spriteBatchHud.DrawString(font, gamemessage, new Vector2(preferredscreensize.X - preferredscreensize.X / 2, preferredscreensize.Y - preferredscreensize.X / 2), Color.Red);
+            }
+        }
         private void DrawFPS(GameTime gameTime)
         {
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -548,12 +559,12 @@ namespace MyBPT.Classes {
                     }
                     else
                     {
-                        //msg: player cannot afford!
+                        InitializeGameMessage("Can't afford the upgrade!");
                     }
                 }
                 else
                 {
-                    //msg: building already max level!
+                    InitializeGameMessage("Building is already at max level!");
                 }
 
                 player.AddMoney(-gameworld.Stations[highlightedstationid].UpgradeCost);
@@ -561,7 +572,7 @@ namespace MyBPT.Classes {
             }
             else
             {
-                //msg: cannot in classic mode
+                InitializeGameMessage("No upgrades allowed on hardmode!");
             }
         }
 
@@ -821,7 +832,7 @@ namespace MyBPT.Classes {
                 }
                 else
                 {
-                    //msg theres a station in the way
+                    InitializeGameMessage("There's a station in the way!");
                 }
 
             }
@@ -844,13 +855,13 @@ namespace MyBPT.Classes {
                         }
                         else
                         {
-                            //MESSAGE : NOT HIGH ENOUGH LVL
+                            InitializeGameMessage("You need to build more stations!");
                         }
 
                     }
                     else
                     {
-                        //MESSAGE: CANT AFFORD TERMINUS!
+                        InitializeGameMessage("Can't afford terminus!");
                     }
                 }
                 if (buymenu.StationBuyButton.IsTapped(currenttouchlocation) && buymenu.StationBuyButton.Visible)
@@ -863,7 +874,7 @@ namespace MyBPT.Classes {
                     }
                     else
                     {
-                        //MESSAGE: CANT AFFORD STATION!
+                        InitializeGameMessage("Can't afford station!");
                     }
                 }
             }
@@ -953,7 +964,7 @@ namespace MyBPT.Classes {
                         }
                         else
                         {
-                            //MESSAGE: CANT AFFORD STATION!
+                            InitializeGameMessage("Can't afford!");
                         }
                     }
                 }
@@ -975,7 +986,7 @@ namespace MyBPT.Classes {
                         }
                         else
                         {
-                            //MESSAGE: CANT AFFORD STATION!
+                            InitializeGameMessage("Can't afford!");
                         }
                     }
                 }
@@ -1019,7 +1030,7 @@ namespace MyBPT.Classes {
         {
             if (incometimer.Timeleft < 0)
             {
-                incometimer.StartTimer(incomeinterval);
+                incometimer.StartTimer(lengthofincomeinterval);
                 player.AddMoney(gameworld.CurrentIncome);
                 NextMonth();
             }
@@ -1062,6 +1073,12 @@ namespace MyBPT.Classes {
                     default:return "undefined";   
                 }
             }
+        }
+        private void InitializeGameMessage(string message)
+        {
+            gamemessage = message;
+            lengthofmessageshow=3;
+            messagetimer.StartTimer(lengthofmessageshow);
         }
 
         //Menu logic functions

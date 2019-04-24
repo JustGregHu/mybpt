@@ -300,7 +300,7 @@ namespace MyBPT.Classes {
                     {
                         rndtexture = texturecollection["world_tile_water"];
                     }
-                    else if (height < 75)
+                    else if (height < 80)
                     {
                       rndtexture = texturecollection["world_tile_sand"];
                         
