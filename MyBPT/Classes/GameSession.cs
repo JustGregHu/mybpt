@@ -447,7 +447,13 @@ namespace MyBPT.Classes
                 menu.Draw(spriteBatchMenu);
                 if (menu.ScoresAreVisible)
                 {
-                    menu.DrawScores(spriteBatchMenu, font, GetAllScores());
+                    List<ScoreInstance> scores = GetAllScores();
+                    List<String> scorestrings = new List<string>();
+                    for (int i = 0; i < scores.Count; i++)
+                    {
+                        scorestrings.Add(scores[i].Playername + ": " + scores[i].Amount);
+                    }
+                    menu.DrawScores(spriteBatchMenu, font, scorestrings);
                 }
                 
             }
@@ -807,6 +813,7 @@ namespace MyBPT.Classes
             }
             if (menu.GoToOptionsButton.IsTapped(currenttouchlocation) && menu.GoToOptionsButton.Visible)
             {
+                currenttouchlocation = new TouchLocation();
                 OpenOptions();
             }
             if (menu.GoToScoresButton.IsTapped(currenttouchlocation) && menu.GoToScoresButton.Visible)
@@ -1038,7 +1045,8 @@ namespace MyBPT.Classes
             if (onscreenkeyboard.SubmitButton.IsTapped(currenttouchlocation) && onscreenkeyboard.SubmitButton.Visible)
             {
                 var conn = GetConnection();
-                CreateNewPlayer(onscreenkeyboard.CurrentText);
+                player.Name = onscreenkeyboard.CurrentText;
+                InsertNewScore();
                 onscreenkeyboard.CloseKeyboard();
                 isgamesessionactive = false;
                 OpenMainMenu();
@@ -1168,7 +1176,8 @@ namespace MyBPT.Classes
         }
         private void ResetStats()
         {
-            //resetstats
+            InitializeGameMessage("stats reset!");
+            TruncateStatTables();
         }
         private void OpenScores()
         {
@@ -1283,10 +1292,74 @@ namespace MyBPT.Classes
             }
         }
 
-        private static List<string> GetAllScores()
+        private void InsertNewScore()
         {
-                List<string> scores = new List<string>();
-               var sql = "SELECT * FROM players;";
+            bool playerfound = false;
+            var players = GetAllPlayers();
+            if (!playerfound)
+            {
+                CreateNewPlayer(player.Name);
+                players = GetAllPlayers();
+            }
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i]==player.Name)
+                {
+                    CreateNewScore(i+1, player.Money);
+                    playerfound = true;
+                    i = players.Count;
+                }
+            }
+        }
+
+        private static void CreateNewScore(int player_id, int playermoney)
+        {
+
+            string sql = "INSERT INTO scores (player_id,totalmoney) VALUES (@Player_Id,@TotalMoney);";
+
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("@Player_Id", player_id);
+                    cmd.Parameters.AddWithValue("@TotalMoney", playermoney);
+                    cmd.ExecuteScalar();
+                }
+
+                conn.Close();
+            }
+        }
+
+        private static List<string> GetAllPlayers()
+        {
+            List<string> scores = new List<string>();
+            var sql = "SELECT * FROM players ORDER BY id ASC;";
+
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            scores.Add(reader.GetString(1));
+                    }
+                }
+                conn.Close();
+            }
+            return scores;
+        }
+
+        private static List<ScoreInstance> GetAllScores()
+        {
+                List<ScoreInstance> scores = new List<ScoreInstance>();
+               var sql = "SELECT scores.totalmoney,players.name FROM scores INNER JOIN players ON players.id=scores.player_id ORDER BY scores.totalmoney Desc LIMIT 10;";
 
                 using (var conn = GetConnection())
                 {
@@ -1299,13 +1372,30 @@ namespace MyBPT.Classes
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
-                               scores.Add(reader.GetString(1));
+                               scores.Add(new ScoreInstance(reader.GetInt32(0),reader.GetString(1)));
                         }
                     }
                      conn.Close();
                 }
                 return scores;
+        }
 
+        private static void TruncateStatTables()
+        {
+            //rewrite. delete from all
+            string sql = "DELETE FROM scores;DELETE FROM  players;";
+
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;;
+                    cmd.ExecuteNonQuery();
+                }
+
+                conn.Close();
+            }
         }
     }
 }

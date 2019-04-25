@@ -84,6 +84,7 @@ namespace MyBPT.Classes
             submitbutton.Visible = false;
             deletebutton.Visible = false;
             isopen = false;
+            CurrentText = "";
         }
 
         public void AddPressedKey(TouchCollection tc)
@@ -118,7 +119,7 @@ namespace MyBPT.Classes
             {
                 if (currenttext.Length>0 && deletebutton.IsTapped(tc[0]) && deletebutton.Visible)
                 {
-                    currenttext = currenttext.Substring(0, currenttext.Length - 2);
+                    currenttext = currenttext.Remove(currenttext.Length - 1);
                 }
             }
         }

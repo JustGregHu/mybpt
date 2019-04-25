@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="AppStart.cs" />
     <Compile Include="Classes\Building.cs" />
+    <Compile Include="Classes\ScoreInstance.cs" />
     <Compile Include="Classes\CountDown.cs" />
     <Compile Include="Classes\Menu.cs" />
     <Compile Include="Classes\Obstacle.cs" />
