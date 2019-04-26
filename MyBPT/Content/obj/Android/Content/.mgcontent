@@ -19,6 +19,10 @@
     <File>C:/mybpt/MyBPT/Content/hud_dpad_north.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_dpad_south.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_dpad_west.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_calendar.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_clock.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_coins.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_influence.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_keyboard_key.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_keyboard_key_del.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_keyboard_submit.png</File>
@@ -32,6 +36,8 @@
     <File>C:/mybpt/MyBPT/Content/hud_menu_play_hardmode.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_play_normal.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_play_options_reset.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play_options_sound_off.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_menu_play_options_sound_on.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_play_options_toggle.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_play_sandbox.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_menu_scores.png</File>
@@ -65,6 +71,12 @@
     <File>C:/mybpt/MyBPT/Content/world_vehicle_bus_front.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

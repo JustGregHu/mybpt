@@ -9,8 +9,9 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static Android.Resource;
+
 
 namespace MyBPT.Classes
 {
@@ -22,8 +23,7 @@ namespace MyBPT.Classes
         int positiononaxis;
         bool directionisX;
         bool visible;
-
-        Point position;
+        Vector2 position;
 
         public Bus(Texture2D bustexture, int positiononaxis, int worldsize, bool directionisX)
         {
