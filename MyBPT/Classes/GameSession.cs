@@ -155,7 +155,7 @@ namespace MyBPT.Classes
             buyingbuilding = false;
 
             //Player variables
-            player = new Player("testperson", 2000, 1);
+            player = new Player("", 2000, 1);
 
             //Map Generation
             gameworld = new GameWorld(texturecollection.GetTextures(),size);
@@ -1334,7 +1334,7 @@ namespace MyBPT.Classes
 
         private static List<string> GetAllPlayers()
         {
-            List<string> scores = new List<string>();
+            List<string> players = new List<string>();
             var sql = "SELECT * FROM players ORDER BY id ASC;";
 
             using (var conn = GetConnection())
@@ -1348,18 +1348,18 @@ namespace MyBPT.Classes
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
-                            scores.Add(reader.GetString(1));
+                            players.Add(reader.GetString(1));
                     }
                 }
                 conn.Close();
             }
-            return scores;
+            return players;
         }
 
         private static List<ScoreInstance> GetAllScores()
         {
                 List<ScoreInstance> scores = new List<ScoreInstance>();
-               var sql = "SELECT scores.totalmoney,players.name FROM scores INNER JOIN players ON players.id=scores.player_id ORDER BY scores.totalmoney Desc LIMIT 10;";
+               var sql = "SELECT scores.id, scores.totalmoney,players.name FROM scores INNER JOIN players ON players.id=scores.player_id ORDER BY scores.totalmoney Desc LIMIT 10;";
 
                 using (var conn = GetConnection())
                 {
@@ -1372,7 +1372,7 @@ namespace MyBPT.Classes
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
-                               scores.Add(new ScoreInstance(reader.GetInt32(0),reader.GetString(1)));
+                               scores.Add(new ScoreInstance(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2)));
                         }
                     }
                      conn.Close();
@@ -1382,19 +1382,22 @@ namespace MyBPT.Classes
 
         private static void TruncateStatTables()
         {
-            //rewrite. delete from all
-            string sql = "DELETE FROM scores;DELETE FROM  players;";
-
-            using (var conn = GetConnection())
+            List<ScoreInstance> scores = GetAllScores();
+            for (int i = 0; i < scores.Count; i++)
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = sql;;
-                    cmd.ExecuteNonQuery();
-                }
+                string sql = "DELETE FROM scores WHERE id="+scores[i].Id;
 
-                conn.Close();
+                using (var conn = GetConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = sql; ;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    conn.Close();
+                }
             }
         }
     }

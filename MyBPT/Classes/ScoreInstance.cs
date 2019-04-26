@@ -14,16 +14,19 @@ namespace MyBPT.Classes
 {
     class ScoreInstance
     {
+        int id;
         int amount;
         string playername;
 
-        public ScoreInstance(int amount, string playername)
+        public ScoreInstance(int id, int amount, string playername)
         {
             this.amount = amount;
             this.playername = playername;
+            this.id = id;
         }
 
         public int Amount { get => amount; set => amount = value; }
         public string Playername { get => playername; set => playername = value; }
+        public int Id { get => id; set => id = value; }
     }
 }
