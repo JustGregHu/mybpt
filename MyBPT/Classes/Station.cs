@@ -378,7 +378,7 @@ namespace MyBPT.Classes {
 
         public void DrawButtons(SpriteBatch spriteBatchHud)
         {
-            spriteBatchHud.Draw(background, new Vector2(-750, -400), new Color(0, 0, 0, 85));
+            spriteBatchHud.Draw(background, new Vector2(-750, -365), new Color(0, 0, 0, 85));
             if (moving)
             {
                 AcceptButton.Draw(spriteBatchHud);

@@ -77,10 +77,10 @@ namespace MyBPT.Classes
 
         public void DrawInfo(SpriteBatch spriteBatch,GameWorld gameWorld,SpriteFont font)
         {
-            spriteBatch.Draw(gameplaystats_coins, new Vector2(preferredscreensize.X-600,15), Color.White);
-            spriteBatch.DrawString(font,"Current income: "+gameWorld.CurrentIncome, new Vector2(preferredscreensize.X - 550, 10), Color.White);
-            spriteBatch.DrawString(font, "Stations: " + gameWorld.CountStationsOnMap(), new Vector2(preferredscreensize.X - 550, 60), Color.White);
-            spriteBatch.DrawString(font, "Termini: " + gameWorld.CountTerminiOnMap(), new Vector2(preferredscreensize.X - 550, 110), Color.White);
+            spriteBatch.Draw(gameplaystats_coins, new Vector2(preferredscreensize.X-600,45), Color.White);
+            spriteBatch.DrawString(font,"Current income: "+gameWorld.CurrentIncome, new Vector2(preferredscreensize.X - 550, 40), Color.White);
+            spriteBatch.DrawString(font, "Stations: " + gameWorld.CountStationsOnMap(), new Vector2(preferredscreensize.X - 550, 90), Color.White);
+            spriteBatch.DrawString(font, "Termini: " + gameWorld.CountTerminiOnMap(), new Vector2(preferredscreensize.X - 550, 140), Color.White);
         }
 
         private void ToggleChoicesVisibility(bool visibility)

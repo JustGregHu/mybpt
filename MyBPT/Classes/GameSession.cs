@@ -204,7 +204,6 @@ namespace MyBPT.Classes
 
         }
 
-
         protected override void Update(GameTime gameTime)
         {
             if (isgamesessionactive && !sandbox && gametimer.Timeleft<1)
@@ -257,7 +256,6 @@ namespace MyBPT.Classes
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transform);
             if (isgamesessionactive)
             {
-
                 UpdateIsometricCamera();
                 DrawMap();
                 DrawRoads();
@@ -744,101 +742,110 @@ namespace MyBPT.Classes
         {
             if (zoomin.IsTapped(currenttouchlocation) && zoomin.Visible)
             {
-                ZoomIn();
+                if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
+                {
+                    ZoomIn();
+                }
             }
             if (zoomout.IsTapped(currenttouchlocation) && zoomout.Visible)
             {
-                ZoomOut();
+                if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
+                {
+                    ZoomOut();
+                }
             }
         }
         private void HandleDpadPresses(TouchLocation currenttouchlocation)
         {
-            if (dpad_up.Visible)
+            if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
             {
-                if (dpad_up.IsHeld(currenttouchlocation))
+                if (dpad_up.Visible)
                 {
-                    if (dpadmoveinterval == dpadmoveintervalinitial)
+                    if (dpad_up.IsHeld(currenttouchlocation))
                     {
-                        DPAD_Up();
-                        if (movingbuilding)
+                        if (dpadmoveinterval == dpadmoveintervalinitial)
                         {
-                            MoveBuildingUp();
+                            DPAD_Up();
+                            if (movingbuilding)
+                            {
+                                MoveBuildingUp();
+                            }
                         }
-                    }
-                
-                DpadMoveIntervalNextTick();
-                }
-                else
-                {
-                    if (dpad_up.IsTapped(currenttouchlocation))
-                        InitializeDpadMoveInterval();
-                }
-            }
-            if (dpad_down.Visible)
-            {
-                if (dpad_down.IsHeld(currenttouchlocation))
-                {
-                    if (dpadmoveinterval == dpadmoveintervalinitial)
-                    {
-                        DPAD_Down();
-                        if (movingbuilding)
-                        {
-                            MoveBuildingDown();
-                        }
-                    }
 
-                    DpadMoveIntervalNextTick();
-                }
-                else
-                {
-                    if (dpad_down.IsTapped(currenttouchlocation))
-                        InitializeDpadMoveInterval();
-                }
-            }
-            if (dpad_left.Visible)
-            {
-                if (dpad_left.IsHeld(currenttouchlocation))
-                {
-                    if (dpadmoveinterval == dpadmoveintervalinitial)
-                    {
-                        DPAD_Left();
-                        if (movingbuilding)
-                        {
-                            MoveBuildingLeft();
-                        }
+                        DpadMoveIntervalNextTick();
                     }
-
-                    DpadMoveIntervalNextTick();
-                }
-                else
-                {
-                    if (dpad_left.IsTapped(currenttouchlocation))
-                        InitializeDpadMoveInterval();
-                }
-            }
-            if (dpad_right.Visible)
-            {
-                if (dpad_right.IsHeld(currenttouchlocation))
-                {
-                    if (dpadmoveinterval == dpadmoveintervalinitial)
+                    else
                     {
-                        DPAD_Right();
-                        if (movingbuilding)
-                        {
-                            MoveBuildingRight();
-                        }
+                        if (dpad_up.IsTapped(currenttouchlocation))
+                            InitializeDpadMoveInterval();
                     }
-
-                    DpadMoveIntervalNextTick();
                 }
-                else
+                if (dpad_down.Visible)
                 {
-                    if (dpad_right.IsTapped(currenttouchlocation))
-                        InitializeDpadMoveInterval();
+                    if (dpad_down.IsHeld(currenttouchlocation))
+                    {
+                        if (dpadmoveinterval == dpadmoveintervalinitial)
+                        {
+                            DPAD_Down();
+                            if (movingbuilding)
+                            {
+                                MoveBuildingDown();
+                            }
+                        }
+
+                        DpadMoveIntervalNextTick();
+                    }
+                    else
+                    {
+                        if (dpad_down.IsTapped(currenttouchlocation))
+                            InitializeDpadMoveInterval();
+                    }
+                }
+                if (dpad_left.Visible)
+                {
+                    if (dpad_left.IsHeld(currenttouchlocation))
+                    {
+                        if (dpadmoveinterval == dpadmoveintervalinitial)
+                        {
+                            DPAD_Left();
+                            if (movingbuilding)
+                            {
+                                MoveBuildingLeft();
+                            }
+                        }
+
+                        DpadMoveIntervalNextTick();
+                    }
+                    else
+                    {
+                        if (dpad_left.IsTapped(currenttouchlocation))
+                            InitializeDpadMoveInterval();
+                    }
+                }
+                if (dpad_right.Visible)
+                {
+                    if (dpad_right.IsHeld(currenttouchlocation))
+                    {
+                        if (dpadmoveinterval == dpadmoveintervalinitial)
+                        {
+                            DPAD_Right();
+                            if (movingbuilding)
+                            {
+                                MoveBuildingRight();
+                            }
+                        }
+
+                        DpadMoveIntervalNextTick();
+                    }
+                    else
+                    {
+                        if (dpad_right.IsTapped(currenttouchlocation))
+                            InitializeDpadMoveInterval();
+                    }
                 }
             }
+            
         }
-
         private void HandleMenuButtonPresses(TouchLocation currenttouchlocation)
         {
             if (menu.GoToPlaymenuButton.IsTapped(currenttouchlocation)&&menu.GoToPlaymenuButton.Visible)
@@ -1074,7 +1081,6 @@ namespace MyBPT.Classes
                 }
             }
         }
-
         private void HandleOnScreenKeyboardButtonPresses(TouchLocation currenttouchlocation)
         {
             onscreenkeyboard.AddPressedKey(tc);
@@ -1330,7 +1336,6 @@ namespace MyBPT.Classes
                 conn.Close();
             }
         }
-
         private void InsertNewScore()
         {
             bool playerfound = false;
@@ -1350,7 +1355,6 @@ namespace MyBPT.Classes
                 }
             }
         }
-
         private static void CreateNewScore(int player_id, int playermoney)
         {
 
@@ -1370,7 +1374,6 @@ namespace MyBPT.Classes
                 conn.Close();
             }
         }
-
         private static List<string> GetAllPlayers()
         {
             List<string> players = new List<string>();
@@ -1394,7 +1397,6 @@ namespace MyBPT.Classes
             }
             return players;
         }
-
         private static List<ScoreInstance> GetAllScores()
         {
                 List<ScoreInstance> scores = new List<ScoreInstance>();
@@ -1418,7 +1420,6 @@ namespace MyBPT.Classes
                 }
                 return scores;
         }
-
         private static void TruncateStatTables()
         {
             List<ScoreInstance> scores = GetAllScores();
