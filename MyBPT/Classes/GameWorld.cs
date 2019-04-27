@@ -1,21 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
-using MyBPT.Classes;
-using System.Threading.Tasks;
 
 namespace MyBPT.Classes {
     class GameWorld {
@@ -177,6 +163,7 @@ namespace MyBPT.Classes {
             }
             return false;
         }
+
         public bool AreThereHillsInY(int y)
         {
             for (int i = 0; i < worldsize; i++)
@@ -201,10 +188,12 @@ namespace MyBPT.Classes {
             catch(Exception){}
 
         }
+
         public void HighlightCurrentTile(SpriteBatch spriteBatch)
         {
             highlightTile.Draw(spriteBatch);      
         }
+
         public void InitiateHighlightTile()
         {
             highlightTile = new Tile(0, texturecollection["world_highlight_white"], mapdata[currentTilePosition.X, currentTilePosition.Y].Position, mapdata[currentTilePosition.X, currentTilePosition.Y].Area);
@@ -213,7 +202,6 @@ namespace MyBPT.Classes {
         public Point CurrentTilePosition{get{return currentTilePosition;}set{currentTilePosition = value;}}
 
         //GAME WORLD
-
 
         public GameWorld(Dictionary<string, Texture2D> texturecollection,bool size)
         {
@@ -282,13 +270,13 @@ namespace MyBPT.Classes {
         {
             spriteBatch.Draw(texture, new Vector2(0, 0), Color.White);
         }
+
         public static float ToSingle(double value)
         {
             return (float)value;
         }
-
         
-    public void GenerateRandomWorld(Point preferredscreensize)
+        public void GenerateRandomWorld(Point preferredscreensize)
     {
         for (int i = 0; i < worldsize; i++)
         {

@@ -14,8 +14,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MyBPT.Classes
 {
+    /// <summary>
+    /// Megnyitható menüobjektum, lehetővé teszi az állomások, végállomások megvásárlását.
+    /// </summary>
     class BuyMenu
     {
+        //Változók
+        int backgroundstartingpositionX;
         bool buymenuisopen;
         bool selectingbuylocation;
         Button openbutton;
@@ -23,10 +28,10 @@ namespace MyBPT.Classes
         Button stationbuybutton;
         Button terminusbuybutton;
         Texture2D background;
-        int backgroundstartingpositionX;
         Texture2D gameplaystats_coins;
         Point preferredscreensize;
 
+        //Tulajdonságok
         public Button OpenButton { get => openbutton; set => openbutton = value; }
         public Button CloseButton { get => closebutton; set => closebutton = value; }
         public bool BuymenuIsOpen { get => buymenuisopen; set => buymenuisopen = value; }
@@ -34,6 +39,14 @@ namespace MyBPT.Classes
         internal Button TerminusBuyButton { get => terminusbuybutton; set => terminusbuybutton = value; }
         internal Button StationBuyButton { get => stationbuybutton; set => stationbuybutton = value; }
 
+        /// <summary>
+        /// Épület konstruktor: létrehozza a vásárlás menüt. Létrehozza a hozzátartozó gombokat, felvételre kerül a háttér pozíciója.
+        /// </summary>
+        /// <param name="texturecollection">A megjelenítéshez szükséges textúragyüjtemény</param>
+        /// <param name="gameWorld">A már legalább részlegesen legenerált játékvilág</param>
+        /// <param name="preferredscreensize">Ajánlott képernyőméret</param>
+        /// <param name="graphicsdevice">MonoGame-hez tartozó grafikai készlet</param>
+        /// <param name="hudmargin">Pixelben megadott távolság a HUD elemek és a képernyő között</param>
         public BuyMenu(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection,int hudmargin)
         {
             Vector2 initialposition = new Vector2(0, 0);
@@ -60,6 +73,12 @@ namespace MyBPT.Classes
             CloseBuyMenu();
         }
 
+        /// <summary>
+        /// Az menühöz tartozó gombok rajzolása. Csak akkor jelenik meg, ha azon elemek láthatósága: igaz
+        /// </summary>
+        /// <param name="spriteBatch">MonoGame spritegyüjtemény, amely lerajzolja az objektumot</param>
+        /// <param name="gameWorld">A már legalább részlegesen legenerált játékvilág</param>
+        /// <param name="font">MonoGame betűgyüjtemény, amelyet beállításai alapján rajzolódik a funckióban megadott szöveg</param>
         public void Draw(SpriteBatch spriteBatch,GameWorld gameWorld,SpriteFont font)
         {
             if (buymenuisopen)
@@ -75,6 +94,12 @@ namespace MyBPT.Classes
             }
         }
 
+        /// <summary>
+        /// Az menühöz tartozó információ HUD-ra való rajzolása. Csak akkor jelenik meg, ha azon elemek láthatósága: igaz
+        /// </summary>
+        /// <param name="spriteBatch">MonoGame spritegyüjtemény, amely lerajzolja az objektumot</param>
+        /// <param name="gameWorld">A már legalább részlegesen legenerált játékvilág</param>
+        /// <param name="font">MonoGame betűgyüjtemény, amelyet beállításai alapján rajzolódik a funckióban megadott szöveg</param>
         public void DrawInfo(SpriteBatch spriteBatch,GameWorld gameWorld,SpriteFont font)
         {
             spriteBatch.Draw(gameplaystats_coins, new Vector2(preferredscreensize.X-600,45), Color.White);
@@ -83,18 +108,27 @@ namespace MyBPT.Classes
             spriteBatch.DrawString(font, "Termini: " + gameWorld.CountTerminiOnMap(), new Vector2(preferredscreensize.X - 550, 140), Color.White);
         }
 
-        private void ToggleChoicesVisibility(bool visibility)
-        {
-            stationbuybutton.Visible = visibility;
-            TerminusBuyButton.Visible = visibility;
-        }
-
+        /// <summary>
+        /// Megjeleníti a vásárolható elemeket.
+        /// </summary>
+        /// <param name="spriteBatch">MonoGame spritegyüjtemény, amely lerajzolja az objektumot</param>
         private void DrawChoices(SpriteBatch spriteBatch)
         {
             stationbuybutton.Draw(spriteBatch);
             TerminusBuyButton.Draw(spriteBatch);
         }
 
+        /// <summary>
+        /// A megadott boolean értéknek megfelelően teszi a megvásárolható elemeket láthatóvá vagy láthatalanná
+        /// </summary>
+        /// <param name="visibility">Látható-e az objektum?</param>
+        private void ToggleChoicesVisibility(bool visibility)
+        {
+            stationbuybutton.Visible = visibility;
+            TerminusBuyButton.Visible = visibility;
+        }
+
+        //Megjelenítést kezelő funkciók
         public void OpenBuyMenu()
         {
             ToggleChoicesVisibility(true);

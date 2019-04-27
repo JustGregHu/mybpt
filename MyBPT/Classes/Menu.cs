@@ -14,39 +14,35 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MyBPT.Classes
 {
+    /// <summary>
+    /// Főmenü objektum. Segítségével nagiválhat a játékos menüpontok és funkciók között, indíthat játékot stb.
+    /// </summary>
     class Menu
     {
+        //Változók
         bool isgamesessionactive;
         bool menuisopen;
         bool scoresarevisible;
         bool loadscreen;
         bool playmenuisopen;
         Point preferredscreensize;
-
         Button logo;
         Texture2D background;
-
         Button openbutton;
         Button closebutton;
-
         Button gotoplaymenu;
         Button gotooptions;
         Button gotoscores;
         Button gotoexit;
-
         Button gotomainmenu;
-
         Button playregular;
         Button playhard;
         Button playsandbox;
-
         Button togglesound;
         Button resetstats;
-
         Button loadscreenvisual;
 
-
-
+        //Tulajdonságok
         public bool MenuIsOpen { get => menuisopen; set => menuisopen = value; }
         internal Button GoToPlaymenuButton { get => gotoplaymenu; set => gotoplaymenu = value; }
         internal Button GoToOptionsButton { get => gotooptions; set => gotooptions = value; }
@@ -62,52 +58,63 @@ namespace MyBPT.Classes
         internal Button CloseButton { get => closebutton; set => closebutton = value; }
         public bool ScoresAreVisible { get => scoresarevisible; set => scoresarevisible = value; }
 
+        /// <summary>
+        /// Tudatja a menüvel, hogy a játékmenet megkezdődött. Ezután láthatóvá válik a closebutton és az openbutton.
+        /// </summary>
         public void StartGameSession()
         {
             isgamesessionactive = true;
         }
 
+        /// <summary>
+        /// Tudatja a menüvel, hogy a játékmenet véget ért. Ezután rejtetté válik a closebutton és az openbutton.
+        /// </summary>
         public void EndGameSession()
         {
             isgamesessionactive = false;
         }
 
+        /// <summary>
+        /// Létrehozza a menü objektumot. Elmenti az ajánlott képernyőméretet, inicializálja a működéshez szükséges elemeket, létrehozza a gombokat és elhelyezi azokat.
+        /// </summary>
+        /// <param name="texturecollection">A megjelenítéshez szükséges textúragyüjtemény</param>
+        /// <param name="preferredscreensize">Ajánlott képernyőméret</param>
+        /// <param name="graphicsdevice">MonoGame-hez tartozó grafikai készlet</param>
+        /// <param name="hudmargin">Pixelben megadott távolság a HUD elemek és a képernyő között</param>
         public Menu(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection, int hudmargin)
         {
+            //inicializálás
             this.preferredscreensize = preferredscreensize;
-
             loadscreen = false;
             menuisopen = true;
             isgamesessionactive = false;
+
+            //háttér
             Color[] data = new Color[preferredscreensize.X * preferredscreensize.Y];
             background = new Texture2D(graphicsdevice, preferredscreensize.X, preferredscreensize.Y);
             for (int i = 0; i < data.Length; ++i)
                 data[i] = Color.White;
             background.SetData(data);
 
+            //gombtextúrák felvétele
             Vector2 initposition = new Vector2(0, 0);
             logo = (new Button(initposition, texturecollection.GetTextures()["hud_menu_LOGO"]));
             openbutton = (new Button(initposition, texturecollection.GetTextures()["hud_menu_open"]));
             closebutton = (new Button(initposition, texturecollection.GetTextures()["hud_menu_close"]));
-
             gotoplaymenu = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play"]));
             gotoscores = (new Button(initposition, texturecollection.GetTextures()["hud_menu_scores"]));
             gotooptions = (new Button(initposition, texturecollection.GetTextures()["hud_menu_options"]));
             gotoexit = (new Button(initposition, texturecollection.GetTextures()["hud_menu_exit"]));
-
             gotomainmenu = (new Button(initposition, texturecollection.GetTextures()["hud_menu_back"]));
-
-            int cardmargin = 50;
-
             playregular = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_normal"]));
             playhard = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_hardmode"]));
             playsandbox = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_sandbox"]));
-
             togglesound = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_options_sound_on"]));
             resetstats = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_options_reset"]));
-
             loadscreenvisual = (new Button(initposition, texturecollection.GetTextures()["game_loading"]));
 
+            //gombok elheyezése
+            int cardmargin = 50;
             logo.UpdatePosition(new Vector2(preferredscreensize.X / 2 - logo.Texture.Width / 2, 50));
             openbutton.UpdatePosition(new Vector2(preferredscreensize.X - openbutton.Texture.Width - hudmargin, hudmargin));
             closebutton.UpdatePosition(new Vector2(preferredscreensize.X - openbutton.Texture.Width - hudmargin, hudmargin));
@@ -123,9 +130,15 @@ namespace MyBPT.Classes
             resetstats.UpdatePosition(new Vector2(preferredscreensize.X / 2 + cardmargin , preferredscreensize.Y / 2 - resetstats.Texture.Height / 2));
             loadscreenvisual.UpdatePosition(new Vector2(preferredscreensize.X / 2 - loadscreenvisual.Texture.Width / 2, preferredscreensize.Y / 2 - loadscreenvisual.Texture.Height / 2));
 
+            //menü megnyitása
             OpenMainMenu();
         }
 
+        /// <summary>
+        /// Az menühöz tartozó gombok és elemek rajzolása. Csak akkor jelenik meg, ha azon elemek láthatósága: igaz
+        /// </summary>
+        /// <param name="spriteBatch">MonoGame spritegyüjtemény, amely lerajzolja az objektumot</param>
+        /// <param name="font">MonoGame betűgyüjtemény, amelyet beállításai alapján rajzolódik a funckióban megadott szöveg</param>
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             if (isgamesessionactive&&!menuisopen)
@@ -166,7 +179,12 @@ namespace MyBPT.Classes
             }
         }
 
-
+        /// <summary>
+        /// Megjeleníti a pontszámlistát, a megadott listából nyeri az adatokat
+        /// </summary>
+        /// <param name="spriteBatch">MonoGame spritegyüjtemény, amely lerajzolja az objektumot</param>
+        /// <param name="font">MonoGame betűgyüjtemény, amelyet beállításai alapján rajzolódik a funckióban megadott szöveg</param>
+        /// <param name="scores">Előre elkészített pontszám szövegrészek gyüjteménye (soronként)</param>
         public void DrawScores(SpriteBatch spriteBatch,SpriteFont font, List<String> scores)
         {
             int max = 10;
@@ -183,6 +201,7 @@ namespace MyBPT.Classes
             }
         }
 
+        //Megjelenítést kezelő funkciók
         public void OpenMainMenu()
         {
             menuisopen = true;
@@ -203,7 +222,6 @@ namespace MyBPT.Classes
             closebutton.Visible = true;
             logo.Visible = true;
         }
-
         public void CloseMenu()
         {
             menuisopen = false;
@@ -224,7 +242,6 @@ namespace MyBPT.Classes
             closebutton.Visible = false;
             logo.Visible = false;
         }   
-
         public void OpenPlayMenu()
         {
             playmenuisopen = true;
@@ -245,7 +262,6 @@ namespace MyBPT.Classes
             closebutton.Visible = true;
             logo.Visible = false;
         }
-
         public void OpenOptions()
         {
             menuisopen = true;
@@ -266,7 +282,6 @@ namespace MyBPT.Classes
             closebutton.Visible = true;
             logo.Visible = false;
         }
-
         public void OpenScores()
         {
             menuisopen = true;
@@ -287,7 +302,6 @@ namespace MyBPT.Classes
             closebutton.Visible = true;
             logo.Visible = false;
         }
-
         public void ShowLoadScreen()
         {
             menuisopen = true;

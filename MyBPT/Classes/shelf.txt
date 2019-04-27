@@ -218,3 +218,42 @@ GAMESESSION
 
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+ class Bus
+    {
+        Texture2D bustexture;
+
+        int worldsize;
+        int positiononaxis;
+        bool directionisX;
+        bool visible;
+        Vector2 position;
+
+        public Bus(Texture2D bustexture, int positiononaxis, int worldsize, bool directionisX)
+        {
+            this.bustexture = bustexture;
+            this.worldsize = worldsize;
+            this.positiononaxis = positiononaxis;
+            this.directionisX = directionisX;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(bustexture, position, Color.White);
+        }
+
+        public void UpdatePosition()
+        {
+
+        }
+    }

@@ -3,7 +3,7 @@ using System;
 namespace com.bitbull.meat
 {
     /**
-	 *  Lerper class for motion smoothing written by James Closs 12.01.20017
+	 *  Lerper class for motion smoothing written by James Closs 12.01.2017
 	 * 
 	 *  Please use as you feel fit - pay me back with some good karma or buying my games!
 	 * 
@@ -11,8 +11,11 @@ namespace com.bitbull.meat
 	 *  
 	 *  http://www.bitbull.com http://blog.bitbull.com
 	 */
- 
-	public class Lerper
+
+    /// <summary>
+    /// Mozgás simító osztály (készítette: James Closs)
+    /// </summary>
+    public class Lerper
 	{
 	    private float previous_velocity;
 	    public delegate void OnTargetDelegate();

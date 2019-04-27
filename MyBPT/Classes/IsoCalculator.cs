@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace MyBPT.Classes
 {
+    /// <summary>
+    /// 2:1 arányú izometrikus és 1:1 arányú 2D koordinátákat konvertáló osztály
+    /// </summary>
     class IsoCalculator
     {
+        /// <summary>
+        /// 2:1 arányú Izometrikus koordinátákat alakít át 1:1 arányú 2D koordinátákká
+        /// </summary>
         public Point IsoTo2D(Point pointtoconvert)
         {
             Point temppoint = new Point(0, 0);
@@ -23,6 +18,9 @@ namespace MyBPT.Classes
             return temppoint;
         }
 
+        /// <summary>
+        /// 1:1 arányú 2D koordinátákat alakít át 2:1 arányú Izometrikus koordinátákká
+        /// </summary>
         public Point TwoDToIso(Point pointtoconvert)
         {
             Point temppoint = new Point(0, 0);
@@ -31,6 +29,9 @@ namespace MyBPT.Classes
             return temppoint;
         }
 
+        /// <summary>
+        /// 2:1 arányú Izometrikus koordinátákat alakít át 1:1 arányú 2D koordinátákká
+        /// </summary>
         public Vector2 IsoTo2D(Vector2 vectortoconvert)
         {
             Vector2 temppoint = new Vector2(0, 0);
@@ -39,6 +40,9 @@ namespace MyBPT.Classes
             return temppoint;
         }
 
+        /// <summary>
+        /// 1:1 arányú 2D koordinátákat alakít át 2:1 arányú Izometrikus koordinátákká
+        /// </summary>
         public Vector2 TwoDToIso(Vector2 vectortoconvert)
         {
             Vector2 temppoint = new Vector2(0, 0);

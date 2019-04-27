@@ -1,5 +1,8 @@
 using System;
 
+/// <summary>
+/// Perlin zaj generáló osztály (dokumentációban belinkel forrásból.)
+/// </summary>
 public class Perlin
 {
     private int[] generatedpermutation;

@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
 
 namespace MyBPT.Classes {
+    /// <summary>
+    /// Egy "csempe" objektum. Csempékből epül fel a játékban található, négyzetekből összerakott terep. Izometrikus pozíciót kapnak.
+    /// </summary>
     class Tile {
+        //Változók
         int height;
         Texture2D texture;
         Vector2 position;
@@ -23,6 +15,21 @@ namespace MyBPT.Classes {
         bool moving;
         bool highlighted;
 
+        //Tulajdonságok
+        public Texture2D Texture { get => texture; set => texture = value; }
+        public Rectangle Area { get => area; set => area = value; }
+        public Vector2 Position { get => position; set => position = value; }
+        public bool Moving { get => moving; set => moving = value; }
+        public int Height { get => height; set => height = value; }
+        public bool Highlighted { get => highlighted; set => highlighted = value; }
+
+        /// <summary>
+        /// Létrehoz egy új csempét, átadja a megadott változókat és inicializálja a megjelenést.
+        /// </summary>
+        /// <param name="area">A csempe hitboxa</param>
+        /// <param name="height">A csempén található terep magassága</param>
+        /// <param name="texture">A csempéhez tartozó textúra</param>
+        /// <param name="position">A csempe Izometrikus pozíciója</param>
         public Tile(int height, Texture2D texture, Vector2 position, Rectangle area) {
             this.height = height;
             this.texture = texture;
@@ -33,7 +40,11 @@ namespace MyBPT.Classes {
             highlighted = false;
         }
 
-        public void Draw(SpriteBatch spriteBatch) { //draws the sprite, highlight and effects must go here
+        /// <summary>
+        /// A csempe játéktérre történő megrajzolása. Azesetben, ha a csempén van a kurzor, a kiemelő textúra is megjelenik
+        /// </summary>
+        /// <param name="spriteBatch">MonoGame spritegyüjtemény, amely lerajzolja az objektumot</param>
+        public void Draw(SpriteBatch spriteBatch) {
             if (highlighted)
             {
                 spriteBatch.Draw(new Texture2D(spriteBatch.GraphicsDevice, 100, 100), position, Color.White);
@@ -43,49 +54,5 @@ namespace MyBPT.Classes {
                 spriteBatch.Draw(texture, position, Color.White);
             }
         }
-
-
-        //ACCESSORS
-
-        public Vector2 Position {
-            get {
-                return position;
-            }
-            set {
-                position = value;
-            }
-        }
-
-        public bool Moving {
-            get {
-                return moving;
-            }
-            set {
-                moving = value;
-            }
-        }
-
-        public int Height
-        {
-            get
-            {
-                return height;
-            }
-        }
-
-        public bool Highlighted
-        {
-            get
-            {
-                return highlighted;
-            }
-            set
-            {
-                highlighted = value;
-            }
-        }
-
-        public Texture2D Texture { get => texture; set => texture = value; }
-        public Rectangle Area { get => area; set => area = value; }
     }
 }

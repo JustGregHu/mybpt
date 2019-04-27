@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Android.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -203,7 +202,6 @@ namespace MyBPT.Classes
         {
 
         }
-
         protected override void Update(GameTime gameTime)
         {
             if (isgamesessionactive && !sandbox && gametimer.Timeleft<1)

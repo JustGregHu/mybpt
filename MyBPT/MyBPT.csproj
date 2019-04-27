@@ -91,7 +91,7 @@
   <ItemGroup>
     <Compile Include="AppStart.cs" />
     <Compile Include="Classes\Building.cs" />
-    <Compile Include="Classes\Bus.cs" />
+    <Compile Include="Classes\KeyboardKeys.cs" />
     <Compile Include="Classes\ScoreInstance.cs" />
     <Compile Include="Classes\CountDown.cs" />
     <Compile Include="Classes\Menu.cs" />
@@ -100,7 +100,6 @@
     <Compile Include="Classes\Road.cs" />
     <Compile Include="Classes\Station.cs" />
     <Compile Include="Classes\Button.cs" />
-    <Compile Include="Classes\ButtonCollection.cs" />
     <Compile Include="Classes\BuyMenu.cs" />
     <Compile Include="Classes\Camera.cs" />
     <Compile Include="Classes\FrameCounter.cs" />

@@ -11,6 +11,9 @@ using Android.Views;
 using Android.Widget;
 
 namespace MyBPT.Classes {
+    /// <summary>
+    /// FPS számláló osztály (dokumentációban belinkel forrásból.)
+    /// </summary>
     public class FrameCounter {
         public FrameCounter() {
         }
