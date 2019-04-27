@@ -29,14 +29,14 @@ namespace MyBPT.Classes
         public bool Highlighted { get => highlighted; set => highlighted = value; }
         public int Cost { get => cost; set => cost = value; }
 
-        public Obstacle(Dictionary<string,Texture2D> texturecollection, string textureid, GameWorld gameWorld,Point coordinates,int cost)
+        public Obstacle(Dictionary<string,Texture2D> texturecollection, string textureid, Point preferredscreensize, GameWorld gameWorld,Point coordinates,int cost)
         {
 
             this.texture = texturecollection[textureid];
             this.cost = cost;
             this.coordinates = coordinates;
-            demolishbutton = new Button(new Vector2(550, 50), texturecollection["hud_button_demolish"]);
-            highlighttile = new Tile(0, texturecollection["world_highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
+            demolishbutton = new Button(new Vector2(0, 0), texturecollection["hud_button_demolish"]);
+            demolishbutton.UpdatePosition(new Vector2(preferredscreensize.X / 2 - demolishbutton.Texture.Width / 2, preferredscreensize.Y - 300));
             this.tileposition = gameWorld.MapData[coordinates.X, coordinates.Y].Position;
             ButtonVisibility_NoSelection();
         }

@@ -38,26 +38,26 @@ namespace MyBPT.Classes
             for (int i = 0; i < data.Length; ++i)
                 data[i] = Color.White;
             background.SetData(data);
-            deletebutton = new Button(new Vector2(1000,350), texturecollection.GetTextures()["hud_keyboard_key_del"]);
-            submitbutton = new Button(new Vector2(500, 650), texturecollection.GetTextures()["hud_keyboard_submit"]);
-            int horizontaloffset = 400;
+            deletebutton = new Button(new Vector2(950,400), texturecollection.GetTextures()["hud_keyboard_key_del"]);
+            submitbutton = new Button(new Vector2(950, 500), texturecollection.GetTextures()["hud_keyboard_submit"]);
+            int horizontaloffset = 250;
             int verticaloffset = 0;
             int currentrowcount = 0;
             for (int i = 0; i < keyboardkeys.Length; i++)
             {
                 if (i==10)
                 {
-                    horizontaloffset = 420;
+                    horizontaloffset = 270;
                     verticaloffset = 55;
                     currentrowcount = 0;
                 }
                 if (i==20)
                 {
-                    horizontaloffset = 440;
+                    horizontaloffset = 290;
                     verticaloffset = 55 * 2;
                     currentrowcount = 0;
                 }
-                keys.Add(new KeyboardKeys(new Button(new Vector2(currentrowcount * 54+ horizontaloffset, 300+ verticaloffset), texturecollection.GetTextures()["hud_keyboard_key"]), keyboardkeys[i]));
+                keys.Add(new KeyboardKeys(new Button(new Vector2(currentrowcount * 54+ horizontaloffset, 400+ verticaloffset), texturecollection.GetTextures()["hud_keyboard_key"]), keyboardkeys[i]));
                 currentrowcount++;
             }
             CloseKeyboard();
@@ -136,7 +136,7 @@ namespace MyBPT.Classes
                 }
                 submitbutton.Draw(spriteBatch);
                 deletebutton.Draw(spriteBatch);
-                spriteBatch.DrawString(font, currenttext, new Vector2(600, 200), Color.White);
+                spriteBatch.DrawString(font, currenttext, new Vector2(500, 350), Color.White);
             }
         }
     }

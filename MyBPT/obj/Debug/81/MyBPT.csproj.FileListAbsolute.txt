@@ -125,8 +125,6 @@ C:\mybpt\MyBPT\obj\Debug\81\linksrc\System.ComponentModel.Composition.pdb
 C:\mybpt\MyBPT\obj\Debug\81\linksrc\Microsoft.CSharp.pdb
 C:\mybpt\MyBPT\obj\Debug\81\linksrc\Mono.Security.pdb
 C:\mybpt\MyBPT\bin\Android\AnyCPU\Debug\SQLiteConnectionBuddy.Android.dll.mdb
-C:\mybpt\MyBPT\obj\Debug\81\linksrc\MyBPT.dll.mdb
-C:\mybpt\MyBPT\obj\Debug\81\linksrc\SQLiteConnectionBuddy.Android.dll.mdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\MyBPT.dll.mdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\SQLiteConnectionBuddy.Android.dll.mdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\Microsoft.CSharp.pdb
@@ -155,3 +153,8 @@ C:\mybpt\MyBPT\obj\Debug\81\android\assets\Mono.Data.Sqlite.pdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.Data.pdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.Numerics.pdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.Transactions.pdb
+C:\mybpt\MyBPT\obj\Debug\81\linksrc\MyBPT.dll.mdb
+C:\mybpt\MyBPT\obj\Debug\81\linksrc\SQLiteConnectionBuddy.Android.dll.mdb
+C:\mybpt\MyBPT\bin\Android\AnyCPU\Debug\MyBPT.dll
+C:\mybpt\MyBPT\obj\Debug\81\linksrc\MyBPT.dll.mdb
+C:\mybpt\MyBPT\obj\Debug\81\linksrc\SQLiteConnectionBuddy.Android.dll.mdb

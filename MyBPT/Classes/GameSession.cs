@@ -66,6 +66,7 @@ namespace MyBPT.Classes
         int hudmargin;
         bool movingbuilding;
         bool buyingbuilding;
+        bool gamehasended;
         int highlightedstationid;
         int highlightedobstacleid;
         Point preferredscreensize;
@@ -78,6 +79,13 @@ namespace MyBPT.Classes
         int lengthofmessageshow;
         int monthcount;
         int currentyear;
+
+        //Hud elements
+        Texture2D gameplaystats_coins;
+        Texture2D gameplaystats_clock;
+        Texture2D gameplaystats_calendar;
+        Texture2D gameplaystats_influence;
+        Texture2D gameplaystats_level;
 
         //Core functions
         public GameSession()
@@ -134,25 +142,38 @@ namespace MyBPT.Classes
             LoadTexturesIntoTextureCollection();
 
             //Buttons, Menus
-            menu = new Menu(GraphicsDevice, preferredscreensize, texturecollection);
-            buymenu = new BuyMenu(GraphicsDevice, preferredscreensize, texturecollection);
+            Vector2 initialpos = new Vector2(0, 0);
+            menu = new Menu(GraphicsDevice, preferredscreensize, texturecollection, hudmargin);
+            buymenu = new BuyMenu(GraphicsDevice, preferredscreensize, texturecollection,hudmargin);
+
             int zoomwidth = texturecollection.GetTextures()["hud_zoom_in"].Width;
-            zoomin = new Button(new Vector2(preferredscreensize.X - (zoomwidth + hudmargin), preferredscreensize.Y - zoomwidth - hudmargin), texturecollection.GetTextures()["hud_zoom_in"]);
-            zoomout = new Button(new Vector2(preferredscreensize.X-((zoomwidth + hudmargin) * 2), preferredscreensize.Y - zoomwidth - hudmargin), texturecollection.GetTextures()["hud_zoom_out"]);
+            zoomin = new Button(initialpos, texturecollection.GetTextures()["hud_zoom_in"]);
+            zoomout = new Button(initialpos, texturecollection.GetTextures()["hud_zoom_out"]);
+            dpad_left = new Button(initialpos, texturecollection.GetTextures()["hud_dpad_west"]);
+            dpad_right = new Button(initialpos, texturecollection.GetTextures()["hud_dpad_east"]);
+            dpad_up = new Button(initialpos, texturecollection.GetTextures()["hud_dpad_north"]);
+            dpad_down = new Button(initialpos, texturecollection.GetTextures()["hud_dpad_south"]);
+            gameplaystats_coins = texturecollection.GetTextures()["hud_gameplaystats_coins"];
+            gameplaystats_clock = texturecollection.GetTextures()["hud_gameplaystats_clock"];
+            gameplaystats_calendar = texturecollection.GetTextures()["hud_gameplaystats_calendar"];
+            gameplaystats_influence = texturecollection.GetTextures()["hud_gameplaystats_influence"];
+            gameplaystats_level = texturecollection.GetTextures()["hud_gameplaystats_level"];
 
-            dpad_left = new Button(new Vector2(hudmargin-20, preferredscreensize.Y - 220 - hudmargin), texturecollection.GetTextures()["hud_dpad_west"]);
-            dpad_right = new Button(new Vector2( 120 + hudmargin, preferredscreensize.Y - 70 - hudmargin), texturecollection.GetTextures()["hud_dpad_east"]);
-            dpad_up = new Button(new Vector2( 120 + hudmargin, preferredscreensize.Y - 220 - hudmargin), texturecollection.GetTextures()["hud_dpad_north"]);
-            dpad_down = new Button(new Vector2(hudmargin-20, preferredscreensize.Y -70 -hudmargin), texturecollection.GetTextures()["hud_dpad_south"]);
+            zoomin.UpdatePosition(new Vector2(preferredscreensize.X / 2 - zoomwidth-20, preferredscreensize.Y - zoomin.Texture.Height - hudmargin));
+            zoomout.UpdatePosition(new Vector2(preferredscreensize.X / 2 + 20, preferredscreensize.Y - zoomout.Texture.Height - hudmargin));
+            dpad_left.UpdatePosition(new Vector2(hudmargin, preferredscreensize.Y - 200 - dpad_left.Texture.Height/2));
+            dpad_right.UpdatePosition(new Vector2(100 + hudmargin, preferredscreensize.Y - 100 -  dpad_left.Texture.Height / 2));
+            dpad_up.UpdatePosition(new Vector2(100 + hudmargin, preferredscreensize.Y - 200 -dpad_left.Texture.Height / 2));
+            dpad_down.UpdatePosition(new Vector2(hudmargin, preferredscreensize.Y - 100 - dpad_left.Texture.Height / 2));
 
-            onscreenkeyboard = new OnScreenKeyboard(GraphicsDevice, preferredscreensize, texturecollection);
+           onscreenkeyboard = new OnScreenKeyboard(GraphicsDevice, preferredscreensize, texturecollection);
         }
         private void InitializeSession(bool isupgradable, bool size,bool issandbox)
         {
-            menu.CloseMenu();
             //Logic variables
             movingbuilding = false;
             buyingbuilding = false;
+            gamehasended = false;
 
             //Player variables
             player = new Player("", 2000, 1);
@@ -161,7 +182,7 @@ namespace MyBPT.Classes
             gameworld = new GameWorld(texturecollection.GetTextures(),size);
             hardmode = isupgradable;
             sandbox = issandbox;
-            gameworld.GenerateMap(spriteBatch, GraphicsDevice);
+            gameworld.GenerateMap(spriteBatch, preferredscreensize,GraphicsDevice);
             gameworld.InitiateHighlightTile();
             SnapCameraToSelectedTile();
 
@@ -170,11 +191,13 @@ namespace MyBPT.Classes
             InitializeMonth();
             if (!issandbox)
             {
-                lengthofgametime = 5;
+                lengthofgametime = 720;
                 gametimer.StartTimer(lengthofgametime);
             }
             lengthofincomeinterval = 30;
             incometimer.StartTimer(lengthofincomeinterval);
+
+            menu.CloseMenu();
         }
         protected override void UnloadContent()
         {
@@ -186,10 +209,10 @@ namespace MyBPT.Classes
         {
             if (isgamesessionactive && !sandbox && gametimer.Timeleft<1)
             {
+                gamehasended = true;
                 CloseMenu();
                 CloseBuyMenu();
                 onscreenkeyboard.OpenKeyboard();
-                InitializeGameMessage("GAME OVER");
             }
             UpdateTouchCollection();
             if (isgamesessionactive)
@@ -203,13 +226,16 @@ namespace MyBPT.Classes
                 UpdatePlayerLevel();
                 if (tc.Count > 0)
                 {
-                    TouchLocation currenttouchlocation = tc[0];
-                    HandleZoomButtonPresses(currenttouchlocation);
-                    HandleDpadPresses(currenttouchlocation);
-                    HandleBuyMenuButtonPresses(currenttouchlocation);
-                    HandleStationButtonPresses(currenttouchlocation);
-                    HandleObstacleDemolishButtonPresses(currenttouchlocation);
-                    HandleBuildingDemolishButtonPresses(currenttouchlocation);
+                    if (!gamehasended)
+                    {
+                        TouchLocation currenttouchlocation = tc[0];
+                        HandleZoomButtonPresses(currenttouchlocation);
+                        HandleDpadPresses(currenttouchlocation);
+                        HandleBuyMenuButtonPresses(currenttouchlocation);
+                        HandleStationButtonPresses(currenttouchlocation);
+                        HandleObstacleDemolishButtonPresses(currenttouchlocation);
+                        HandleBuildingDemolishButtonPresses(currenttouchlocation);
+                    }
                 }
             }
             if (tc.Count > 0)
@@ -253,9 +279,6 @@ namespace MyBPT.Classes
                 DrawBuyMenuElements();
                 DrawObstacleDemolitionMenu();
                 DrawBuildingDemolitionMenu();
-#if DEBUG
-                DrawFPS(gameTime);
-#endif
                 DrawGameMessage();
                 spriteBatchHud.End();
 
@@ -429,14 +452,20 @@ namespace MyBPT.Classes
                 if (idofhighlightedstation >-1)
                 {
                     gameworld.Stations[idofhighlightedstation].DrawButtons(spriteBatchHud);
-                    gameworld.Stations[idofhighlightedstation].DrawInfo(spriteBatchHud,font);
+                    gameworld.Stations[idofhighlightedstation].DrawInfo(spriteBatchHud,font,hudmargin);
                 }
                 else
                 {
-                    spriteBatchHud.DrawString(font, "Lvl " + player.Level, new Vector2(50, 50), Color.White);
-                    spriteBatchHud.DrawString(font, "Cash: " + player.Money, new Vector2(50, 100), Color.White);
-                    spriteBatchHud.DrawString(font, "Next month: " + incometimer.Timeleft + "s", new Vector2(50, 200), Color.White);
-                    spriteBatchHud.DrawString(font, currentyear +" "+CurrentMonth, new Vector2(50, 250), Color.White);
+                    spriteBatchHud.Draw(gameplaystats_calendar, new Vector2(hudmargin, hudmargin), Color.White);
+                    spriteBatchHud.Draw(gameplaystats_clock, new Vector2(hudmargin, hudmargin+50), Color.White);
+                    spriteBatchHud.Draw(gameplaystats_coins, new Vector2(hudmargin, hudmargin+100), Color.White);
+                    spriteBatchHud.Draw(gameplaystats_level, new Vector2(hudmargin, hudmargin + 150), Color.White);
+
+                    spriteBatchHud.DrawString(font, currentyear + " " + CurrentMonth, new Vector2(hudmargin * 2, hudmargin), Color.White);
+                    spriteBatchHud.DrawString(font, incometimer.Timeleft + "s", new Vector2(hudmargin * 2, hudmargin + 50), Color.White);
+                    spriteBatchHud.DrawString(font, player.Money.ToString(), new Vector2(hudmargin*2, hudmargin + 100), Color.White);
+                    spriteBatchHud.DrawString(font, player.Level.ToString(), new Vector2(hudmargin * 2, hudmargin + 150), Color.White);
+
                 }
             }
         }
@@ -444,7 +473,7 @@ namespace MyBPT.Classes
         {
             if (!buymenu.BuymenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
             {
-                menu.Draw(spriteBatchMenu);
+                menu.Draw(spriteBatchMenu,font);
                 if (menu.ScoresAreVisible)
                 {
                     List<ScoreInstance> scores = GetAllScores();
@@ -462,7 +491,7 @@ namespace MyBPT.Classes
         {
             if (!movingbuilding && (!menu.MenuIsOpen) && !onscreenkeyboard.KeyboardIsOpen)
             {
-                buymenu.Draw(spriteBatchHud);
+                buymenu.Draw(spriteBatchHud,gameworld,font);
             }
         }
         private void DrawObstacleDemolitionMenu()
@@ -492,12 +521,18 @@ namespace MyBPT.Classes
         private void DrawOnScreenKeyboard()
         {
             onscreenkeyboard.DrawOnScreenKeyboard(spriteBatchKeyboard, font);
+            if (gamehasended&&isgamesessionactive)
+            {
+                spriteBatchKeyboard.DrawString(font, "Game Over! Your total income is: " + gameworld.CurrentIncome, new Vector2(hudmargin + 320, hudmargin + 150), Color.White);
+                spriteBatchKeyboard.DrawString(font, "Please enter your name below.", new Vector2(hudmargin + 350, hudmargin + 190), Color.White);
+            }
+           
         }
         private void DrawGameMessage()
         {
             if (messagetimer.Timeleft>0)
             {
-                spriteBatchHud.DrawString(font, gamemessage, new Vector2(preferredscreensize.X - preferredscreensize.X / 2, preferredscreensize.Y - preferredscreensize.X / 2), Color.Red);
+                spriteBatchHud.DrawString(font, gamemessage, new Vector2(preferredscreensize.X - preferredscreensize.X / 2, preferredscreensize.Y - preferredscreensize.X / 2+hudmargin), Color.Red);
             }
         }
         private void DrawFPS(GameTime gameTime)
@@ -520,11 +555,11 @@ namespace MyBPT.Classes
             highlightedstationid = gameworld.Stations.Count;
             if (isterminus)
             {
-                gameworld.Stations.Add(new Station(GraphicsDevice, preferredscreensize, texturecollection, gameworld, new Point(gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y), true));
+                gameworld.Stations.Add(new Station(GraphicsDevice, preferredscreensize, texturecollection, hudmargin, gameworld, new Point(gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y), true));
             }
             else
             {
-                gameworld.Stations.Add(new Station(GraphicsDevice, preferredscreensize, texturecollection, gameworld, new Point(gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y), false));
+                gameworld.Stations.Add(new Station(GraphicsDevice, preferredscreensize, texturecollection, hudmargin, gameworld, new Point(gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y), false));
 
             }
             BeginBuildingPlacement();
@@ -884,6 +919,7 @@ namespace MyBPT.Classes
             }
             if (buymenu.CloseButton.IsTapped(currenttouchlocation) && buymenu.CloseButton.Visible)
             {
+                currenttouchlocation = new TouchLocation();
                 CloseBuyMenu();
                 SnapCameraToSelectedTile();
             }
@@ -1153,16 +1189,19 @@ namespace MyBPT.Classes
         }
         private void StartRegularSession()
         {
+            menu.ShowLoadScreen();
             ActivateGame();
             InitializeSession(false,false,false);
         }
         private void StartHardSession()
         {
+            menu.ShowLoadScreen();
             ActivateGame();
             InitializeSession(true, true, false);
         }
         private void StartSandboxSession()
         {
+            menu.ShowLoadScreen();
             ActivateGame();
             InitializeSession(false, false,true);
         }
@@ -1305,7 +1344,7 @@ namespace MyBPT.Classes
             {
                 if (players[i]==player.Name)
                 {
-                    CreateNewScore(i+1, player.Money);
+                    CreateNewScore(i+1, gameworld.CurrentIncome);
                     playerfound = true;
                     i = players.Count;
                 }
@@ -1359,7 +1398,7 @@ namespace MyBPT.Classes
         private static List<ScoreInstance> GetAllScores()
         {
                 List<ScoreInstance> scores = new List<ScoreInstance>();
-               var sql = "SELECT scores.id, scores.totalmoney,players.name FROM scores INNER JOIN players ON players.id=scores.player_id ORDER BY scores.totalmoney Desc LIMIT 10;";
+               var sql = "SELECT scores.id, scores.totalmoney,players.name FROM scores INNER JOIN players ON players.id=scores.player_id ORDER BY scores.totalmoney Desc;";
 
                 using (var conn = GetConnection())
                 {

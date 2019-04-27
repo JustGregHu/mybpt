@@ -37,6 +37,9 @@ namespace MyBPT.Classes {
         Button upgradebutton;
         Button acceptbutton;
         Button cancelbutton;
+        Texture2D gameplaystats_influence;
+        Texture2D gameplaystats_clock;
+        Texture2D gameplaystats_coins;
 
         public bool Highlighted { get => highlighted; set => highlighted = value; }
         public bool Isterminus { get => isterminus; set => isterminus = value; }
@@ -92,34 +95,34 @@ namespace MyBPT.Classes {
         {
             get
             {
-                return "Income: " + income;
+                return "Income: " + income+" cash/month";
             }
         }
         public string Description_Influence_Tiles
         {
             get
             {
-                return "Influence: " + effectradius;
+                return "Influence: " + effectradius + " tiles";
             }
         }
         public string Description_UpgradeCost
         {
             get {
-                return "Upgrade Cost: " + UpgradeCost;
+                return "Upgrade Cost: " + UpgradeCost + " cash";
             }
         }
         public string Description_SellPrice
         {
             get
             {
-                return "Sell Price: " + SellPrice;
+                return "Sell Price: " + SellPrice + " cash"; ;
             }
         }
         public string Description_Cost
         {
             get
             {
-                return "Cost :"+cost;
+                return "Cost :"+ cost + " cash"; ;
                 
             }
            
@@ -189,19 +192,29 @@ namespace MyBPT.Classes {
             ApplyIncome(gameworld);
         }
 
-        public Station(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection, GameWorld gameWorld, Point coordinates, bool isterminus)
+        public Station(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection, int hudmargin, GameWorld gameWorld, Point coordinates, bool isterminus)
         {
             Color[] data = new Color[preferredscreensize.X * preferredscreensize.Y];
             background = new Texture2D(graphicsdevice, preferredscreensize.X, preferredscreensize.Y);
             for (int i = 0; i < data.Length; ++i)
                 data[i] = Color.White;
             background.SetData(data);
+            Vector2 initialpos = new Vector2(0, 0);
+            movebutton = new Button(initialpos, texturecollection.GetTextures()["hud_button_station_move"]);
+            sellbutton = new Button(initialpos, texturecollection.GetTextures()["hud_button_station_sell"]);
+            upgradebutton = new Button(initialpos, texturecollection.GetTextures()["hud_button_station_upgrade"]);
+            acceptbutton = new Button(initialpos, texturecollection.GetTextures()["hud_button_apply"]);
+            cancelbutton = new Button(initialpos, texturecollection.GetTextures()["hud_button_cancel"]);
 
-            movebutton = new Button(new Vector2(400, 50), texturecollection.GetTextures()["hud_button_station_move"]);
-            sellbutton = new Button(new Vector2(550, 50), texturecollection.GetTextures()["hud_button_station_sell"]);
-            upgradebutton = new Button(new Vector2(700, 50), texturecollection.GetTextures()["hud_button_station_upgrade"]);
-            acceptbutton = new Button(new Vector2(500, 200), texturecollection.GetTextures()["hud_button_apply"]);
-            cancelbutton = new Button(new Vector2(650, 200), texturecollection.GetTextures()["hud_button_cancel"]);
+            movebutton.UpdatePosition(new Vector2(preferredscreensize.X / 2 - movebutton.Texture.Width / 2- movebutton.Texture.Width-hudmargin,preferredscreensize.Y-300));
+            sellbutton.UpdatePosition(new Vector2(preferredscreensize.X / 2 - movebutton.Texture.Width/2, preferredscreensize.Y - 300));
+            upgradebutton.UpdatePosition(new Vector2(preferredscreensize.X / 2 + movebutton.Texture.Width / 2 + hudmargin, preferredscreensize.Y - 300));
+            acceptbutton.UpdatePosition(new Vector2(preferredscreensize.X / 2 - movebutton.Texture.Width-hudmargin/2, preferredscreensize.Y - 300));
+            cancelbutton.UpdatePosition(new Vector2(preferredscreensize.X / 2 + hudmargin / 2, preferredscreensize.Y - 300));
+
+            gameplaystats_clock= texturecollection.GetTextures()["hud_gameplaystats_clock"];
+            gameplaystats_coins = texturecollection.GetTextures()["hud_gameplaystats_coins"];
+            gameplaystats_influence = texturecollection.GetTextures()["hud_gameplaystats_influence"];
             this.tileposition = gameWorld.MapData[coordinates.X, coordinates.Y].Position;
             this.isterminus = isterminus;
             this.coordinates = coordinates;
@@ -348,18 +361,24 @@ namespace MyBPT.Classes {
             }
         }
 
-        public void DrawInfo(SpriteBatch spriteBatchHud, SpriteFont font)
+        public void DrawInfo(SpriteBatch spriteBatchHud, SpriteFont font,int hudmargin)
         {
-            spriteBatchHud.DrawString(font, Description_LevelAndType, new Vector2(50, 50), Color.White);
-            spriteBatchHud.DrawString(font, Description_Influence_Tiles, new Vector2(50, 100), Color.White);
-            spriteBatchHud.DrawString(font, Description_Influence_Worth, new Vector2(50, 150), Color.White);
-            spriteBatchHud.DrawString(font, Description_UpgradeCost, new Vector2(50, 200), Color.White);
-            spriteBatchHud.DrawString(font, Description_SellPrice, new Vector2(50, 250), Color.White);
+            spriteBatchHud.Draw(gameplaystats_influence, new Vector2(hudmargin, hudmargin + 50), Color.White);
+            spriteBatchHud.Draw(gameplaystats_clock, new Vector2(hudmargin, hudmargin + 100), Color.White);
+            spriteBatchHud.Draw(gameplaystats_coins, new Vector2(hudmargin, hudmargin + 150), Color.White);
+            spriteBatchHud.Draw(gameplaystats_coins, new Vector2(hudmargin, hudmargin + 200), Color.White);
+
+            spriteBatchHud.DrawString(font, Description_LevelAndType, new Vector2(hudmargin, hudmargin), Color.White);
+
+            spriteBatchHud.DrawString(font, Description_Influence_Tiles, new Vector2(hudmargin * 2, hudmargin+50), Color.White);
+            spriteBatchHud.DrawString(font, Description_Influence_Worth, new Vector2(hudmargin * 2, hudmargin + 100), Color.White);
+            spriteBatchHud.DrawString(font, Description_UpgradeCost, new Vector2(hudmargin * 2, hudmargin + 150), Color.White);
+            spriteBatchHud.DrawString(font, Description_SellPrice, new Vector2(hudmargin * 2, hudmargin + 200), Color.White);
         }
 
         public void DrawButtons(SpriteBatch spriteBatchHud)
         {
-            spriteBatchHud.Draw(background, new Vector2(-900, -400), new Color(0, 0, 0, 85));
+            spriteBatchHud.Draw(background, new Vector2(-750, -400), new Color(0, 0, 0, 85));
             if (moving)
             {
                 AcceptButton.Draw(spriteBatchHud);

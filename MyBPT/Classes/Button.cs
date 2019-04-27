@@ -23,6 +23,7 @@ namespace MyBPT.Classes {
 
         public bool Visible { get => visible; set => visible = value; }
         public Vector2 Position { get => position; set => position = value; }
+        public Texture2D Texture { get => texture; set => texture = value; }
 
         public Button(Vector2 position, Texture2D texture) {
             highlighted = false;
@@ -34,6 +35,12 @@ namespace MyBPT.Classes {
 
         }
 
+
+        public void UpdatePosition(Vector2 position)
+        {
+            this.position = position;
+            area = new Rectangle(position.ToPoint(), new Point(texture.Width, texture.Height));
+        }
 
         public void Draw(SpriteBatch spriteBatch) {
             if (Visible) {

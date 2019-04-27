@@ -254,10 +254,10 @@ namespace MyBPT.Classes {
             return noiseMap;
         }
 
-        public void GenerateMap(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice)
+        public void GenerateMap(SpriteBatch spriteBatch,Point preferredscreensize,GraphicsDevice graphicsDevice)
         {
             double[,] noiseMap = GenerateNoiseMap(worldsize, worldsize, noisescale);
-            GenerateRandomWorld();
+            GenerateRandomWorld(preferredscreensize);
             CreateNoiseMap(spriteBatch,graphicsDevice,noiseMap);
         }
 
@@ -288,7 +288,7 @@ namespace MyBPT.Classes {
         }
 
         
-    public void GenerateRandomWorld()
+    public void GenerateRandomWorld(Point preferredscreensize)
     {
         for (int i = 0; i < worldsize; i++)
         {
@@ -370,7 +370,7 @@ namespace MyBPT.Classes {
                 for (int u = 0; u < worldsize; u++)
                 {
                     if (MapData[i, u].Height > hillheight)
-                        obstacles.Add(new Obstacle(texturecollection, "world_obstacle_hill", this, new Point(i, u), 500));
+                        obstacles.Add(new Obstacle(texturecollection, "world_obstacle_hill", preferredscreensize,this, new Point(i, u), 500));
                     for (int x = 0; x < roadpositionsX.Count; x++)
                     {
                         if (i == roadpositionsX[x] && !AreThereHillsInX(roadpositionsX[x]))
@@ -447,7 +447,7 @@ namespace MyBPT.Classes {
                         {
                             if (rnd.Next(1, 100) > 85)
                             {
-                                buildings.Add(new Building(texturecollection, this, new Point(i, u),type,level));
+                                buildings.Add(new Building(texturecollection, this, preferredscreensize,new Point(i, u),type,level));
 
                             }
                         }
@@ -455,7 +455,7 @@ namespace MyBPT.Classes {
                         {
                             if (rnd.Next(1, 100) > 95)
                             {
-                                buildings.Add(new Building(texturecollection, this, new Point(i, u), type, level));
+                                buildings.Add(new Building(texturecollection, this, preferredscreensize,new Point(i, u), type, level));
 
                             }
                         }
@@ -463,7 +463,7 @@ namespace MyBPT.Classes {
                         {
                             if (rnd.Next(1, 100) > 90)
                             {
-                                buildings.Add(new Building(texturecollection, this, new Point(i, u), type, level));
+                                buildings.Add(new Building(texturecollection, this, preferredscreensize,new Point(i, u), type, level));
 
                             }
 

@@ -19,8 +19,11 @@ namespace MyBPT.Classes
         bool isgamesessionactive;
         bool menuisopen;
         bool scoresarevisible;
+        bool loadscreen;
+        bool playmenuisopen;
+        Point preferredscreensize;
 
-        Texture2D logo;
+        Button logo;
         Texture2D background;
 
         Button openbutton;
@@ -39,6 +42,9 @@ namespace MyBPT.Classes
 
         Button togglesound;
         Button resetstats;
+
+        Button loadscreenvisual;
+
 
 
         public bool MenuIsOpen { get => menuisopen; set => menuisopen = value; }
@@ -66,8 +72,11 @@ namespace MyBPT.Classes
             isgamesessionactive = false;
         }
 
-        public Menu(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection)
+        public Menu(GraphicsDevice graphicsdevice, Point preferredscreensize, GameTextures texturecollection, int hudmargin)
         {
+            this.preferredscreensize = preferredscreensize;
+
+            loadscreen = false;
             menuisopen = true;
             isgamesessionactive = false;
             Color[] data = new Color[preferredscreensize.X * preferredscreensize.Y];
@@ -76,27 +85,48 @@ namespace MyBPT.Classes
                 data[i] = Color.White;
             background.SetData(data);
 
+            Vector2 initposition = new Vector2(0, 0);
+            logo = (new Button(initposition, texturecollection.GetTextures()["hud_menu_LOGO"]));
+            openbutton = (new Button(initposition, texturecollection.GetTextures()["hud_menu_open"]));
+            closebutton = (new Button(initposition, texturecollection.GetTextures()["hud_menu_close"]));
 
-            openbutton = (new Button(new Vector2(preferredscreensize.X- 100,  100), texturecollection.GetTextures()["hud_menu_open"]));
-            closebutton = (new Button(new Vector2(preferredscreensize.X-100, 100), texturecollection.GetTextures()["hud_menu_close"]));
+            gotoplaymenu = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play"]));
+            gotoscores = (new Button(initposition, texturecollection.GetTextures()["hud_menu_scores"]));
+            gotooptions = (new Button(initposition, texturecollection.GetTextures()["hud_menu_options"]));
+            gotoexit = (new Button(initposition, texturecollection.GetTextures()["hud_menu_exit"]));
 
-            gotoplaymenu = (new Button(new Vector2(100, 0), texturecollection.GetTextures()["hud_menu_play"]));
-            gotooptions = (new Button(new Vector2(100, 200), texturecollection.GetTextures()["hud_menu_options"]));
-            gotoscores = (new Button(new Vector2(100, 400), texturecollection.GetTextures()["hud_menu_scores"]));
-            gotoexit = (new Button(new Vector2(100, 600), texturecollection.GetTextures()["hud_menu_exit"]));
+            gotomainmenu = (new Button(initposition, texturecollection.GetTextures()["hud_menu_back"]));
 
-            gotomainmenu = (new Button(new Vector2(preferredscreensize.X - 100, preferredscreensize.Y - 400), texturecollection.GetTextures()["hud_menu_back"]));
+            int cardmargin = 50;
 
-            playregular = (new Button(new Vector2(100, 0), texturecollection.GetTextures()["hud_menu_play_normal"]));
-            playhard = (new Button(new Vector2(100, 200), texturecollection.GetTextures()["hud_menu_play_hardmode"]));
-            playsandbox = (new Button(new Vector2(100, 400), texturecollection.GetTextures()["hud_menu_play_sandbox"]));
+            playregular = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_normal"]));
+            playhard = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_hardmode"]));
+            playsandbox = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_sandbox"]));
 
-            togglesound = (new Button(new Vector2(100, 0), texturecollection.GetTextures()["hud_menu_play_options_toggle"]));
-            resetstats = (new Button(new Vector2(100, 200), texturecollection.GetTextures()["hud_menu_play_options_reset"]));
+            togglesound = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_options_sound_on"]));
+            resetstats = (new Button(initposition, texturecollection.GetTextures()["hud_menu_play_options_reset"]));
+
+            loadscreenvisual = (new Button(initposition, texturecollection.GetTextures()["game_loading"]));
+
+            logo.UpdatePosition(new Vector2(preferredscreensize.X / 2 - logo.Texture.Width / 2, 50));
+            openbutton.UpdatePosition(new Vector2(preferredscreensize.X - openbutton.Texture.Width - hudmargin, hudmargin));
+            closebutton.UpdatePosition(new Vector2(preferredscreensize.X - openbutton.Texture.Width - hudmargin, hudmargin));
+            gotoplaymenu.UpdatePosition(new Vector2(preferredscreensize.X / 2 - gotoplaymenu.Texture.Width / 2, preferredscreensize.Y/2-gotoplaymenu.Texture.Height / 2));
+            gotoscores.UpdatePosition(new Vector2(preferredscreensize.X / 2 - gotoscores.Texture.Width / 2, preferredscreensize.Y / 2+gotoscores.Texture.Height/2));
+            gotooptions.UpdatePosition(new Vector2(preferredscreensize.X - gotooptions.Texture.Width*2 - hudmargin*2, preferredscreensize.Y - gotooptions.Texture.Height - hudmargin));
+            gotoexit.UpdatePosition(new Vector2(preferredscreensize.X - gotoexit.Texture.Width - hudmargin, preferredscreensize.Y - gotoexit.Texture.Height - hudmargin));
+            gotomainmenu.UpdatePosition(new Vector2(preferredscreensize.X / 2 - gotomainmenu.Texture.Width / 2, preferredscreensize.Y - 150));
+            playregular.UpdatePosition(new Vector2(preferredscreensize.X / 2 - cardmargin - playregular.Texture.Width - playregular.Texture.Width / 2, preferredscreensize.Y / 2 - playregular.Texture.Height / 2));
+            playhard.UpdatePosition(new Vector2(preferredscreensize.X / 2 - playhard.Texture.Width / 2, preferredscreensize.Y / 2 - playhard.Texture.Height / 2));
+            playsandbox.UpdatePosition(new Vector2(preferredscreensize.X / 2 + cardmargin + playsandbox.Texture.Width / 2, preferredscreensize.Y / 2 - playsandbox.Texture.Height / 2));
+            togglesound.UpdatePosition(new Vector2(preferredscreensize.X / 2 - cardmargin - togglesound.Texture.Width, preferredscreensize.Y / 2 - togglesound.Texture.Height / 2));
+            resetstats.UpdatePosition(new Vector2(preferredscreensize.X / 2 + cardmargin , preferredscreensize.Y / 2 - resetstats.Texture.Height / 2));
+            loadscreenvisual.UpdatePosition(new Vector2(preferredscreensize.X / 2 - loadscreenvisual.Texture.Width / 2, preferredscreensize.Y / 2 - loadscreenvisual.Texture.Height / 2));
+
             OpenMainMenu();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             if (isgamesessionactive&&!menuisopen)
             {
@@ -106,10 +136,14 @@ namespace MyBPT.Classes
             {
                 if (isgamesessionactive)
                 {
-                    closebutton.Draw(spriteBatch);
                     spriteBatch.Draw(background, new Vector2(0, 0), new Color(0, 0, 0, 90));
+                    closebutton.Draw(spriteBatch);
                 }
-                gotoplaymenu.Draw(spriteBatch);
+                else
+                {
+                    spriteBatch.Draw(background, new Vector2(0, 0), new Color(0, 114, 188));
+                }
+                logo.Draw(spriteBatch);
                 gotoplaymenu.Draw(spriteBatch);
                 gotooptions.Draw(spriteBatch);
                 gotoscores.Draw(spriteBatch);
@@ -121,16 +155,30 @@ namespace MyBPT.Classes
                 togglesound.Draw(spriteBatch);
                 resetstats.Draw(spriteBatch);
             }
+            if (loadscreen)
+            {
+                loadscreenvisual.Draw(spriteBatch);
+            }
+            if (playmenuisopen)
+            {
+                spriteBatch.DrawString(font, "Your objective is to amass as much income as possible", new Vector2(210,60), Color.White);
+                spriteBatch.DrawString(font, "within two years of ingame time.", new Vector2(390, 105), Color.White);
+            }
         }
 
 
         public void DrawScores(SpriteBatch spriteBatch,SpriteFont font, List<String> scores)
         {
+            int max = 10;
+            if (scores.Count<10)
+            {
+                max = scores.Count;
+            }
             if (scoresarevisible)
             {
-                for (int i = 0; i < scores.Count; i++)
+                for (int i = 0; i < max; i++)
                 {
-                    spriteBatch.DrawString(font, scores[i], new Vector2(100, 200 + 50 * i),Color.White);
+                    spriteBatch.DrawString(font, scores[i]+" cash of total income", new Vector2(50, 50 + 50 * i),Color.White);
                 }
             }
         }
@@ -138,6 +186,8 @@ namespace MyBPT.Classes
         public void OpenMainMenu()
         {
             menuisopen = true;
+            loadscreen = false;
+            playmenuisopen = false;
             scoresarevisible = false;
             gotoplaymenu.Visible = true;
             gotooptions.Visible = true;
@@ -151,11 +201,14 @@ namespace MyBPT.Classes
             resetstats.Visible = false;
             openbutton.Visible = false;
             closebutton.Visible = true;
+            logo.Visible = true;
         }
 
         public void CloseMenu()
         {
             menuisopen = false;
+            loadscreen = false;
+            playmenuisopen = false;
             scoresarevisible = false;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
@@ -169,12 +222,14 @@ namespace MyBPT.Classes
             resetstats.Visible = false;
             openbutton.Visible = true;
             closebutton.Visible = false;
-            menuisopen = false;
+            logo.Visible = false;
         }   
 
         public void OpenPlayMenu()
         {
+            playmenuisopen = true;
             menuisopen = true;
+            loadscreen = false;
             scoresarevisible = false;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
@@ -188,11 +243,14 @@ namespace MyBPT.Classes
             resetstats.Visible = false;
             openbutton.Visible = false;
             closebutton.Visible = true;
+            logo.Visible = false;
         }
 
         public void OpenOptions()
         {
             menuisopen = true;
+            loadscreen = false;
+            playmenuisopen = false;
             scoresarevisible = false;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
@@ -206,11 +264,14 @@ namespace MyBPT.Classes
             resetstats.Visible = true;
             openbutton.Visible = false;
             closebutton.Visible = true;
+            logo.Visible = false;
         }
 
         public void OpenScores()
         {
             menuisopen = true;
+            loadscreen = false;
+            playmenuisopen = false;
             scoresarevisible = true;
             gotoplaymenu.Visible = false;
             gotooptions.Visible = false;
@@ -224,6 +285,27 @@ namespace MyBPT.Classes
             resetstats.Visible = false;
             openbutton.Visible = false;
             closebutton.Visible = true;
+            logo.Visible = false;
+        }
+
+        public void ShowLoadScreen()
+        {
+            menuisopen = true;
+            loadscreen = true;
+            scoresarevisible = false;
+            gotoplaymenu.Visible = false;
+            gotooptions.Visible = false;
+            gotoscores.Visible = false;
+            gotoexit.Visible = false;
+            gotomainmenu.Visible = false;
+            playregular.Visible = false;
+            playhard.Visible = false;
+            playsandbox.Visible = false;
+            togglesound.Visible = false;
+            resetstats.Visible = false;
+            openbutton.Visible = false;
+            closebutton.Visible = true;
+            logo.Visible = false;
         }
     }
 }

@@ -23,6 +23,7 @@
     <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_clock.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_coins.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_influence.png</File>
+    <File>C:/mybpt/MyBPT/Content/hud_gameplaystats_level.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_keyboard_key.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_keyboard_key_del.png</File>
     <File>C:/mybpt/MyBPT/Content/hud_keyboard_submit.png</File>
@@ -71,6 +72,7 @@
     <File>C:/mybpt/MyBPT/Content/world_vehicle_bus_front.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
