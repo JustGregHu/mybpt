@@ -93,7 +93,7 @@ namespace MyBPT.Classes
             preferredscreensize = new Point(1280, 720);
             graphics = new GraphicsDeviceManager(this);
             try { Content.RootDirectory = "Content"; }
-            catch (Exception){}
+            catch (Exception) { }
             graphics.IsFullScreen = true;
             graphics.PreferredBackBufferWidth = preferredscreensize.X;
             graphics.PreferredBackBufferHeight = preferredscreensize.Y;
@@ -112,7 +112,7 @@ namespace MyBPT.Classes
             perlin = new Perlin();
             incometimer = new CountDown();
             gametimer = new CountDown();
-            messagetimer=new CountDown();
+            messagetimer = new CountDown();
             gamemessage = "";
             messagetimer.StartTimer(1);
 
@@ -125,8 +125,8 @@ namespace MyBPT.Classes
             dpadmoveinterval = dpadmoveintervalinitial;
 
             //Gameworld variables
-            stationcost=350;
-            terminuscost=1000;
+            stationcost = 350;
+            terminuscost = 1000;
 
             base.Initialize();
         }
@@ -143,7 +143,7 @@ namespace MyBPT.Classes
             //Buttons, Menus
             Vector2 initialpos = new Vector2(0, 0);
             menu = new Menu(GraphicsDevice, preferredscreensize, texturecollection, hudmargin);
-            buymenu = new BuyMenu(GraphicsDevice, preferredscreensize, texturecollection,hudmargin);
+            buymenu = new BuyMenu(GraphicsDevice, preferredscreensize, texturecollection, hudmargin);
 
             int zoomwidth = texturecollection.GetTextures()["hud_zoom_in"].Width;
             zoomin = new Button(initialpos, texturecollection.GetTextures()["hud_zoom_in"]);
@@ -158,16 +158,16 @@ namespace MyBPT.Classes
             gameplaystats_influence = texturecollection.GetTextures()["hud_gameplaystats_influence"];
             gameplaystats_level = texturecollection.GetTextures()["hud_gameplaystats_level"];
 
-            zoomin.UpdatePosition(new Vector2(preferredscreensize.X / 2 - zoomwidth-20, preferredscreensize.Y - zoomin.Texture.Height - hudmargin));
+            zoomin.UpdatePosition(new Vector2(preferredscreensize.X / 2 - zoomwidth - 20, preferredscreensize.Y - zoomin.Texture.Height - hudmargin));
             zoomout.UpdatePosition(new Vector2(preferredscreensize.X / 2 + 20, preferredscreensize.Y - zoomout.Texture.Height - hudmargin));
-            dpad_left.UpdatePosition(new Vector2(hudmargin, preferredscreensize.Y - 200 - dpad_left.Texture.Height/2));
-            dpad_right.UpdatePosition(new Vector2(100 + hudmargin, preferredscreensize.Y - 100 -  dpad_left.Texture.Height / 2));
-            dpad_up.UpdatePosition(new Vector2(100 + hudmargin, preferredscreensize.Y - 200 -dpad_left.Texture.Height / 2));
+            dpad_left.UpdatePosition(new Vector2(hudmargin, preferredscreensize.Y - 200 - dpad_left.Texture.Height / 2));
+            dpad_right.UpdatePosition(new Vector2(100 + hudmargin, preferredscreensize.Y - 100 - dpad_left.Texture.Height / 2));
+            dpad_up.UpdatePosition(new Vector2(100 + hudmargin, preferredscreensize.Y - 200 - dpad_left.Texture.Height / 2));
             dpad_down.UpdatePosition(new Vector2(hudmargin, preferredscreensize.Y - 100 - dpad_left.Texture.Height / 2));
 
-           onscreenkeyboard = new OnScreenKeyboard(GraphicsDevice, preferredscreensize, texturecollection);
+            onscreenkeyboard = new OnScreenKeyboard(GraphicsDevice, preferredscreensize, texturecollection);
         }
-        private void InitializeSession(bool isupgradable, bool size,bool issandbox)
+        private void InitializeSession(bool isupgradable, bool size, bool issandbox)
         {
             //Logic variables
             movingbuilding = false;
@@ -178,10 +178,10 @@ namespace MyBPT.Classes
             player = new Player("", 2000, 1);
 
             //Map Generation
-            gameworld = new GameWorld(texturecollection.GetTextures(),size);
+            gameworld = new GameWorld(texturecollection.GetTextures(), size);
             hardmode = isupgradable;
             sandbox = issandbox;
-            gameworld.GenerateMap(spriteBatch, preferredscreensize,GraphicsDevice);
+            gameworld.GenerateMap(spriteBatch, preferredscreensize, GraphicsDevice);
             gameworld.InitiateHighlightTile();
             SnapCameraToSelectedTile();
 
@@ -204,7 +204,7 @@ namespace MyBPT.Classes
         }
         protected override void Update(GameTime gameTime)
         {
-            if (isgamesessionactive && !sandbox && gametimer.Timeleft<1)
+            if (isgamesessionactive && !sandbox && gametimer.Timeleft < 1)
             {
                 gamehasended = true;
                 CloseMenu();
@@ -265,7 +265,7 @@ namespace MyBPT.Classes
             spriteBatch.End();
             if (isgamesessionactive)
             {
- 
+
                 spriteBatchHud.Begin(SpriteSortMode.Immediate,
                         BlendState.AlphaBlend,
                         SamplerState.PointClamp,
@@ -315,8 +315,8 @@ namespace MyBPT.Classes
         private void SnapCameraToSelectedTile()
         {
             Tile currenttile = gameworld.MapData[gameworld.CurrentTilePosition.X, gameworld.CurrentTilePosition.Y];
-            float mapx = currenttile.Position.X-preferredscreensize.X/2+ currenttile.Texture.Width/2;
-            float mapy = currenttile.Position.Y- preferredscreensize.Y / 2 + currenttile.Texture.Height / 2; ;
+            float mapx = currenttile.Position.X - preferredscreensize.X / 2 + currenttile.Texture.Width / 2;
+            float mapy = currenttile.Position.Y - preferredscreensize.Y / 2 + currenttile.Texture.Height / 2; ;
             camera.TargetPosition = (new Vector2(mapx, mapy));
         }
         private void UpdateIsometricCamera()
@@ -445,21 +445,21 @@ namespace MyBPT.Classes
                 DrawZoomButtons();
                 DrawDpad();
                 int idofhighlightedstation = IdOfHighlightedStation;
-                if (idofhighlightedstation >-1)
+                if (idofhighlightedstation > -1)
                 {
                     gameworld.Stations[idofhighlightedstation].DrawButtons(spriteBatchHud);
-                    gameworld.Stations[idofhighlightedstation].DrawInfo(spriteBatchHud,font,hudmargin);
+                    gameworld.Stations[idofhighlightedstation].DrawInfo(spriteBatchHud, font, hudmargin);
                 }
                 else
                 {
                     spriteBatchHud.Draw(gameplaystats_calendar, new Vector2(hudmargin, hudmargin), Color.White);
-                    spriteBatchHud.Draw(gameplaystats_clock, new Vector2(hudmargin, hudmargin+50), Color.White);
-                    spriteBatchHud.Draw(gameplaystats_coins, new Vector2(hudmargin, hudmargin+100), Color.White);
+                    spriteBatchHud.Draw(gameplaystats_clock, new Vector2(hudmargin, hudmargin + 50), Color.White);
+                    spriteBatchHud.Draw(gameplaystats_coins, new Vector2(hudmargin, hudmargin + 100), Color.White);
                     spriteBatchHud.Draw(gameplaystats_level, new Vector2(hudmargin, hudmargin + 150), Color.White);
 
                     spriteBatchHud.DrawString(font, currentyear + " " + CurrentMonth, new Vector2(hudmargin * 2, hudmargin), Color.White);
                     spriteBatchHud.DrawString(font, incometimer.Timeleft + "s", new Vector2(hudmargin * 2, hudmargin + 50), Color.White);
-                    spriteBatchHud.DrawString(font, player.Money.ToString(), new Vector2(hudmargin*2, hudmargin + 100), Color.White);
+                    spriteBatchHud.DrawString(font, player.Money.ToString(), new Vector2(hudmargin * 2, hudmargin + 100), Color.White);
                     spriteBatchHud.DrawString(font, player.Level.ToString(), new Vector2(hudmargin * 2, hudmargin + 150), Color.White);
 
                 }
@@ -469,7 +469,7 @@ namespace MyBPT.Classes
         {
             if (!buymenu.BuymenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
             {
-                menu.Draw(spriteBatchMenu,font);
+                menu.Draw(spriteBatchMenu, font);
                 if (menu.ScoresAreVisible)
                 {
                     List<ScoreInstance> scores = GetAllScores();
@@ -480,14 +480,14 @@ namespace MyBPT.Classes
                     }
                     menu.DrawScores(spriteBatchMenu, font, scorestrings);
                 }
-                
+
             }
         }
         private void DrawBuyMenuElements()
         {
             if (!movingbuilding && (!menu.MenuIsOpen) && !onscreenkeyboard.KeyboardIsOpen)
             {
-                buymenu.Draw(spriteBatchHud,gameworld,font);
+                buymenu.Draw(spriteBatchHud, gameworld, font);
             }
         }
         private void DrawObstacleDemolitionMenu()
@@ -495,10 +495,10 @@ namespace MyBPT.Classes
             if (!movingbuilding)
                 if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
                 {
-                        for (int i = 0; i < gameworld.Obstacles.Count; i++)
-                        {
-                            gameworld.Obstacles[i].DrawButtons(spriteBatchHud);
-                        }
+                    for (int i = 0; i < gameworld.Obstacles.Count; i++)
+                    {
+                        gameworld.Obstacles[i].DrawButtons(spriteBatchHud);
+                    }
                 }
 
 
@@ -508,27 +508,27 @@ namespace MyBPT.Classes
             if (!movingbuilding)
                 if (!buymenu.BuymenuIsOpen && !menu.MenuIsOpen && !onscreenkeyboard.KeyboardIsOpen)
                 {
-                for (int i = 0; i < gameworld.Buildings.Count; i++)
-                {
-                    gameworld.Buildings[i].DrawButtons(spriteBatchHud);
+                    for (int i = 0; i < gameworld.Buildings.Count; i++)
+                    {
+                        gameworld.Buildings[i].DrawButtons(spriteBatchHud);
+                    }
                 }
-            }
         }
         private void DrawOnScreenKeyboard()
         {
             onscreenkeyboard.DrawOnScreenKeyboard(spriteBatchKeyboard, font);
-            if (gamehasended&&isgamesessionactive)
+            if (gamehasended && isgamesessionactive)
             {
                 spriteBatchKeyboard.DrawString(font, "Game Over! Your total income is: " + gameworld.CurrentIncome, new Vector2(hudmargin + 320, hudmargin + 150), Color.White);
                 spriteBatchKeyboard.DrawString(font, "Please enter your name below.", new Vector2(hudmargin + 350, hudmargin + 190), Color.White);
             }
-           
+
         }
         private void DrawGameMessage()
         {
-            if (messagetimer.Timeleft>0)
+            if (messagetimer.Timeleft > 0)
             {
-                spriteBatchHud.DrawString(font, gamemessage, new Vector2(preferredscreensize.X - preferredscreensize.X / 2, preferredscreensize.Y - preferredscreensize.X / 2+hudmargin), Color.Red);
+                spriteBatchHud.DrawString(font, gamemessage, new Vector2(preferredscreensize.X - preferredscreensize.X / 2, preferredscreensize.Y - preferredscreensize.Y/4), Color.Red);
             }
         }
         private void DrawFPS(GameTime gameTime)
@@ -563,30 +563,86 @@ namespace MyBPT.Classes
         }
         private void FinishBuildingPlacement()
         {
-        if (!gameworld.IsThereanObstacleAt(gameworld.Stations[highlightedstationid].Coordinates) && !gameworld.IsThereWaterAt(gameworld.Stations[highlightedstationid].Coordinates))
-            if (!gameworld.IsThereARoadAt(gameworld.Stations[highlightedstationid].Coordinates) &&gameworld.IsThereARoadNextTo(gameworld.Stations[highlightedstationid].Coordinates,1))
+            if (!gameworld.IsThereanObstacleAt(gameworld.Stations[highlightedstationid].Coordinates))
             {
-                    if (!gameworld.IsThereABuildingAt(gameworld.Stations[highlightedstationid].Coordinates))
+                if (!gameworld.IsThereWaterAt(gameworld.Stations[highlightedstationid].Coordinates))
+                {
+                    if (!gameworld.IsThereARoadAt(gameworld.Stations[highlightedstationid].Coordinates))
                     {
-                        gameworld.Stations[highlightedstationid].Highlighted = false;
-                        gameworld.Stations[highlightedstationid].FinalizeMove(gameworld);
-                        movingbuilding = false;
-                        buyingbuilding = false;
+                        if (gameworld.IsThereARoadNextTo(gameworld.Stations[highlightedstationid].Coordinates, 1))
+                        {
+                            if (!gameworld.IsThereABuildingAt(gameworld.Stations[highlightedstationid].Coordinates))
+                            {
+                                gameworld.Stations[highlightedstationid].Highlighted = false;
+                                gameworld.Stations[highlightedstationid].FinalizeMove(gameworld);
+                                movingbuilding = false;
+                                buyingbuilding = false;
+                            }
+                            else
+                            {
+                                InitializeGameMessage("You cannot place the station onto a building!");
+                            }
+                        }
+                        else
+                        {
+                            InitializeGameMessage("Should place the station next to a road!");
+                        }
                     }
+                    else
+                    {
+                        InitializeGameMessage("You cannot place a station onto the road!");
+                    }
+                }
+                else
+                {
+                    InitializeGameMessage("You cannot place the station on the water!");
+                }
+            }
+            else
+            {
+                InitializeGameMessage("There's an obstacle in the way!");
             }
         }
         private void MakeBuildingPurchase()
         {
-            if (!gameworld.IsThereanObstacleAt(gameworld.Stations[highlightedstationid].Coordinates) && !gameworld.IsThereWaterAt(gameworld.Stations[highlightedstationid].Coordinates)) { 
-                if (!gameworld.IsThereARoadAt(gameworld.Stations[highlightedstationid].Coordinates) && gameworld.IsThereARoadNextTo(gameworld.Stations[highlightedstationid].Coordinates, 1))
+            if (!gameworld.IsThereanObstacleAt(gameworld.Stations[highlightedstationid].Coordinates))
+            {
+                if (!gameworld.IsThereWaterAt(gameworld.Stations[highlightedstationid].Coordinates))
                 {
-                    player.AddMoney(-gameworld.Stations[highlightedstationid].Cost);
-                    FinishBuildingPlacement();
-                    buyingbuilding = false;
+                    if (!gameworld.IsThereARoadAt(gameworld.Stations[highlightedstationid].Coordinates))
+                    {
+                        if (gameworld.IsThereARoadNextTo(gameworld.Stations[highlightedstationid].Coordinates, 1))
+                        {
+                            if (!gameworld.IsThereABuildingAt(gameworld.Stations[highlightedstationid].Coordinates))
+                            {
+                                player.AddMoney(-gameworld.Stations[highlightedstationid].Cost);
+                                FinishBuildingPlacement();
+                                buyingbuilding = false;
+                            }
+                            else
+                            {
+                                InitializeGameMessage("You cannot place the station onto a building!");
+                            }
+                        }
+                        else
+                        {
+                            InitializeGameMessage("Should place the station next to a road!");
+                        }
+                    }
+                    else
+                    {
+                        InitializeGameMessage("You cannot place a station onto the road!");
+                    }
                 }
-        }
-        
-
+                else
+                {
+                    InitializeGameMessage("You cannot place the station on the water!");
+                }
+            }
+            else
+            {
+                InitializeGameMessage("There's an obstacle in the way!");
+            }
         }
         private void UndoBuildingPlacement()
         {
@@ -626,7 +682,6 @@ namespace MyBPT.Classes
         {
             if (!hardmode)
             {
-
                 if (gameworld.Stations[highlightedstationid].Level != gameworld.Stations[highlightedstationid].Maxlevel)
                 {
                     if (player.CanAfford(gameworld.Stations[highlightedstationid].UpgradeCost))
@@ -663,6 +718,7 @@ namespace MyBPT.Classes
             else
             {
                 gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+                InitializeGameMessage("There's a station in the way!");
             }
 
         }
@@ -676,6 +732,8 @@ namespace MyBPT.Classes
             else
             {
                 gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+                InitializeGameMessage("There's a station in the way!");
+
             }
         }
         private void MoveBuildingLeft()
@@ -688,6 +746,8 @@ namespace MyBPT.Classes
             else
             {
                 gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+                InitializeGameMessage("There's a station in the way!");
+
             }
         }
         private void MoveBuildingRight()
@@ -700,6 +760,8 @@ namespace MyBPT.Classes
             else
             {
                 gameworld.CurrentTilePosition = gameworld.Stations[highlightedstationid].Coordinates;
+                InitializeGameMessage("There's a station in the way!");
+
             }
         }
 

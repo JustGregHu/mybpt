@@ -155,6 +155,8 @@ namespace MyBPT.Classes {
             ButtonVisibility_NoSelection();
         }
 
+        //MEGJELENÍTÉS
+    
         /// <summary>
         /// Az állomások felrajzolása a játéktérre
         /// </summary>
@@ -238,6 +240,8 @@ namespace MyBPT.Classes {
 
         }
 
+        //MŰVELETEK
+       
         /// <summary>
         /// Az állomást szintjének növelése 1-el. Ez a textúráját is megváltoztatja
         /// </summary>
@@ -349,6 +353,8 @@ namespace MyBPT.Classes {
             }
         }
 
+        //MOZGATÁSI FOLYAMAT
+
         /// <summary>
         /// A mozgatási folyamat megkezdése
         /// </summary>
@@ -409,6 +415,8 @@ namespace MyBPT.Classes {
             highlighttile.Position = tileposition;
             ButtonVisibility_NoSelection();
         }
+
+        //VÁLTOZÓ MŰVELETEK
 
         /// <summary>
         /// Visszatér azzal az összeggel amelyet a játékos kap, ha eladja az állomást
