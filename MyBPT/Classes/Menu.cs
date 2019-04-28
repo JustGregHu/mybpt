@@ -17,7 +17,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Főmenü objektum. Segítségével nagiválhat a játékos menüpontok és funkciók között, indíthat játékot stb.
     /// </summary>
-    class Menu
+    public class Menu
     {
         //Változók
         bool isgamesessionactive;

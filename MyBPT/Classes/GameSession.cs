@@ -1428,7 +1428,7 @@ namespace MyBPT.Classes
         /// Ha változó értéke negatív, 0-t ad vissza. Más esetben vissza adja változatlanul
         /// </summary>
         /// <param name="a">Ellenőrizendő szám</param>
-        private int RemoveOffsetMin(int a)
+        public static int RemoveOffsetMin(int a)
         {
             if (a < 0)
             {
@@ -1442,7 +1442,7 @@ namespace MyBPT.Classes
         /// </summary>
         /// <param name="a">Első ellenőrizendő szám</param>
         /// <param name="b">Második ellenőrizendő szám</param>
-        private int RemoveOffsetMax(int a, int b)
+        public static int RemoveOffsetMax(int a, int b)
         {
             if (a > b)
             {
@@ -1456,7 +1456,7 @@ namespace MyBPT.Classes
         /// </summary>
         /// <param name="height">Az alakzat szélessége</param>
         /// <param name="width">Az alakzat magassága</param>
-        private Vector2 FindCenter(int width, int height)
+        public static Vector2 FindCenter(int width, int height)
         {
             return new Vector2(width / 2, height / 2);
         }

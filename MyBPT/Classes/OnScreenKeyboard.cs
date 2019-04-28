@@ -9,7 +9,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Képernyőbillentyűzet objektum. Segítségével bekérhetünk a játékostól egy sor szöveget (stringet)
     /// </summary>
-    class OnScreenKeyboard
+    public class OnScreenKeyboard
     {
         //Változók
         string currenttext;

@@ -15,7 +15,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Visszaszámláló objektum (Timer használatával)
     /// </summary>
-    class CountDown
+    public class CountDown
     {
         //Változók
         int timeleft;

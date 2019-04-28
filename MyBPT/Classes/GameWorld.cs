@@ -7,7 +7,7 @@ namespace MyBPT.Classes {
     /// <summary>
     /// A játékteret és az azzal kapcsolatos funkciókat megvalósító osztály. Terepet, épületeket, akadályokat, pályaelemeket generál, amellyekkel interaktálhat a játékos.
     /// </summary>
-    class GameWorld {
+    public class GameWorld {
         #region Változók, Pályaelemek, Tulajdonságok
         IsoCalculator isoCalculator = new IsoCalculator();
         Random rnd = new Random();

@@ -17,7 +17,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Megnyitható menüobjektum, lehetővé teszi az állomások, végállomások megvásárlását.
     /// </summary>
-    class BuyMenu
+    public class BuyMenu
     {
         //Változók
         int backgroundstartingpositionX;

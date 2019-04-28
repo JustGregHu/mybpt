@@ -2,7 +2,7 @@
     /// <summary>
     /// Játékos adatait tároló osztály.
     /// </summary>
-    class Player {
+    public class Player {
         //Változók
         string name;
         int money;

@@ -6,7 +6,7 @@ namespace MyBPT.Classes {
     /// <summary>
     /// Lenyomható és megjeleníthetó gomb.
     /// </summary>
-    class Button {
+    public class Button {
 
         //Változók
         Vector2 position;

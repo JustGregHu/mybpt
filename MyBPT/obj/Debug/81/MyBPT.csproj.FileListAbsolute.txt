@@ -155,6 +155,3 @@ C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.Numerics.pdb
 C:\mybpt\MyBPT\obj\Debug\81\android\assets\System.Transactions.pdb
 C:\mybpt\MyBPT\obj\Debug\81\linksrc\MyBPT.dll.mdb
 C:\mybpt\MyBPT\obj\Debug\81\linksrc\SQLiteConnectionBuddy.Android.dll.mdb
-C:\mybpt\MyBPT\bin\Android\AnyCPU\Debug\MyBPT.dll
-C:\mybpt\MyBPT\obj\Debug\81\linksrc\MyBPT.dll.mdb
-C:\mybpt\MyBPT\obj\Debug\81\linksrc\SQLiteConnectionBuddy.Android.dll.mdb

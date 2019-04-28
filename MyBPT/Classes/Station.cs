@@ -5,7 +5,7 @@ namespace MyBPT.Classes {
     /// <summary>
     /// Egy megjeleníthető buszállomás / végállomás objektum. A játékos létrehozhatja ezeket. és segítségükkel gyüjthet bevételt.
     /// </summary>
-    class Station {
+    public class Station {
         //adatok
         int cost;
         int type;

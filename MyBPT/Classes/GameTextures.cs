@@ -7,7 +7,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// MonoGame textúrákat tartalmazó elem.
     /// </summary>
-    class GameTextures
+    public class GameTextures
     {
         Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         Dictionary<string, int> isbuildings = new Dictionary<string, int>();

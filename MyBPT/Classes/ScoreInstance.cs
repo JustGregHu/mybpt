@@ -12,10 +12,10 @@ using Android.Widget;
 
 namespace MyBPT.Classes
 {
-      /// <summary>
-      /// Egy (adatbázisból származó) pontszám egyedelőfordulásának értékét tárolja. 
-      /// </summary>
-    class ScoreInstance
+    /// <summary>
+    /// Egy (adatbázisból származó) pontszám egyedelőfordulásának értékét tárolja. 
+    /// </summary>
+    public class ScoreInstance
     {
         //Tábla oszlopai
         int id;

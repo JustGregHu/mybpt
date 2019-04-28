@@ -8,7 +8,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Mozgatható kamera. Lehetővé teszi a nézet mozgatását a játéktéren belül.
     /// </summary>
-    class Camera
+    public class Camera
     {
         //Változók
         public Matrix transform;

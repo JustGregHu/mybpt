@@ -5,7 +5,7 @@ namespace MyBPT.Classes {
     /// <summary>
     /// Egy "csempe" objektum. Csempékből epül fel a játékban található, négyzetekből összerakott terep. Izometrikus pozíciót kapnak.
     /// </summary>
-    class Tile {
+    public class Tile {
         //Változók
         int height;
         Texture2D texture;

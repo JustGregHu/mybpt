@@ -5,7 +5,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// 2:1 arányú izometrikus és 1:1 arányú 2D koordinátákat konvertáló osztály
     /// </summary>
-    class IsoCalculator
+    public class IsoCalculator
     {
         /// <summary>
         /// 2:1 arányú Izometrikus koordinátákat alakít át 1:1 arányú 2D koordinátákká

@@ -7,7 +7,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Befolyással rendelkező, megjeleníthető épületpobjektum. A játéktéren belül a játékos az épületek befolyását gyűjti az állomások hatásköre segítségével.
     /// </summary>
-    class Building
+    public class Building
     {
         //Változók
         int type;

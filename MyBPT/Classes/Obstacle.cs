@@ -16,7 +16,7 @@ namespace MyBPT.Classes
 {     /// <summary>
       /// Blokádelem. A játéktéren jelenik meg, és a játékosnak el kell takarítania mielött az általa lefoglalt pocícióra épithet.
       /// </summary>
-    class Obstacle
+    public class Obstacle
     {
         //Változók
         Texture2D texture;
@@ -25,7 +25,6 @@ namespace MyBPT.Classes
         bool highlighted;
         int cost;
         Button demolishbutton;
-        Tile highlighttile;
 
         //Tulajdonságok
         public Button DemolishButton { get => demolishbutton; set => demolishbutton = value; }

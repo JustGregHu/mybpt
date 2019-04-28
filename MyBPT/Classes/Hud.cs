@@ -7,7 +7,7 @@ namespace MyBPT.Classes {
     /// <summary>
     /// A gombok és játékinfó erre a nézetbeli rétegre kerülnek.
     /// </summary>
-    class Hud {
+    public class Hud {
         public Matrix transform;
         Viewport view;
         Vector2 position;

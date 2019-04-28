@@ -15,7 +15,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Képernyőbillentyűzet létrehozásához szükséges billenytűelem.
     /// </summary>
-    class KeyboardKeys
+    public class KeyboardKeys
     {
         Button button;
         char key;

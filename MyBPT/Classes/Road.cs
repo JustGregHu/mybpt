@@ -17,7 +17,7 @@ namespace MyBPT.Classes
     /// <summary>
     /// Egy "csempényi" útelemnek megfelelő objektum.
     /// </summary>
-    class Road
+    public class Road
     {
         Texture2D texture;
         Vector2 tileposition;
