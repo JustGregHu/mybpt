@@ -21,11 +21,13 @@ namespace MyBPT.Classes
         int id;
         int amount;
         string playername;
+        string timestamp;
         
         //Tulajdonságok
         public int Amount { get => amount; set => amount = value; }
         public string Playername { get => playername; set => playername = value; }
         public int Id { get => id; set => id = value; }
+        public string Timestamp { get => timestamp; set => timestamp = value; }
 
         /// <summary>
         /// Létrehoz egy pontszám egyedelőfordulását, és megadja az adatait.
@@ -34,11 +36,12 @@ namespace MyBPT.Classes
         /// <param name="amount">Pontszám</param>
         /// <param name="id">Egyedelőfordulás azonosítója</param>
         /// <param name="playername">A pontszámot elért játékos neve</param>
-        public ScoreInstance(int id, int amount, string playername)
+        public ScoreInstance(int id, int amount, string playername, string timestamp)
         {
             this.amount = amount;
             this.playername = playername;
             this.id = id;
+            this.timestamp = timestamp;
         }
     }
 }

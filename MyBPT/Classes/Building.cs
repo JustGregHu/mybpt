@@ -29,54 +29,17 @@ namespace MyBPT.Classes
         /// <summary>
         /// Épület konstruktor: létrehoz egy megjeleníthető épületet. A megadott szint és típus által beállítja a szintent és az épület típusát. Létrehozza a HUD elemeket és inicializálja a megjelenítést.
         /// </summary>
-        /// <param name="texturecollection">A megjelenítéshez szükséges textúragyüjtemény</param>
+        /// <param name="gametextures">A megjelenítéshez szükséges textúragyüjtemény</param>
         /// <param name="gameWorld">A már legalább részlegesen legenerált játékvilág</param>
         /// <param name="preferredscreensize">Ajánlott képernyőméret</param>
         /// <param name="coordinates">Ahol az épület található</param>
         /// <param name="type">Épülettípus. 0: polgári, 1: kereskedelmi, 2: ipari</param>
         ///  <param name="level">Bónuszokkál jár a magasabb szint. Jelenleg támogatott maximum: 2</param>
-        public Building(Dictionary<string, Texture2D> texturecollection, GameWorld gameWorld, Point preferredscreensize, Point coordinates, int type, int level)
+        public Building(GameTextures gametextures, GameWorld gameWorld, Point preferredscreensize, Point coordinates, int type, int level)
         {
             this.level = level;
             this.type = type;
-            switch (level)
-            {
-                case 1:
-                    switch (type)
-                    {
-                        case 0:
-                            this.texture = texturecollection["world_building_residential_1"];
-                            break;
-                        case 1:
-                            this.texture = texturecollection["world_building_commercial_1"];
-                            break;
-                        case 2:
-                            this.texture = texturecollection["world_building_industrial_1"];
-                            break;
-                        default: 
-                            break;
-                    }
-                    break;
-                case 2:
-                    switch (type)
-                    {
-                        case 0:
-                            this.texture = texturecollection["world_building_residential_2"];
-                            break;
-                        case 1:
-                            this.texture = texturecollection["world_building_commercial_2"];
-                            break;
-                        case 2:
-                            this.texture = texturecollection["world_building_industrial_2"];
-                            break;
-                        default:
-                            
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
+            this.texture = gametextures.FindBuildingTexture(level, type);
             switch (type)
             {
                 case 0:
@@ -90,9 +53,9 @@ namespace MyBPT.Classes
                     break;
             }
             this.coordinates = coordinates;
-            demolishbutton = new Button(new Vector2(0,0), texturecollection["hud_button_demolish"]);
+            demolishbutton = new Button(new Vector2(0,0),gametextures.GetTextures()["hud_button_demolish"]);
             demolishbutton.UpdatePosition(new Vector2(preferredscreensize.X / 2 - demolishbutton.Texture.Width / 2, preferredscreensize.Y - 300));
-            highlighttile = new Tile(0, texturecollection["world_highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
+            highlighttile = new Tile(0, gametextures.GetTextures()["world_highlight_lightblue"], tileposition, new Rectangle(tileposition.ToPoint(), new Point(200, 100)));
             this.tileposition = gameWorld.MapData[coordinates.X, coordinates.Y].Position;
             ButtonVisibility_NoSelection();
         }

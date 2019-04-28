@@ -8,11 +8,11 @@ namespace MyBPT.Classes {
     /// A játékteret és az azzal kapcsolatos funkciókat megvalósító osztály. Terepet, épületeket, akadályokat, pályaelemeket generál, amellyekkel interaktálhat a játékos.
     /// </summary>
     class GameWorld {
-        //Változók
+        #region Változók, Pályaelemek, Tulajdonságok
         IsoCalculator isoCalculator = new IsoCalculator();
         Random rnd = new Random();
         Tile[,] mapdata;
-        Dictionary<string, Texture2D> texturecollection;
+        GameTextures texturecollection;
         Texture2D texture;
         Color[] colourMap;
         Point currentTilePosition;
@@ -41,7 +41,7 @@ namespace MyBPT.Classes {
                 return mapdata;
             }
         }
-        public Dictionary<string, Texture2D> TextureCollection { get => texturecollection; set => texturecollection = value; }
+        public GameTextures GameTextures { get => texturecollection; set => texturecollection = value; }
         public int Worldsize { get => worldsize; set => worldsize = value; }
         internal List<Obstacle> Obstacles { get => obstacles; set => obstacles = value; }
         internal List<Road> Roads { get => roads; set => roads = value; }
@@ -49,14 +49,15 @@ namespace MyBPT.Classes {
         internal List<Station> Stations { get => stations; set => stations = value; }
         public Point CurrentTilePosition { get => currentTilePosition; set => currentTilePosition = value; }
 
-        //JÁTÉKVILÁG LÉTREHOZÁSA
+        #endregion
+        #region Játékvilág létrehozása
 
         /// <summary>
         /// Létrehoz egy játékvilág objektumot. Inicializál egy üres világot.
         /// </summary>
         /// <param name="texturecollection">A megjelenítéshez szükséges textúragyüjtemény</param>
         /// <param name="size">Ha igaz, kisebb méretű világ generálódik. Normál méretű, ha hamis</param>
-        public GameWorld(Dictionary<string, Texture2D> texturecollection, bool size)
+        public GameWorld(GameTextures texturecollection, bool size)
         {
             perlin = new Perlin();
             if (size)
@@ -82,7 +83,7 @@ namespace MyBPT.Classes {
         public void GenerateMap(SpriteBatch spriteBatch, Point preferredscreensize, GraphicsDevice graphicsDevice)
         {
             double[,] noiseMap = GenerateNoiseMap(worldsize, worldsize, noisescale);
-            GenerateRandomWorld(preferredscreensize);
+            GenerateRandomWorld(preferredscreensize,texturecollection);
             CreateNoiseMap(spriteBatch, graphicsDevice, noiseMap);
         }
 
@@ -141,7 +142,7 @@ namespace MyBPT.Classes {
         /// Legenerál és elment egy új világot. Létrehozza a csempetérképet, majd az utakat, akadályokat és az épületeket.
         /// </summary>
         /// /// <param name="preferredscreensize">Ajánlott képernyőméret</param>
-        public void GenerateRandomWorld(Point preferredscreensize)
+        public void GenerateRandomWorld(Point preferredscreensize,GameTextures gameTextures)
         {
             //csempék
             for (int i = 0; i < worldsize; i++)
@@ -152,28 +153,28 @@ namespace MyBPT.Classes {
                     Texture2D rndtexture;
                     if (height < waterheight)
                     {
-                        rndtexture = texturecollection["world_tile_water"];
+                        rndtexture = texturecollection.GetTextures()["world_tile_water"];
                     }
                     else if (height < 80)
                     {
-                        rndtexture = texturecollection["world_tile_sand"];
+                        rndtexture = texturecollection.GetTextures()["world_tile_sand"];
 
                     }
                     else if (height < 170)
                     {
-                        rndtexture = texturecollection["world_tile_grass"];
+                        rndtexture = texturecollection.GetTextures()["world_tile_grass"];
                     }
                     else if (height < 190)
                     {
-                        rndtexture = texturecollection["world_tile_stone"];
+                        rndtexture = texturecollection.GetTextures()["world_tile_stone"];
                     }
                     else if (height < 255)
                     {
-                        rndtexture = texturecollection["world_tile_snow"];
+                        rndtexture = texturecollection.GetTextures()["world_tile_snow"];
                     }
                     else
                     {
-                        rndtexture = texturecollection["world_tile_water"];
+                        rndtexture = texturecollection.GetTextures()["world_tile_water"];
                     }
 
                     int draw_x = (int)(u * 100);
@@ -228,14 +229,14 @@ namespace MyBPT.Classes {
                 for (int u = 0; u < worldsize; u++)
                 {
                     if (MapData[i, u].Height > hillheight)
-                        obstacles.Add(new Obstacle(texturecollection, "world_obstacle_hill", preferredscreensize, this, new Point(i, u), 500));
+                        obstacles.Add(new Obstacle(texturecollection.GetTextures(), "world_obstacle_hill", preferredscreensize, this, new Point(i, u), 500));
                     for (int x = 0; x < roadpositionsX.Count; x++)
                     {
                         if (i == roadpositionsX[x] && !AreThereHillsInX(roadpositionsX[x]))
                         {
                             if (MapData[i, u].Height < waterheight)
                             {
-                                roads.Add(new Road(texturecollection, "world_bridge_west_east", this, new Point(i, u)));
+                                roads.Add(new Road(texturecollection.GetTextures(), "world_bridge_west_east", this, new Point(i, u)));
                             }
                             else if (MapData[i, u].Height > hillheight)
                             {
@@ -243,7 +244,7 @@ namespace MyBPT.Classes {
                             }
                             else
                             {
-                                roads.Add(new Road(texturecollection, "world_road_west_east", this, new Point(i, u)));
+                                roads.Add(new Road(texturecollection.GetTextures(), "world_road_west_east", this, new Point(i, u)));
                             }
                         }
                     }
@@ -253,13 +254,13 @@ namespace MyBPT.Classes {
                         {
                             if (IsThereARoadAt(new Point(i, u)))
                             {
-                                roads.Add(new Road(texturecollection, "world_roadcross", this, new Point(i, u)));
+                                roads.Add(new Road(texturecollection.GetTextures(), "world_roadcross", this, new Point(i, u)));
                             }
                             else
                             {
                                 if (MapData[i, u].Height < waterheight)
                                 {
-                                    roads.Add(new Road(texturecollection, "world_bridge_north_south", this, new Point(i, u)));
+                                    roads.Add(new Road(texturecollection.GetTextures(), "world_bridge_north_south", this, new Point(i, u)));
                                 }
                                 else if (MapData[i, u].Height > 180)
                                 {
@@ -267,13 +268,15 @@ namespace MyBPT.Classes {
                                 }
                                 else
                                 {
-                                    roads.Add(new Road(texturecollection, "world_road_north_south", this, new Point(i, u)));
+                                    roads.Add(new Road(texturecollection.GetTextures(), "world_road_north_south", this, new Point(i, u)));
                                 }
                             }
                         }
                     }
                 }
             }
+
+            //épületek
 
             for (int i = 0; i < worldsize; i++)
             {
@@ -287,15 +290,15 @@ namespace MyBPT.Classes {
                         int random2 = rnd.Next(0, 101);
                         if (random1 < 65)
                         {
-                            type = 0;
+                            type = 1;
                         }
                         else if (random1 < 90)
                         {
-                            type = 1;
+                            type = 2;
                         }
                         else
                         {
-                            type = 2;
+                            type = 3;
                         }
                         if (random2 > 80)
                         {
@@ -332,7 +335,8 @@ namespace MyBPT.Classes {
             }
         }
 
-        //KERESÉS, MEGSZÁMLÁLÁS, INFORMÁCIÓ
+        #endregion
+        #region Keresés, Megszámlálás, Információ
 
         /// <summary>
         /// Igazzal tér vissza, ha a megadott koordinátát még nem foglalta el csempe
@@ -541,14 +545,15 @@ namespace MyBPT.Classes {
             }
         }
 
-        //KURZOR ÉS JELENLEGI CSEMPE MŰVELETEK
+        #endregion
+        #region Kurzor, Jelenlegi csempe műveletek
 
         /// <summary>
         /// Létrehozza, és alapbeállításba helyezi a kurzort
         /// </summary>
         public void InitiateHighlightTile()
         {
-            highlightTile = new Tile(0, texturecollection["world_highlight_white"], mapdata[currentTilePosition.X, currentTilePosition.Y].Position, mapdata[currentTilePosition.X, currentTilePosition.Y].Area);
+            highlightTile = new Tile(0, texturecollection.GetTextures()["world_highlight_white"], mapdata[currentTilePosition.X, currentTilePosition.Y].Position, mapdata[currentTilePosition.X, currentTilePosition.Y].Area);
         }
 
         /// <summary>
@@ -576,7 +581,8 @@ namespace MyBPT.Classes {
             highlightTile.Draw(spriteBatch);      
         }
 
-        //MŰVELETEK
+        #endregion
+        #region Műveletek
         /// <summary>
         /// double-t alakít float-tá
         /// </summary>
@@ -585,7 +591,6 @@ namespace MyBPT.Classes {
         {
             return (float)value;
         }
-
-
+        #endregion
     }
 }

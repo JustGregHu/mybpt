@@ -249,35 +249,21 @@ namespace MyBPT.Classes {
         /// <param name="gameWorld">A már legalább részlegesen legenerált játékvilág</param>
         public void LevelStationUp(GameTextures texturecollection, GameWorld gameworld)
         {
+            int type = 0;
             level += 1;
             if (level > maxlevel)
             {
                 level = maxlevel;
             }
-
-            switch (level)
+            if (isterminus)
             {
-                case 2:
-                    if (isterminus)
-                    {
-                        this.texture = texturecollection.GetTextures()["world_terminus_2"];
-                    }
-                    else
-                    {
-                        this.texture = texturecollection.GetTextures()["world_station_2"];
-                    }
-                    break;
-                default:
-                    if (isterminus)
-                    {
-                        this.texture = texturecollection.GetTextures()["world_terminus_1"];
-                    }
-                    else
-                    {
-                        this.texture = texturecollection.GetTextures()["world_station_1"];
-                    }
-                    break;
+                type = 2;
             }
+            else
+            {
+                type = 1;
+            }
+            this.texture = texturecollection.FindStationTexture(level, type);
             ApplyEffectRadius();
             ApplyCost();
             ApplyIncome(gameworld);

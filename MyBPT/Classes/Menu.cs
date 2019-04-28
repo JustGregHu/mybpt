@@ -196,7 +196,7 @@ namespace MyBPT.Classes
             {
                 for (int i = 0; i < max; i++)
                 {
-                    spriteBatch.DrawString(font, scores[i]+" cash of total income", new Vector2(50, 50 + 50 * i),Color.White);
+                    spriteBatch.DrawString(font, scores[i], new Vector2(50, 50 + 50 * i),Color.White);
                 }
             }
         }
