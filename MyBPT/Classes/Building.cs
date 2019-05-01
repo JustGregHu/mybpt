@@ -114,16 +114,11 @@ namespace MyBPT.Classes
         /// <summary>
         /// Típus száma alapján stringként adja vissza az épület típusát.
         /// </summary>
-        /// <param name="whattype">Típus száma (0-2)</param>
-        public string GetTypeString(int whattype)
+        enum GetTypeString
         {
-            switch (whattype)
-            {
-                case 0: return "Residential";
-                case 1: return "Commercial";
-                case 2: return "Industrial";
-                default: return "Undefined";
-            }
+            Residential = 0,
+            Commercial = 1,
+            Industrial = 2,
         }
 
         /// <summary>

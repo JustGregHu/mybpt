@@ -135,7 +135,7 @@ namespace MyBPT.Classes
             openbutton.Visible = false;
             closebutton.Visible = true;
             stationbuybutton.Visible = true;
-            stationbuybutton.Visible = true;
+            terminusbuybutton.Visible = true;
             selectingbuylocation = false;
             buymenuisopen = true;
         }
@@ -146,7 +146,7 @@ namespace MyBPT.Classes
             openbutton.Visible = true;
             closebutton.Visible = false;
             selectingbuylocation = false;
-            stationbuybutton.Visible = false;
+            terminusbuybutton.Visible = false;
             stationbuybutton.Visible = false;
             buymenuisopen = false;
         }

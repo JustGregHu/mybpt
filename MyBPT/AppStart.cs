@@ -14,7 +14,7 @@ namespace MyBPT
         , Theme = "@style/Theme.Splash"
         , AlwaysRetainTaskState = true
         , LaunchMode = Android.Content.PM.LaunchMode.SingleInstance
-        , ScreenOrientation = ScreenOrientation.ReverseLandscape
+        , ScreenOrientation = ScreenOrientation.UserLandscape
         , ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden | ConfigChanges.ScreenSize | ConfigChanges.ScreenLayout)]
     public class AppStart : Microsoft.Xna.Framework.AndroidGameActivity
     {
