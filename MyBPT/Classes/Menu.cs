@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MyBPT.Classes
 {
     /// <summary>
-    /// Főmenü objektum. Segítségével nagiválhat a játékos menüpontok és funkciók között, indíthat játékot stb.
+    /// Főmenü objektum. Segítségével navigálhat a játékos menüpontok és funkciók között, indíthat játékot stb.
     /// </summary>
     public class Menu
     {

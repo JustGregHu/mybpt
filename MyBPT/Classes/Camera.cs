@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 namespace MyBPT.Classes
 {
     /// <summary>
-    /// Mozgatható kamera. Lehetővé teszi a nézet mozgatását a játéktéren belül.
+    /// Mozgatható kamera. Lehetővé teszi a nézet mozgatását a játéktéren belül. Felhasználható viszont egy statikus kezelőfelület elemeinek megjelenítésére is.
     /// </summary>
     public class Camera
     {

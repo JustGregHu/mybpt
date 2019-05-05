@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace MyBPT.Classes {
     /// <summary>
-    /// Lenyomható és megjeleníthetó gomb.
+    /// Lenyomható és megjeleníthető gomb.
     /// </summary>
     public class Button {
 

@@ -21,7 +21,6 @@ namespace MyBPT.Classes
     {
         #region Változók
         //Számolás
-        FrameCounter frameCounter;
         IsoCalculator isoCalculator;
         Perlin perlin;
         CountDown incometimer;
@@ -121,7 +120,6 @@ namespace MyBPT.Classes
             viewdistance = 2.2f;
 
             //Számolás
-            frameCounter = new FrameCounter();
             isoCalculator = new IsoCalculator();
             perlin = new Perlin();
             incometimer = new CountDown();
@@ -241,10 +239,7 @@ namespace MyBPT.Classes
             //Game Over esemény
             if (isgamesessionactive && !sandbox && gametimer.Timeleft < 1)
             {
-                gamehasended = true;
-                CloseMenu();
-                CloseBuyMenu();
-                onscreenkeyboard.OpenKeyboard();
+                PrepareGameOver();
             }
             UpdateTouchCollection();
             //Játékalkalmon belüli események
@@ -677,17 +672,6 @@ namespace MyBPT.Classes
             }
         }
 
-        /// <summary>
-        /// Megjeleníti az FPS számlálót
-        /// </summary>
-        private void DrawFPS(GameTime gameTime)
-        {
-            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            frameCounter.Update(deltaTime);
-            var fps = string.Format("FPS: {0}", frameCounter.AverageFramesPerSecond);
-            spriteBatchHud.DrawString(font, fps, new Vector2(0, 0), Color.White);
-        }
-
         #endregion
         #region Állomás elhelyezése, Megvásárlása
 
@@ -853,6 +837,7 @@ namespace MyBPT.Classes
                 {
                     if (player.CanAfford(gameworld.Stations[highlightedstationid].UpgradeCost))
                     {
+                        player.AddMoney(-gameworld.Stations[highlightedstationid].UpgradeCost);
                         gameworld.Stations[highlightedstationid].LevelStationUp(texturecollection, gameworld);
                     }
                     else
@@ -864,9 +849,6 @@ namespace MyBPT.Classes
                 {
                     InitializeGameMessage("Building is already at max level!");
                 }
-
-                player.AddMoney(-gameworld.Stations[highlightedstationid].UpgradeCost);
-                gameworld.Stations[highlightedstationid].LevelStationUp(texturecollection, gameworld);
             }
             else
             {
@@ -1170,7 +1152,21 @@ namespace MyBPT.Classes
             }
             if (menu.GoToExitButton.IsTapped(currenttouchlocation) && menu.GoToExitButton.Visible)
             {
-                Exit();
+                if (!gamehasended)
+                {
+                    if (sandbox)
+                    {
+                        ExitToMenu();
+                    }
+                    else
+                    {
+                        PrepareGameOver();
+                    }
+                }
+                else
+                {
+                    Exit();
+                }
             }
             if (menu.GoToMainmenuButton.IsTapped(currenttouchlocation) && menu.GoToMainmenuButton.Visible)
             {
@@ -1732,6 +1728,30 @@ namespace MyBPT.Classes
         private void DeactivateGame()
         {
             isgamesessionactive = false;
+        }
+
+        /// <summary>
+        /// Véget vet a játékmenetnek (mentés nelkül) és menyitja a menüt
+        /// </summary>
+        private void ExitToMenu()
+        {
+            gamehasended = true;
+            CloseMenu();
+            CloseBuyMenu();
+            isgamesessionactive = false;
+            OpenMainMenu();
+            menu.EndGameSession();
+        }
+
+        /// <summary>
+        /// Véget vet a játékmenetnek és előhozza a képernyőbillentyűzetet
+        /// </summary>
+        private void PrepareGameOver()
+        {
+                gamehasended = true;
+                CloseMenu();
+                CloseBuyMenu();
+                onscreenkeyboard.OpenKeyboard();
         }
 
         /// <summary>

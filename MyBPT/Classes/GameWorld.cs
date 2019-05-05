@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace MyBPT.Classes {
     /// <summary>
-    /// A játékteret és az azzal kapcsolatos funkciókat megvalósító osztály. Terepet, épületeket, akadályokat, pályaelemeket generál, amellyekkel interaktálhat a játékos.
+    /// A játékteret és az azzal kapcsolatos funkciókat megvalósító osztály. Terepet, épületeket, akadályokat, pályaelemeket generál, amelyekkel interaktálhat a játékos.
     /// </summary>
     public class GameWorld {
         #region Változók, Pályaelemek, Tulajdonságok

@@ -110,11 +110,9 @@
     <Compile Include="Classes\Button.cs" />
     <Compile Include="Classes\BuyMenu.cs" />
     <Compile Include="Classes\Camera.cs" />
-    <Compile Include="Classes\FrameCounter.cs" />
     <Compile Include="Classes\GameSession.cs" />
     <Compile Include="Classes\GameWorld.cs" />
     <Compile Include="Classes\GameTextures.cs" />
-    <Compile Include="Classes\Hud.cs" />
     <Compile Include="Classes\Lerper.cs" />
     <Compile Include="Classes\Perlin.cs" />
     <Compile Include="Classes\Player.cs" />

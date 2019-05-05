@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MyBPT.Classes
 {     /// <summary>
-      /// Blokádelem. A játéktéren jelenik meg, és a játékosnak el kell takarítania mielött az általa lefoglalt pocícióra épithet.
+      /// Blokádelem. A játéktéren jelenik meg, és a játékosnak el kell takarítania mielőtt az általa lefoglalt pozícióra építhet.
       /// </summary>
     public class Obstacle
     {
